@@ -20,4 +20,7 @@ export class HomeComponent {
       maxHeight: '100vh',   // 移除 Material Dialog 預設最大高度
     });
   }
+  scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 }
