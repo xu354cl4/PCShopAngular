@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { GameDialogComponent } from '../game-dialog/game-dialog.component';
+import { GamehomeComponent } from '../gamehome/gamehome.component';
 
 @Component({
   selector: 'app-home',
@@ -10,10 +10,12 @@ import { GameDialogComponent } from '../game-dialog/game-dialog.component';
 export class HomeComponent {
   constructor(private dialog: MatDialog) { }
 
-  openGame() {
-    this.dialog.open(GameDialogComponent, {
-      width: '500px',
-      height: '600px'
+  openGameHome() {
+    this.dialog.open(GamehomeComponent, {
+      width: '80vw',       // 視窗寬度
+      height: '80vh',      // 視窗高度
+      maxWidth: '100vw',    // 移除 Material Dialog 預設最大寬度
+      maxHeight: '100vh',   // 移除 Material Dialog 預設最大高度
     });
   }
 }
