@@ -1,44 +1,23 @@
 (function () {
 
-  //===== Preloader
   window.onload = function () {
-    window.setTimeout(fadeout, 500);
-  }
-
-  function fadeout() {
-    const preloader = document.querySelector('.preloader');
-    if (preloader) {
-      preloader.style.opacity = '0';
-      preloader.style.display = 'none';
+    const p = document.querySelector('.preloader');
+    if (p) {
+      window.setTimeout(() => {
+        p.style.opacity = "0";
+        p.style.display = "none";
+      }, 500);
     }
   }
 
-  /*=====================================
-  Sticky
-  =======================================*/
   window.onscroll = function () {
-
-    const header_navbar = document.querySelector(".navbar-area");
-    if (!header_navbar) return;
-
-    const sticky = header_navbar.offsetTop;
-
-    const backToTo = document.querySelector(".scroll-top");
-    if (backToTo) {
-      if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
-        backToTo.style.display = "flex";
-      } else {
-        backToTo.style.display = "none";
-      }
+    const back = document.querySelector('.scroll-top');
+    if (back) {
+      back.style.display =
+        (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50)
+          ? 'flex'
+          : 'none';
     }
-  };
-
-  //===== mobile-menu-btn
-  const navbarToggler = document.querySelector(".mobile-menu-btn");
-  if (navbarToggler) {
-    navbarToggler.addEventListener('click', function () {
-      navbarToggler.classList.toggle("active");
-    });
   }
 
 })();

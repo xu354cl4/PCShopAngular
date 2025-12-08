@@ -1,0 +1,24 @@
+<!-- Preloader -->
+<div class="preloader">
+  <div class="preloader-inner">
+    <div class="preloader-icon">
+      <span></span>
+      <span></span>
+    </div>
+  </div>
+</div>
+<!-- /End Preloader -->
+
+<app-header></app-header>
+
+<router-outlet></router-outlet>
+
+<app-footer></app-footer>
+
+<button class="floating-btn" (click)="openGameHome()">
+  <i class="lni lni-game"></i>
+</button>
+
+<a href="javascript:void(0)" class="scroll-top" (click)="scrollToTop()">
+  <i class="lni lni-chevron-up"></i>
+</a>
