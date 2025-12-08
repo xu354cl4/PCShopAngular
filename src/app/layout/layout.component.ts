@@ -6,10 +6,12 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { GamehomeComponent } from '../gamehome/gamehome.component';
 import { CommonModule } from '@angular/common';
 
+
 @Component({
   selector: 'app-layout',
   standalone: true,
   templateUrl: './layout.component.html',
+  styleUrls: ['./layout.component.css'],
   imports: [
     CommonModule,
     RouterOutlet,
