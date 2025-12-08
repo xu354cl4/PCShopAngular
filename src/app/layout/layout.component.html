@@ -7,11 +7,12 @@
     </div>
   </div>
 </div>
-<!-- /End Preloader -->
 
 <app-header></app-header>
 
-<router-outlet></router-outlet>
+<main>
+  <router-outlet></router-outlet>
+</main>
 
 <app-footer></app-footer>
 
@@ -19,6 +20,6 @@
   <i class="lni lni-game"></i>
 </button>
 
-<a href="javascript:void(0)" class="scroll-top" (click)="scrollToTop()">
+<a class="scroll-top" (click)="scrollToTop()">
   <i class="lni lni-chevron-up"></i>
 </a>
