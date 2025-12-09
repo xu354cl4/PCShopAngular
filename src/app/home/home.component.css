@@ -1,0 +1,22 @@
+.carousel-inner {
+  height: 400px !important;
+  /* 你想要的固定高度 */
+}
+
+.carousel-inner img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  /* 等比例裁切，不變形 */
+  object-position: center;
+  /* 圖片置中 */
+}
+
+.custom-width {
+  max-width: 1400px;
+  /* 控制最大寬度 */
+  margin: 0 auto;
+  /* 自動置中 */
+  padding: 0 20px;
+  /* 控制左右內距 */
+}
