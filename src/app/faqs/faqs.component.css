@@ -1,0 +1,8 @@
+.accordion {
+  max-width: 1400px;
+  /* 控制最大寬度 */
+  margin: 0 auto;
+  /* 自動置中 */
+  padding: 0 20px;
+  /* 控制左右內距 */
+}
