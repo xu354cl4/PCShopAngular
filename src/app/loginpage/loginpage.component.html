@@ -1,0 +1,329 @@
+@if(num == 1){
+<div class="login-container">
+  <div class="card">
+    <h2 class="title">會員登入</h2>
+
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" placeholder="請輸入 Email" />
+    </div>
+
+    <div class="form-group">
+      <label>密碼</label>
+      <input type="password" placeholder="請輸入密碼" />
+    </div>
+
+    <button class="login-btn">登入</button>
+    <div class="links">
+      <a href="#">忘記密碼？</a>
+      <a href="#">註冊帳號</a>
+    </div>
+
+    <div class="divider">
+      <span>或使用第三方登入</span>
+    </div>
+
+    <!-- 🔽 第三方登入按鈕區塊 -->
+    <div class="social-login">
+
+      <button class="social-btn google">
+        <img src="https://www.svgrepo.com/show/475656/google-color.svg" />
+        Google 登入
+      </button>
+
+      <!-- 新的 Facebook 白底藍框 -->
+      <button class="social-btn facebook">
+        <svg viewBox="0 0 24 24" width="20" height="20" style="fill:white;">
+          <path
+            d="M22 12.07C22 6.48 17.52 2 11.93 2S2 6.48 2 12.07c0 5.02 3.66 9.19 8.44 10v-7.07H7.9v-2.93h2.54V9.64c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.23.2 2.23.2v2.45h-1.26c-1.24 0-1.63.77-1.63 1.56v1.87h2.78l-.44 2.93h-2.34V22c4.78-.81 8.44-4.98 8.44-9.93z" />
+        </svg>
+        Facebook 登入
+      </button>
+      <!-- LINE -->
+      <button class="social-btn line">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+          <path
+            d="M12 2C6.48 2 2 5.94 2 10.76c0 3.03 1.92 5.7 4.79 7.2-.16.57-.58 2.04-.67 2.45-.1.43.15.42.31.31.13-.09 1.99-1.36 2.8-1.92.99.27 2.05.41 3.16.41 5.52 0 10-3.94 10-8.76S17.52 2 12 2zm4.6 10.41H15v1.75c0 .41-.34.75-.75.75s-.75-.34-.75-.75V8.84c0-.41.34-.75.75-.75h2.07c1.34 0 2.43 1.09 2.43 2.43s-1.09 2.43-2.43 2.43zM13 8.84c0-.41.34-.75.75-.75s.75.34.75.75v5.32c0 .41-.34.75-.75.75s-.75-.34-.75-.75V8.84zm-2.43 0c0-.41.34-.75.75-.75s.75.34.75.75v5.32c0 .41-.34.75-.75.75s-.75-.34-.75-.75V8.84zm-1.27 0h-.86v5.32c0 .41-.34.75-.75.75s-.75-.34-.75-.75V8.84H6.7c-.41 0-.75-.34-.75-.75s.34-.75.75-.75h1.6c.41 0 .75.34.75.75s-.34.75-.75.75z" />
+        </svg>
+        LINE 登入
+      </button>
+
+    </div>
+  </div>
+</div>
+}
+
+@if(num == 2 ){
+
+<div class="container vh-100 d-flex justify-content-center align-items-center">
+  <div class="row w-100 justify-content-center">
+    <div class="col-12 col-md-6 col-lg-4">
+
+      <h3 class="text-center mb-3">取回密碼</h3>
+
+      <p class="text-muted text-center mb-4">
+        請輸入您註冊時使用的 Email，我們會寄送一封重設密碼的連結給您。
+      </p>
+
+      <div class="mb-3">
+        <label for="email" class="form-label">Email 信箱</label>
+        <input
+          type="email"
+          id="email"
+          class="form-control"
+          placeholder="example@mail.com">
+      </div>
+
+      <!-- 預留訊息區塊（未來可由 Angular 控制顯示） -->
+      <div class="alert alert-info d-none" id="messageBox">
+        已寄送重設密碼信件！
+      </div>
+
+      <div class="d-flex justify-content-between mt-4">
+        <button class="btn btn-primary w-50 me-2">送出</button>
+        <button class="btn btn-outline-secondary w-50">取消</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+}
+
+@if(num == 3 ){
+<div class="container-3">
+  <h2 class="title-3">會員註冊</h2>
+
+  <form>
+
+    <div class="form-group-3">
+      <label class="label-3">Full Name（姓名）</label>
+      <input type="text" name="FullName" maxlength="50" class="form-control-3">
+    </div>
+
+    <div class="form-group-3">
+      <label class="label-3">Mail / Account（Email）</label>
+      <input type="email" name="Mail" maxlength="255" class="form-control-3">
+    </div>
+
+    <div class="form-group-3">
+      <label class="label-3">Password（密碼）</label>
+      <input type="password" name="PasswordHash" maxlength="255" class="form-control-3">
+    </div>
+
+    <div class="form-group-3">
+      <label class="label-3">Phone（手機）</label>
+      <input type="text" name="Phone" maxlength="50" class="form-control-3">
+    </div>
+
+    <div class="form-group-3">
+      <label class="label-3">Address（地址）</label>
+      <input type="text" name="Address" maxlength="255" class="form-control-3">
+    </div>
+
+    <div class="form-group-3">
+      <label class="label-3">Shipping Address（寄送地址）</label>
+      <input type="text" name="ShippingAddress" maxlength="255" class="form-control-3">
+    </div>
+
+    <div class="form-group-3">
+      <label class="label-3">BirthDay（生日）</label>
+      <input type="date" name="BirthDay" class="form-control-3">
+    </div>
+
+    <div class="form-group-3">
+      <label class="label-3">Picture（個人照片）</label>
+      <input type="file" name="Picture" accept="image/*" class="form-control-3">
+    </div>
+
+    <button type="button" class="btn-3">註冊</button>
+
+  </form>
+</div>
+
+}
+
+@if(num == 4 ){
+<div class="sidebar-4">
+
+  <div class="user-panel-4">
+    <div class="avatar-4"></div>
+    <div class="user-info-4">
+      <div class="user-name-4">王小明</div>
+      <div class="user-email-4">testmail.com</div>
+    </div>
+  </div>
+
+  <nav class="menu-4">
+
+    <!-- 大功能 1：帳戶總覽 -->
+    <div class="menu-header-4">
+      <span class="menu-icon-4">🏠</span>
+      <span>帳戶總覽</span>
+    </div>
+
+    <!-- 大功能 2：訂單管理（可展開） -->
+    <input type="checkbox" id="menu-orders-4" class="toggle-4">
+    <label class="menu-header-4" for="menu-orders-4">
+      <span class="menu-icon-4">📦</span>
+      <span>訂單管理</span>
+      <span class="arrow-4">▾</span>
+    </label>
+
+    <div class="submenu-4">
+      <div class="submenu-item-4">全部訂單</div>
+      <div class="submenu-item-4">待付款</div>
+      <div class="submenu-item-4">待出貨</div>
+      <div class="submenu-item-4">配送中</div>
+      <div class="submenu-item-4">已完成</div>
+      <div class="submenu-item-4">取消/退貨</div>
+    </div>
+
+    <!-- 大功能 3：個人設定（可展開） -->
+    <input type="checkbox" id="menu-profile-4" class="toggle-4">
+    <label class="menu-header-4" for="menu-profile-4">
+      <span class="menu-icon-4">👤</span>
+      <span>個人設定</span>
+      <span class="arrow-4">▾</span>
+    </label>
+
+    <div class="submenu-4">
+      <div class="submenu-item-4">基本資料</div>
+      <div class="submenu-item-4">地址管理</div>
+      <div class="submenu-item-4">帳號安全</div>
+    </div>
+
+    <!-- 大功能 4：優惠相關 -->
+    <input type="checkbox" id="menu-coupon-4" class="toggle-4">
+    <label class="menu-header-4" for="menu-coupon-4">
+      <span class="menu-icon-4">🎟️</span>
+      <span>優惠管理</span>
+      <span class="arrow-4">▾</span>
+    </label>
+
+    <div class="submenu-4">
+      <div class="submenu-item-4">優惠券</div>
+      <div class="submenu-item-4">蝦幣紀錄</div>
+      <div class="submenu-item-4">回饋活動</div>
+    </div>
+
+    <!-- 大功能 5：登出 -->
+    <div class="menu-header-4 logout-4">
+      <span class="menu-icon-4">🚪</span>
+      <span>登出</span>
+    </div>
+
+  </nav>
+</div>
+
+
+
+
+}
+
+
+@if(num ==5){
+<main class="member-center-5">
+
+  <!-- 側邊欄 -->
+  <aside class="sidebar-5">
+    <h3>會員中心</h3>
+    <ul>
+      <li>帳戶總覽</li>
+      <li>訂單管理
+        <ul>
+          <li>待付款</li>
+          <li>配送中</li>
+          <li>已完成</li>
+        </ul>
+      </li>
+      <li>個人設定
+        <ul>
+          <li>基本資料</li>
+          <li>地址管理</li>
+          <li>帳號安全</li>
+        </ul>
+      </li>
+      <li>優惠管理
+        <ul>
+          <li>折價券</li>
+          <li>蝦幣紀錄</li>
+          <li>回饋活動</li>
+        </ul>
+      </li>
+    </ul>
+  </aside>
+
+  <!-- 右側內容區 -->
+  <section class="content-5">
+
+    <!-- 帳戶總覽 -->
+    <div class="content-panel-5">
+      <h2 class="content-title-5">帳戶總覽</h2>
+      <div class="card-5">
+        <h3>個人資料</h3>
+        <div class="info-grid-5">
+          <div class="info-item-5">
+            <span class="info-label-5">姓名</span>
+            <span class="info-value-5">王小明</span>
+          </div>
+          <div class="info-item-5">
+            <span class="info-label-5">生日</span>
+            <span class="info-value-5">1995/05/20</span>
+          </div>
+          <div class="info-item-5">
+            <span class="info-label-5">手機</span>
+            <span class="info-value-5">0912345678</span>
+          </div>
+          <div class="info-item-5">
+            <span class="info-label-5">Email</span>
+            <span class="info-value-5">testcom</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 訂單管理 -->
+    <div class="content-panel-5">
+      <h2 class="content-title-5">訂單管理</h2>
+      <div class="card-5">
+        <h3>最新訂單</h3>
+        <ul class="order-list-5">
+          <li><span class="order-id">#12345</span> <span class="order-status pending">待付款</span> <span class="order-amount">$2,500</span></li>
+          <li><span class="order-id">#12346</span> <span class="order-status shipping">配送中</span> <span class="order-amount">$1,200</span></li>
+          <li><span class="order-id">#12347</span> <span class="order-status completed">已完成</span> <span class="order-amount">$3,000</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 個人設定 -->
+    <div class="content-panel-5">
+      <h2 class="content-title-5">個人設定</h2>
+      <div class="card-5">
+        <ul class="settings-list-5">
+          <li>基本資料 <span class="icon">⚙️</span></li>
+          <li>地址管理 <span class="icon">🏠</span></li>
+          <li>帳號安全 <span class="icon">🔒</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 優惠管理 -->
+    <div class="content-panel-5">
+      <h2 class="content-title-5">優惠管理</h2>
+      <div class="card-5">
+        <ul class="coupon-list-5">
+          <li>折價券 <span class="icon">💰</span></li>
+          <li>蝦幣紀錄 <span class="icon">🪙</span></li>
+          <li>回饋活動 <span class="icon">🎁</span></li>
+        </ul>
+      </div>
+    </div>
+
+  </section>
+
+</main>
+
+}
