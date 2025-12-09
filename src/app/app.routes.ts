@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { LayoutComponent } from './layout/layout.component';
+import { FaqsComponent } from './faqs/faqs.component';
+
 
 export const routes: Routes = [
   {
@@ -10,7 +12,7 @@ export const routes: Routes = [
       { path: '', component: HomeComponent },
       // 未來其他頁面也放這裡
       // { path: 'product/:id', component: ProductDetailComponent },
+      { path: 'faqs', component: FaqsComponent },
     ]
   },
-
 ];
