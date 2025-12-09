@@ -1,0 +1,25 @@
+.floating-btn {
+  position: fixed;
+  top: 450px;
+  right: 30px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #ff5722;
+  color: white;
+  border: none;
+  font-size: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+
+  z-index: 2147483647 !important;
+  /*⭐ 全宇宙最高值 */
+}
+
+
+.floating-btn i {
+  font-size: 28px;
+}

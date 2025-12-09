@@ -5,10 +5,9 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { provideRouter, Route } from '@angular/router';
 import { AppComponent } from './app/app.component';
 import { HomeComponent } from './app/home/home.component';
+import { routes } from './app/app.routes';
 
-const routes: Route[] = [
-  { path: '', component: HomeComponent },
-];
+
 
 bootstrapApplication(AppComponent, {
   providers: [

@@ -1,14 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
+<!-- Preloader -->
+<div class="preloader">
+  <div class="preloader-inner">
+    <div class="preloader-icon">
+      <span></span>
+      <span></span>
+    </div>
+  </div>
+</div>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
+<!-- Header -->
+<app-header></app-header>
 
-<body>
-  <app-root></app-root>
-</body>
+<!-- Main content for routing -->
+<main>
+  <router-outlet></router-outlet>
+</main>
 
-</html>
+<!-- Footer -->
+<app-footer></app-footer>
+
+<!-- Floating Game Button -->
+<button class="floating-btn" (click)="openGameHome()">
+  <i class="lni lni-game"></i>
+</button>
+
+<!-- Scroll to Top -->
+<a class="scroll-top" (click)="scrollToTop()">
+  <i class="lni lni-chevron-up"></i>
+</a>
