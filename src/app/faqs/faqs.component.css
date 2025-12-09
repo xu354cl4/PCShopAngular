@@ -6,3 +6,24 @@
   padding: 0 20px;
   /* 控制左右內距 */
 }
+
+/* 啟用 Bootstrap 預設箭頭 */
+.accordion-button::after {
+  display: block !important;
+  background-image: var(--bs-accordion-btn-icon) !important;
+  transition: transform 0.2s ease-in-out;
+}
+
+/* 展開時旋轉箭頭 */
+.accordion-button:not(.collapsed)::after {
+  transform: rotate(180deg);
+}
+
+.accordion-button.collapsed {
+  background-color: #f0f6ff;
+  /* 你要的顏色 */
+}
+
+.accordion-collapse {
+  transition: height .35s ease;
+}
