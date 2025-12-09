@@ -8,18 +8,23 @@
   </div>
 </div>
 
+<!-- Header -->
 <app-header></app-header>
 
+<!-- 主內容 -->
 <main>
   <router-outlet></router-outlet>
-  <!-- 子頁面放這裡 -->
 </main>
 
+<!-- Footer -->
 <app-footer></app-footer>
 
+<!-- 浮動遊戲按鈕 -->
 <button class="floating-btn" (click)="openGameHome()">
   <i class="lni lni-game"></i>
 </button>
+
+<!-- 回到頂部 -->
 <a class="scroll-top" (click)="scrollToTop()">
   <i class="lni lni-chevron-up"></i>
 </a>

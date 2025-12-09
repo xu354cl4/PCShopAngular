@@ -36,3 +36,4 @@ export class LayoutComponent {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 }
+
