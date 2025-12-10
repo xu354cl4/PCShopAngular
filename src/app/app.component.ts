@@ -1,26 +1,26 @@
 import { Component } from '@angular/core';
+import { LoginpageComponent } from "./loginpage/loginpage.component";
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterModule } from '@angular/router';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { GamehomeComponent } from './gamehome/gamehome.component';
-
 @Component({
   selector: 'app-root',
-  standalone: true,
-  imports: [
+  imports: [RouterOutlet,
+    LoginpageComponent,
     CommonModule,
-    RouterOutlet,
     RouterModule,
     HeaderComponent,
     FooterComponent,
-    MatDialogModule
-  ],
+    MatDialogModule],
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrl: './app.component.css'
 })
 export class AppComponent {
+  title = 'PcShop';
+
   constructor(private dialog: MatDialog) { }
 
   openGameHome() {
