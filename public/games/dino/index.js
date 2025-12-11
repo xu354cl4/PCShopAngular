@@ -802,9 +802,16 @@
         this.distanceMeter.setHighScore(this.highestScore);
       }
 
+      // ← ★ 最重要：回傳分數給 Angular
+      window.parent.postMessage(
+        { type: "gameScore", score: Math.ceil(this.distanceRan) },
+        "*"
+      );
+
       // Reset the time clock.
       this.time = getTimeStamp();
     },
+
 
     stop: function () {
       this.playing = false;

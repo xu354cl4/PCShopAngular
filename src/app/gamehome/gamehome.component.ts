@@ -19,6 +19,8 @@ export class GamehomeComponent {
     this.dialog.open(GameDialogComponent, {
       width: '80vw',
       height: '80vh',
+      maxWidth: '100vw',
+      maxHeight: '100vh',
       data: { game: gameName }
     });
   }

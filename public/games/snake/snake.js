@@ -135,21 +135,25 @@ function draw() {
 
   // game over
 
-  if (snakeX < box || snakeX > 17 * box || snakeY < 3 * box || snakeY > 17 * box || collision(newHead, snake)) {
+  if (
+    snakeX < box ||
+    snakeX > 17 * box ||
+    snakeY < 3 * box ||
+    snakeY > 17 * box ||
+    collision(newHead, snake)
+  ) {
     clearInterval(game);
     dead.play();
-  }
-  function gameOver() {
-    // 🔥 回傳分數
-    window.parent.postMessage({
-      type: "gameScore",
-      game: "snake",
-      score: score
-    }, "*");
 
-    // 重置遊戲
-    resetGame();
+    // ⬇⬇⬇ 新增：回傳遊戲分數給 Angular Dialog
+    window.parent.postMessage(
+      { type: "gameScore", score: score },
+      "*"
+    );
+
+    return; // 結束函式
   }
+
   snake.unshift(newHead);
 
   ctx.fillStyle = "white";
