@@ -1,14 +1,13 @@
 import { Component } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { GameDialogComponent } from '../game-dialog/game-dialog.component';
-import { GameFloppybirdComponent } from '../game-floppybird/game-floppybird.component';
 
 
 @Component({
   selector: 'app-gamehome',
   standalone: true,
-  templateUrl: './gamehome.component.html'
-
+  templateUrl: './gamehome.component.html',
+  styleUrls: ['./gamehome.component.css']
 })
 export class GamehomeComponent {
   constructor(
@@ -16,18 +15,14 @@ export class GamehomeComponent {
     private dialogRef: MatDialogRef<GamehomeComponent>   // ← 注入自己
   ) { }
 
-  openGame() {
+  openGame(gameName: string) {
     this.dialog.open(GameDialogComponent, {
-      width: '500px',
-      height: '800px'
+      width: '80vw',
+      height: '80vh',
+      data: { game: gameName }
     });
   }
-  openGame2() {
-    this.dialog.open(GameFloppybirdComponent, {
-      width: '500px',
-      height: '800px'
-    });
-  }
+
   closeGame() {
     this.dialogRef.close();   // <= 使用 dialogRef 關閉
   }
