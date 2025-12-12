@@ -804,7 +804,7 @@
 
       // ← ★ 最重要：回傳分數給 Angular
       window.parent.postMessage(
-        { type: "gameScore", score: Math.ceil(this.distanceRan) },
+        { type: "gameScore", score: Math.round(this.distanceRan * DistanceMeter.config.COEFFICIENT) },
         "*"
       );
 

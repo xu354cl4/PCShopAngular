@@ -1,7 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-
 import { UpperCasePipe } from '@angular/common';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
@@ -22,7 +21,7 @@ export class GameDialogComponent {
   safeUrl!: SafeResourceUrl;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: { game: string },
+    @Inject(MAT_DIALOG_DATA) public data: { game: string },  //只有在寫了@Inject(MAT_DIALOG_DATA)後才會接收到資料
     private dialogRef: MatDialogRef<GameDialogComponent>,
     private sanitizer: DomSanitizer
   ) {
