@@ -1,24 +1,22 @@
 /*
 Create by Learn Web Developement
-Youtube channel : https://www.youtube.com/channel/UC8n8ftV94ZU_DJLOLtrpORA
+Rewritten & Debugged for Angular iframe communication
 */
 
 const cvs = document.getElementById("snake");
 const ctx = cvs.getContext("2d");
 
-// create the unit
 const box = 32;
 
-// load images
-
+// Background
 const ground = new Image();
 ground.src = "img/ground.png";
 
+// Food image
 const foodImg = new Image();
 foodImg.src = "img/food.png";
 
-// load audio files
-
+// Sounds
 let dead = new Audio();
 let eat = new Audio();
 let up = new Audio();
@@ -33,125 +31,151 @@ right.src = "audio/right.mp3";
 left.src = "audio/left.mp3";
 down.src = "audio/down.mp3";
 
-// create the snake
+// Snake Array
+let snake = [{ x: 9 * box, y: 10 * box }];
 
-let snake = [];
+// Food
+let food = generateFood();
 
-snake[0] = {
-  x: 9 * box,
-  y: 10 * box
-};
+function generateFood() {
+  let newFood;
+  let overlap = true;
 
-// create the food
+  while (overlap) {
+    newFood = {
+      x: Math.floor(Math.random() * 17 + 1) * box,
+      y: Math.floor(Math.random() * 15 + 3) * box
+    };
 
-let food = {
-  x: Math.floor(Math.random() * 17 + 1) * box,
-  y: Math.floor(Math.random() * 15 + 3) * box
+    // 檢查是否與蛇身重疊
+    overlap = snake.some(part => part.x === newFood.x && part.y === newFood.y);
+  }
+
+  return newFood;
 }
 
-// create the score var
-
+// Score + Direction
 let score = 0;
-
-//control the snake
-
 let d;
 
+// Key Listener
 document.addEventListener("keydown", direction);
 
 function direction(event) {
   let key = event.keyCode;
-  if (key == 37 && d != "RIGHT") {
-    left.play();
-    d = "LEFT";
-  } else if (key == 38 && d != "DOWN") {
-    d = "UP";
-    up.play();
-  } else if (key == 39 && d != "LEFT") {
-    d = "RIGHT";
-    right.play();
-  } else if (key == 40 && d != "UP") {
-    d = "DOWN";
-    down.play();
-  }
+  if (key == 37 && d != "RIGHT") { left.play(); d = "LEFT"; }
+  else if (key == 38 && d != "DOWN") { up.play(); d = "UP"; }
+  else if (key == 39 && d != "LEFT") { right.play(); d = "RIGHT"; }
+  else if (key == 40 && d != "UP") { down.play(); d = "DOWN"; }
 }
 
-// cheack collision function
+// Collision detection
 function collision(head, array) {
   for (let i = 0; i < array.length; i++) {
-    if (head.x == array[i].x && head.y == array[i].y) {
-      return true;
-    }
+    if (head.x === array[i].x && head.y === array[i].y) return true;
   }
   return false;
 }
 
-// draw everything to the canvas
+// Draw Snake with rounded head
+function drawSnakeHead(x, y, dir) {
+  ctx.fillStyle = "#4CAF50";
+  ctx.beginPath();
+  ctx.roundRect(x, y, box, box, 8);
+  ctx.fill();
 
+  let eye1 = {}, eye2 = {};
+  if (dir === "LEFT") {
+    eye1 = { x: x + 8, y: y + 10 };
+    eye2 = { x: x + 8, y: y + 20 };
+  } else if (dir === "RIGHT") {
+    eye1 = { x: x + box - 12, y: y + 10 };
+    eye2 = { x: x + box - 12, y: y + 20 };
+  } else if (dir === "UP") {
+    eye1 = { x: x + 10, y: y + 8 };
+    eye2 = { x: x + 22, y: y + 8 };
+  } else {
+    eye1 = { x: x + 10, y: y + box - 12 };
+    eye2 = { x: x + 22, y: y + box - 12 };
+  }
+
+  ctx.fillStyle = "white";
+  ctx.beginPath();
+  ctx.arc(eye1.x, eye1.y, 4, 0, Math.PI * 2);
+  ctx.arc(eye2.x, eye2.y, 4, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.fillStyle = "black";
+  ctx.beginPath();
+  ctx.arc(eye1.x, eye1.y, 2, 0, Math.PI * 2);
+  ctx.arc(eye2.x, eye2.y, 2, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+// Snake body
+function drawSnakeBody(x, y) {
+  ctx.fillStyle = "#66BB6A";
+  ctx.beginPath();
+  ctx.roundRect(x, y, box, box, 6);
+  ctx.fill();
+}
+
+// Main Draw function
 function draw() {
-
   ctx.drawImage(ground, 0, 0);
 
+  // Draw Snake
   for (let i = 0; i < snake.length; i++) {
-    ctx.fillStyle = (i == 0) ? "green" : "white";
-    ctx.fillRect(snake[i].x, snake[i].y, box, box);
-
-    ctx.strokeStyle = "red";
-    ctx.strokeRect(snake[i].x, snake[i].y, box, box);
+    if (i === 0) drawSnakeHead(snake[i].x, snake[i].y, d);
+    else drawSnakeBody(snake[i].x, snake[i].y);
   }
 
   ctx.drawImage(foodImg, food.x, food.y);
 
-  // old head position
   let snakeX = snake[0].x;
   let snakeY = snake[0].y;
 
-  // which direction
-  if (d == "LEFT") snakeX -= box;
-  if (d == "UP") snakeY -= box;
-  if (d == "RIGHT") snakeX += box;
-  if (d == "DOWN") snakeY += box;
+  if (d === "LEFT") snakeX -= box;
+  else if (d === "UP") snakeY -= box;
+  else if (d === "RIGHT") snakeX += box;
+  else if (d === "DOWN") snakeY += box;
 
-  // if the snake eats the food
+  // let ateFood = snakeX === food.x && snakeY === food.y;
+
+  // if (ateFood) {
+  //   score++;
+  //   eat.play();
+  //   food = {
+  //     x: Math.floor(Math.random() * 17 + 1) * box,
+  //     y: Math.floor(Math.random() * 15 + 3) * box
+  //   };
+  // } else {
+  //   snake.pop();
+  // }
+
+
   if (snakeX == food.x && snakeY == food.y) {
     score++;
     eat.play();
-    food = {
-      x: Math.floor(Math.random() * 17 + 1) * box,
-      y: Math.floor(Math.random() * 15 + 3) * box
-    }
-    // we don't remove the tail
+    food = generateFood();
   } else {
-    // remove the tail
     snake.pop();
   }
 
-  // add new Head
+  let newHead = { x: snakeX, y: snakeY };
 
-  let newHead = {
-    x: snakeX,
-    y: snakeY
-  }
-
-  // game over
-
+  // Game Over Check
   if (
-    snakeX < box ||
-    snakeX > 17 * box ||
-    snakeY < 3 * box ||
-    snakeY > 17 * box ||
+    snakeX < box || snakeX > 17 * box ||
+    snakeY < 3 * box || snakeY > 17 * box ||
     collision(newHead, snake)
   ) {
     clearInterval(game);
     dead.play();
 
-    // ⬇⬇⬇ 新增：回傳遊戲分數給 Angular Dialog
-    window.parent.postMessage(
-      { type: "gameScore", score: score },
-      "*"
-    );
-
-    return; // 結束函式
+    window.parent.postMessage({ type: "gameScore", score }, "*");
+    showRestartButton();
+    return;
   }
 
   snake.unshift(newHead);
@@ -161,24 +185,51 @@ function draw() {
   ctx.fillText(score, 2 * box, 1.6 * box);
 }
 
-// call draw function every 100 ms
-
 let game = setInterval(draw, 100);
 
+// Game Over Overlay
+function showRestartButton() {
+  ctx.fillStyle = "rgba(0,0,0,0.6)";
+  ctx.fillRect(0, 0, cvs.width, cvs.height);
 
+  ctx.fillStyle = "white";
+  ctx.font = "40px Arial";
+  ctx.textAlign = "center";
+  ctx.fillText("Game Over!", cvs.width / 2, cvs.height / 2 - 40);
 
+  ctx.fillStyle = "#4CAF50";
+  ctx.fillRect(cvs.width / 2 - 100, cvs.height / 2, 200, 60);
 
+  ctx.fillStyle = "white";
+  ctx.font = "30px Arial";
+  ctx.fillText("Restart", cvs.width / 2, cvs.height / 2 + 40);
 
+  cvs.addEventListener("click", restartClickHandler);
+}
 
+function restartClickHandler(event) {
+  let rect = cvs.getBoundingClientRect();
+  let x = event.clientX - rect.left;
+  let y = event.clientY - rect.top;
 
+  if (
+    x >= cvs.width / 2 - 100 && x <= cvs.width / 2 + 100 &&
+    y >= cvs.height / 2 && y <= cvs.height / 2 + 60
+  ) {
+    cvs.removeEventListener("click", restartClickHandler);
+    restartGame();
+  }
+}
 
+function restartGame() {
+  snake = [{ x: 9 * box, y: 10 * box }];
+  score = 0;
+  d = undefined;
 
+  food = {
+    x: Math.floor(Math.random() * 17 + 1) * box,
+    y: Math.floor(Math.random() * 15 + 3) * box
+  };
 
-
-
-
-
-
-
-
-
+  game = setInterval(draw, 100);
+}
