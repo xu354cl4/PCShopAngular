@@ -1,0 +1,69 @@
+<div class="muji-container">
+  <h2 class="page-title">購物車</h2>
+
+  <div class="cart-header">
+    <div class="col-check">
+      <input type="checkbox" id="selectAllTop" [(ngModel)]="isAllSelected" (change)="toggleAll()">
+    </div>
+    <div class="col-product">商品詳情</div>
+    <div class="col-price">單價</div>
+    <div class="col-qty">數量</div>
+    <div class="col-total">總計</div>
+    <div class="col-action">操作</div>
+  </div>
+
+  <div class="cart-list">
+    <div class="cart-item" *ngFor="let item of cartItems">
+      <div class="col-check">
+        <input type="checkbox" [(ngModel)]="item.selected" (change)="checkAllStatus()">
+      </div>
+
+      <div class="col-product item-info">
+        <img [src]="item.imageUrl" alt="商品圖">
+        <div class="details">
+          <div class="name">{{ item.name }}</div>
+          <div class="spec-badge">{{ item.spec }}</div>
+        </div>
+      </div>
+
+      <div class="col-price mobile-label-price">
+        NT$ {{ item.price | number }}
+      </div>
+
+      <div class="col-qty">
+        <div class="qty-control">
+          <button (click)="updateQty(item, -1)" [disabled]="item.quantity <= 1">-</button>
+          <input type="text" [value]="item.quantity" readonly>
+          <button (click)="updateQty(item, 1)">+</button>
+        </div>
+      </div>
+
+      <div class="col-total highlight-text">
+        NT$ {{ item.price * item.quantity | number }}
+      </div>
+
+      <div class="col-action">
+        <button class="btn-delete" (click)="removeItem(item.id)">刪除</button>
+      </div>
+    </div>
+
+    <div class="empty-cart" *ngIf="cartItems.length === 0">
+      購物車內還沒有商品
+    </div>
+  </div>
+
+  <div class="checkout-bar">
+    <div class="bar-left">
+      <input type="checkbox" id="selectAllBottom" [(ngModel)]="isAllSelected" (change)="toggleAll()">
+      <label for="selectAllBottom"> 全選 ({{ cartItems.length }})</label>
+    </div>
+
+    <div class="bar-right">
+      <div class="total-info">
+        <span>總金額 ({{ selectedCount }} 個商品):</span>
+        <span class="final-price">NT$ {{ totalAmount | number }}</span>
+      </div>
+      <button class="btn-checkout" [disabled]="selectedCount === 0">去買單</button>
+    </div>
+  </div>
+</div>

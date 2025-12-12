@@ -6,12 +6,16 @@ import { provideRouter, Route } from '@angular/router';
 import { AppComponent } from './app/app.component';
 import { HomeComponent } from './app/home/home.component';
 import { routes } from './app/app.routes';
-
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { AuthInterceptor } from './app/interceptors/auth.interceptor';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 
 bootstrapApplication(AppComponent, {
   providers: [
     importProvidersFrom(BrowserAnimationsModule, MatDialogModule),
-    provideRouter(routes)
+    provideRouter(routes),
+    provideHttpClient(withInterceptorsFromDi()),
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
   ]
 });

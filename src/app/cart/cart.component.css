@@ -1,0 +1,172 @@
+.muji-container {
+  max-width: 1100px;
+  margin: 40px auto 120px; /* 底部留白給 fixed footer */
+  padding: 0 20px;
+}
+
+.page-title {
+  font-weight: 500;
+  color: var(--muji-text);
+  margin-bottom: 25px;
+  border-left: 4px solid var(--muji-primary);
+  padding-left: 12px;
+}
+
+/* Grid Layout Setup */
+.cart-header, .cart-item {
+  display: grid;
+  grid-template-columns: 50px 4fr 1.5fr 2fr 1.5fr 1fr; /* 仿蝦皮比例 */
+  align-items: center;
+  gap: 10px;
+  padding: 15px 20px;
+}
+
+/* Header Style */
+.cart-header {
+  background: var(--muji-card);
+  color: var(--muji-text-light);
+  font-size: 14px;
+  margin-bottom: 15px;
+  border-radius: 3px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+}
+
+/* Item Style */
+.cart-item {
+  background: var(--muji-card);
+  border: 1px solid var(--muji-border);
+  margin-bottom: 12px;
+  border-radius: 3px;
+  transition: all 0.2s;
+
+  &:hover {
+    border-color: #dcdcdc;
+  }
+}
+
+.item-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+
+  img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    background: #f5f5f5;
+  }
+
+  .details {
+    .name { font-size: 16px; color: var(--muji-text); margin-bottom: 6px; }
+    .spec-badge {
+      display: inline-block;
+      font-size: 12px;
+      color: #888;
+      background: #f0f0f0;
+      padding: 2px 8px;
+      border-radius: 2px;
+    }
+  }
+}
+
+/* Quantity Control */
+.qty-control {
+  display: flex;
+  width: fit-content;
+  border: 1px solid var(--muji-border);
+
+  button {
+    background: #fff;
+    border: none;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    color: #666;
+    transition: background 0.2s;
+    &:hover { background: #f5f5f5; }
+    &:disabled { color: #ccc; cursor: default; }
+  }
+
+  input {
+    width: 40px;
+    text-align: center;
+    border: none;
+    border-left: 1px solid var(--muji-border);
+    border-right: 1px solid var(--muji-border);
+    color: var(--muji-text);
+    font-size: 14px;
+  }
+}
+
+.highlight-text {
+  color: var(--muji-primary);
+  font-weight: 600;
+}
+
+.btn-delete {
+  background: transparent;
+  border: none;
+  color: var(--muji-text-light);
+  cursor: pointer;
+  font-size: 14px;
+  &:hover { color: var(--muji-danger); text-decoration: underline; }
+}
+
+/* Sticky Footer */
+.checkout-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: var(--muji-card);
+  border-top: 1px solid var(--muji-primary); /* 上緣加強無印色 */
+  padding: 15px 10%; /* 響應式 padding */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 -4px 10px rgba(0,0,0,0.05);
+  z-index: 100;
+
+  .bar-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+  }
+
+  .bar-right {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+
+    .total-info {
+      font-size: 16px;
+      .final-price {
+        font-size: 24px;
+        color: var(--muji-primary);
+        font-weight: bold;
+        margin-left: 10px;
+      }
+    }
+
+    .btn-checkout {
+      background: var(--muji-primary);
+      color: white;
+      border: none;
+      padding: 12px 40px;
+      font-size: 16px;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: background 0.3s;
+
+      &:hover { background: var(--muji-primary-dark); }
+      &:disabled { background: #d0d0d0; cursor: not-allowed; }
+    }
+  }
+}
+
+.empty-cart {
+  text-align: center;
+  padding: 50px;
+  color: #999;
+}
