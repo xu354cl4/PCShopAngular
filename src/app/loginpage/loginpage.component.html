@@ -26,7 +26,7 @@
     <!-- 🔽 第三方登入按鈕區塊 -->
     <div class="social-login">
 
-      <button class="social-btn google">
+      <button class="social-btn google" (click)="onGoogleLogin()">
         <img src="https://www.svgrepo.com/show/475656/google-color.svg" />
         Google 登入
       </button>
@@ -47,7 +47,7 @@
         </svg>
         LINE 登入
       </button>
-
+<app-google-login></app-google-login>
     </div>
   </div>
 </div>
