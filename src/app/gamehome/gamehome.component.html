@@ -1,7 +1,10 @@
-<button mat-raised-button color="primary" (click)="openGame()">
-  <img src="/2048/favicon.ico" alt="">
-</button>
-<button mat-raised-button color="primary" (click)="openGame2()">
-  <img src="/floppybird/Floppyicon.png" alt="">
-</button>
-<button (click)="closeGame()">關閉視窗</button>
+<h2>遊戲選單</h2>
+
+<div class="game-list">
+  <button (click)="openGame('dino')">小恐龍</button>
+  <button (click)="openGame('snake')">貪食蛇</button>
+  <button (click)="openGame('2048')">2048</button>
+</div>
+<div>
+  <button (click)="closeGame()">關閉視窗</button>
+</div>

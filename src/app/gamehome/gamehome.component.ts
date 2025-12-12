@@ -1,14 +1,15 @@
 import { Component } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { GameDialogComponent } from '../game-dialog/game-dialog.component';
-import { GameFloppybirdComponent } from '../game-floppybird/game-floppybird.component';
 
+// MatDialog = 開啟 / 建立 Dialog 的工廠（外部用）
+// MatDialogRef = 已經被開啟的 Dialog 的控制器（內部用）
 
 @Component({
   selector: 'app-gamehome',
   standalone: true,
-  templateUrl: './gamehome.component.html'
-
+  templateUrl: './gamehome.component.html',
+  styleUrls: ['./gamehome.component.css']
 })
 export class GamehomeComponent {
   constructor(
@@ -16,18 +17,16 @@ export class GamehomeComponent {
     private dialogRef: MatDialogRef<GamehomeComponent>   // ← 注入自己
   ) { }
 
-  openGame() {
-    this.dialog.open(GameDialogComponent, {
-      width: '500px',
-      height: '800px'
+  openGame(gameName: string) {
+    this.dialog.open(GameDialogComponent, {  //將data: { game: gameName }傳給GameDialogComponent
+      width: '90vw',
+      height: '90vh',
+      maxWidth: '100vw',
+      maxHeight: '100vh',
+      data: { game: gameName }
     });
   }
-  openGame2() {
-    this.dialog.open(GameFloppybirdComponent, {
-      width: '500px',
-      height: '800px'
-    });
-  }
+
   closeGame() {
     this.dialogRef.close();   // <= 使用 dialogRef 關閉
   }
