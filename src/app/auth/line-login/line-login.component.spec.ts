@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GameFloppybirdComponent } from './game-floppybird.component';
+import { LineLoginComponent } from './line-login.component';
 
-describe('GameFloppybirdComponent', () => {
-  let component: GameFloppybirdComponent;
-  let fixture: ComponentFixture<GameFloppybirdComponent>;
+describe('LineLoginComponent', () => {
+  let component: LineLoginComponent;
+  let fixture: ComponentFixture<LineLoginComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [GameFloppybirdComponent]
+      imports: [LineLoginComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(GameFloppybirdComponent);
+    fixture = TestBed.createComponent(LineLoginComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
