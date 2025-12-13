@@ -2,7 +2,7 @@
 
   max-width: 1100px;
 
-  margin: 40px auto 120px; /* 底部留白給 fixed footer */
+  margin: 40px auto 80px;
 
   padding: 0 20px;
 
@@ -28,11 +28,13 @@
 
 /* Grid Layout Setup */
 
-.cart-header, .cart-item {
+.cart-header,
+.cart-item {
 
   display: grid;
 
-  grid-template-columns: 50px 4fr 1.5fr 2fr 1.5fr 1fr; /* 仿蝦皮比例 */
+  grid-template-columns: 50px 4fr 1.5fr 2fr 1.5fr 1fr;
+  /* 仿蝦皮比例 */
 
   align-items: center;
 
@@ -58,7 +60,7 @@
 
   border-radius: 3px;
 
-  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
 
 }
 
@@ -116,7 +118,11 @@
 
   .details {
 
-    .name { font-size: 16px; color: var(--muji-text); margin-bottom: 6px; }
+    .name {
+      font-size: 16px;
+      color: var(--muji-text);
+      margin-bottom: 6px;
+    }
 
     .spec-badge {
 
@@ -168,9 +174,14 @@
 
     transition: background 0.2s;
 
-    &:hover { background: #f5f5f5; }
+    &:hover {
+      background: #f5f5f5;
+    }
 
-    &:disabled { color: #ccc; cursor: default; }
+    &:disabled {
+      color: #ccc;
+      cursor: default;
+    }
 
   }
 
@@ -220,7 +231,10 @@
 
   font-size: 14px;
 
-  &:hover { color: var(--muji-danger); text-decoration: underline; }
+  &:hover {
+    color: var(--muji-danger);
+    text-decoration: underline;
+  }
 
 }
 
@@ -229,20 +243,14 @@
 /* Sticky Footer */
 
 .checkout-bar {
-
-  position: fixed;
-
-  bottom: 0;
-
-  left: 0;
-
+  position: relative;
   width: 100%;
-
   background: var(--muji-card);
+  border-top: 1px solid var(--muji-primary);
+  padding: 15px 20px;
+  margin-top: 20px;
+  border-radius: 3px;
 
-  border-top: 1px solid var(--muji-primary); /* 上緣加強無印色 */
-
-  padding: 15px 10%; /* 響應式 padding */
 
   display: flex;
 
@@ -250,7 +258,7 @@
 
   align-items: center;
 
-  box-shadow: 0 -4px 10px rgba(0,0,0,0.05);
+  box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.05);
 
   z-index: 100;
 
@@ -320,9 +328,14 @@
 
 
 
-      &:hover { background: var(--muji-primary-dark); }
+      &:hover {
+        background: var(--muji-primary-dark);
+      }
 
-      &:disabled { background: #d0d0d0; cursor: not-allowed; }
+      &:disabled {
+        background: #d0d0d0;
+        cursor: not-allowed;
+      }
 
     }
 

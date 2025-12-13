@@ -1,6 +1,18 @@
+/* Global Theme Variables */
+:root {
+  --muji-primary: #7F0019;
+  --muji-primary-dark: #590012;
+  --muji-text: #333333;
+  --muji-text-light: #666666;
+  --muji-card: #ffffff;
+  --muji-border: #eeeeee;
+  --muji-danger: #d9534f;
+}
+
 /* You can add global styles to this file, and also import other style files */
 
-html, body {
+html,
+body {
   height: 100%;
   margin: 0;
   padding: 0;
