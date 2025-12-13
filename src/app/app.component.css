@@ -1,3 +1,8 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
 .floating-btn {
   position: fixed;
   top: 450px;
@@ -14,12 +19,5 @@
   justify-content: center;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   cursor: pointer;
-
-  z-index: 2147483647 !important;
-  /*⭐ 全宇宙最高值 */
-}
-
-
-.floating-btn i {
-  font-size: 28px;
+  z-index: 2147483647;
 }

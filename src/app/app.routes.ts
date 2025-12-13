@@ -1,6 +1,4 @@
 import { Routes } from '@angular/router';
-import { HomeComponent } from './home/home.component';
-import { ProductListComponent } from './product/product-list/product-list.component';
 
 export const routes: Routes = [
   {
@@ -19,7 +17,14 @@ export const routes: Routes = [
   },
   // 未來其他頁面也放這裡
   {
-    path: 'products', title: 'Products', component: ProductListComponent,
+    path: 'products',
+    loadChildren: () =>
+      import('./product/product.module').then(m => m.ProductModule)
   },
+
+  {
+    path: '**',
+    redirectTo: ''
+  }
 
 ];

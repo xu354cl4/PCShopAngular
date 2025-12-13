@@ -8,9 +8,8 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { GamehomeComponent } from './gamehome/gamehome.component';
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet,
-    LoginpageComponent,
-    CommonModule,
+  imports: [CommonModule,
+    RouterOutlet,
     RouterModule,
     HeaderComponent,
     FooterComponent,

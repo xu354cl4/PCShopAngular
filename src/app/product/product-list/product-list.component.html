@@ -1,81 +1,89 @@
-<div class="container mt-4">
+<div class="page-wrapper">
+  <div class="container mt-4">
 
-  <!-- 篩選列（搜尋、排序、每頁筆數 → 水平排列） -->
-  <div class="d-flex gap-3 mb-4">
+    <!-- 篩選列（搜尋、排序、每頁筆數 → 水平排列） -->
+    <div class="d-flex gap-3 mb-4">
 
-    <!-- 搜尋 -->
-    <div class="flex-grow-1">
-      <input class="form-control" placeholder="搜尋產品..." [(ngModel)]="searchKeyword" (input)="updateProducts()" />
+      <!-- 搜尋 -->
+      <div class="flex-grow-1">
+        <input class="form-control" placeholder="搜尋產品..." [(ngModel)]="searchKeyword" (input)="updateProducts()" />
+      </div>
+
+      <!-- 排序 -->
+      <div style="width: 200px;">
+        <select class="form-control" [(ngModel)]="sortBy" (change)="updateProducts()">
+          <option value="name">依名稱排序</option>
+          <option value="priceAsc">價格由低到高</option>
+          <option value="priceDesc">價格由高到低</option>
+        </select>
+      </div>
+
+      <!-- 每頁顯示筆數 -->
+      <div style="width: 200px;">
+        <select class="form-control" [(ngModel)]="itemsPerPage" (change)="changeItemsPerPage()">
+          <option *ngFor="let opt of itemsPerPageOptions" [ngValue]="opt">
+            每頁 {{ opt }} 筆
+          </option>
+        </select>
+      </div>
     </div>
 
-    <!-- 排序 -->
-    <div style="width: 200px;">
-      <select class="form-control" [(ngModel)]="sortBy" (change)="updateProducts()">
-        <option value="name">依名稱排序</option>
-        <option value="priceAsc">價格由低到高</option>
-        <option value="priceDesc">價格由高到低</option>
-      </select>
-    </div>
+    <!-- 商品列表 -->
+    <div class="row">
+      <div class="col-md-3 mb-4" *ngFor="let product of pagedProducts">
+        <div class="card h-100">
+          <a [routerLink]="['/products', product.id]">
+            <img [src]="product.imageUrl" class="card-img-top" [alt]="product.name" />
+          </a>
+          <div class="card-body">
+            <!-- 商品名稱加 routerLink -->
+            <h5>
+              <a [routerLink]="['/products', product.id]" class="text-decoration-none text-dark">
+                {{ product.name }}
+              </a>
+            </h5>
 
-    <!-- 每頁顯示筆數 -->
-    <div style="width: 200px;">
-      <select class="form-control" [(ngModel)]="itemsPerPage" (change)="changeItemsPerPage()">
-        <option *ngFor="let opt of itemsPerPageOptions" [ngValue]="opt">
-          每頁 {{ opt }} 筆
-        </option>
-      </select>
-    </div>
-  </div>
+            <p class="text-primary fw-bold">$ {{ product.price }}</p>
+            <!-- 星星評價 -->
+            <div class="text-warning">
+              <ng-container *ngFor="let s of [].constructor(product.rating)">
+                ★
+              </ng-container>
+            </div>
 
-  <!-- 商品列表 -->
-  <div class="row">
-    <div class="col-md-3 mb-4" *ngFor="let product of pagedProducts">
-      <div class="card h-100">
-        <img [src]="product.imageUrl" class="card-img-top" [alt]="product.name" />
-
-        <div class="card-body">
-          <h5>{{ product.name }}</h5>
-          <p class="text-primary fw-bold">$ {{ product.price }}</p>
-
-          <!-- 星星評價 -->
-          <div class="text-warning">
-            <ng-container *ngFor="let s of [].constructor(product.rating)">
-              ★
-            </ng-container>
           </div>
-
         </div>
       </div>
     </div>
+
+    <!-- 分頁 -->
+    <nav *ngIf="totalPages > 1" class="mt-4">
+      <ul class="pagination justify-content-center">
+
+        <!-- 上一頁 -->
+        <li class="page-item" [class.disabled]="currentPage === 1">
+          <button class="page-link" (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">
+            上一頁
+          </button>
+        </li>
+
+        <!-- 頁碼 -->
+        <li class="page-item" *ngFor="let p of displayPages" [class.active]="p === currentPage">
+
+          <button class="page-link" [disabled]="p === '...'" (click)="onClickPage(p)">
+            {{ p }}
+          </button>
+        </li>
+
+        <!-- 下一頁 -->
+        <li class="page-item" [class.disabled]="currentPage === totalPages">
+          <button class="page-link" (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages">
+            下一頁
+          </button>
+        </li>
+
+      </ul>
+    </nav>
+
   </div>
-
-  <!-- 分頁 -->
-  <nav *ngIf="totalPages > 1" class="mt-4">
-    <ul class="pagination justify-content-center">
-
-      <!-- 上一頁 -->
-      <li class="page-item" [class.disabled]="currentPage === 1">
-        <button class="page-link" (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">
-          上一頁
-        </button>
-      </li>
-
-      <!-- 頁碼 -->
-      <li class="page-item" *ngFor="let p of displayPages" [class.active]="p === currentPage">
-
-        <button class="page-link" [disabled]="p === '...'" (click)="onClickPage(p)">
-          {{ p }}
-        </button>
-      </li>
-
-      <!-- 下一頁 -->
-      <li class="page-item" [class.disabled]="currentPage === totalPages">
-        <button class="page-link" (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages">
-          下一頁
-        </button>
-      </li>
-
-    </ul>
-  </nav>
-
 </div>
