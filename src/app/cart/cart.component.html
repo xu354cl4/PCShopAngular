@@ -58,12 +58,39 @@
       <label for="selectAllBottom"> 全選 ({{ cartItems.length }})</label>
     </div>
 
-    <div class="bar-right">
-      <div class="total-info">
-        <span>總金額 ({{ selectedCount }} 個商品):</span>
+<div class="bar-right">
+
+    <div class="coupon-selector">
+      <label for="couponSelect"><i class="fas fa-ticket-alt"></i> 優惠券</label>
+
+      <select id="couponSelect"
+              [(ngModel)]="selectedCoupon"
+              [compareWith]="compareCoupons">
+
+        <option [ngValue]="null">不使用優惠券</option>
+
+        <option *ngFor="let coupon of couponsList"
+                [ngValue]="coupon"
+                [disabled]="coupon.disabled">
+          {{ coupon.name }} ({{ coupon.disabled ? '未達門檻' : '適用' }})
+        </option>
+      </select>
+    </div>
+
+    <div class="total-info">
+      <div class="price-details">
+        <span>總金額 ({{ selectedCount }}):</span>
+        <span *ngIf="discountAmount > 0" class="original-price">
+          NT$ {{ subTotal | number }}
+        </span>
         <span class="final-price">NT$ {{ totalAmount | number }}</span>
       </div>
-      <button class="btn-checkout" [disabled]="selectedCount === 0">去買單</button>
+      <small *ngIf="discountAmount > 0" class="discount-text">
+        已折抵 NT$ {{ discountAmount | number }}
+      </small>
     </div>
+
+    <button class="btn-checkout" [disabled]="selectedCount === 0">去買單</button>
   </div>
 </div>
+

@@ -1,123 +1,63 @@
 .muji-container {
-
   max-width: 1100px;
-
   margin: 40px auto 80px;
-
   padding: 0 20px;
-
 }
-
-
 
 .page-title {
-
   font-weight: 500;
-
   color: var(--muji-text);
-
   margin-bottom: 25px;
-
   border-left: 4px solid var(--muji-primary);
-
   padding-left: 12px;
-
 }
-
-
 
 /* Grid Layout Setup */
-
 .cart-header,
 .cart-item {
-
   display: grid;
-
-  grid-template-columns: 50px 4fr 1.5fr 2fr 1.5fr 1fr;
-  /* 仿蝦皮比例 */
-
+  grid-template-columns: 50px 4fr 1.5fr 2fr 1.5fr 1fr; /* 仿蝦皮比例 */
   align-items: center;
-
   gap: 10px;
-
   padding: 15px 20px;
-
 }
-
-
 
 /* Header Style */
-
 .cart-header {
-
   background: var(--muji-card);
-
   color: var(--muji-text-light);
-
   font-size: 14px;
-
   margin-bottom: 15px;
-
   border-radius: 3px;
-
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
-
 }
-
-
 
 /* Item Style */
-
 .cart-item {
-
   background: var(--muji-card);
-
   border: 1px solid var(--muji-border);
-
   margin-bottom: 12px;
-
   border-radius: 3px;
-
   transition: all 0.2s;
 
-
-
   &:hover {
-
     border-color: #dcdcdc;
-
   }
-
 }
 
-
-
 .item-info {
-
   display: flex;
-
   align-items: center;
-
   gap: 15px;
 
-
-
   img {
-
     width: 80px;
-
     height: 80px;
-
     object-fit: cover;
-
     background: #f5f5f5;
-
   }
 
-
-
   .details {
-
     .name {
       font-size: 16px;
       color: var(--muji-text);
@@ -125,55 +65,30 @@
     }
 
     .spec-badge {
-
       display: inline-block;
-
       font-size: 12px;
-
       color: #888;
-
       background: #f0f0f0;
-
       padding: 2px 8px;
-
       border-radius: 2px;
-
     }
-
   }
-
 }
 
-
-
 /* Quantity Control */
-
 .qty-control {
-
   display: flex;
-
   width: fit-content;
-
   border: 1px solid var(--muji-border);
 
-
-
   button {
-
     background: #fff;
-
     border: none;
-
     width: 30px;
-
     height: 30px;
-
     cursor: pointer;
-
     color: #666;
-
     transition: background 0.2s;
-
     &:hover {
       background: #f5f5f5;
     }
@@ -182,175 +97,241 @@
       color: #ccc;
       cursor: default;
     }
-
   }
-
-
 
   input {
-
     width: 40px;
-
     text-align: center;
-
     border: none;
-
     border-left: 1px solid var(--muji-border);
-
     border-right: 1px solid var(--muji-border);
-
     color: var(--muji-text);
-
     font-size: 14px;
-
   }
-
 }
-
-
 
 .highlight-text {
-
   color: var(--muji-primary);
-
   font-weight: 600;
-
 }
 
-
-
 .btn-delete {
-
   background: transparent;
-
   border: none;
-
   color: var(--muji-text-light);
-
   cursor: pointer;
-
   font-size: 14px;
-
   &:hover {
     color: var(--muji-danger);
     text-decoration: underline;
   }
-
 }
 
-
-
-/* Sticky Footer */
-
+/* Sticky Footer (結帳列) */
 .checkout-bar {
+  /* --- 您原本的 Container 設定 (保持不動) --- */
   position: relative;
   width: 100%;
-  background: var(--muji-card);
+  background: var(--muji-card); /* 或者用您下面設定的 #fcfaf8 */
+  background-color: #fcfaf8;    /* Muji 風格米白色背景 (後者會覆蓋前者) */
   border-top: 1px solid var(--muji-primary);
   padding: 15px 20px;
   margin-top: 20px;
   border-radius: 3px;
-
-
   display: flex;
-
   justify-content: space-between;
-
   align-items: center;
-
   box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.05);
-
   z-index: 100;
 
-
-
+  /* --- 左側全選區塊 --- */
   .bar-left {
-
     display: flex;
-
     align-items: center;
-
     gap: 8px;
-
+    cursor: pointer;
     font-size: 15px;
-
+    color: #333;
   }
 
-
-
+  /* --- 右側區塊 (包含折價券、總價、按鈕) --- */
   .bar-right {
-
     display: flex;
-
     align-items: center;
-
     gap: 25px;
 
+    /* 1. 折價券選單區塊 */
+    .coupon-selector {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-right: 20px; /* 與右邊價格區塊拉開一點距離 */
 
-
-    .total-info {
-
-      font-size: 16px;
-
-      .final-price {
-
-        font-size: 24px;
-
-        color: var(--muji-primary);
-
-        font-weight: bold;
-
-        margin-left: 10px;
-
+      label {
+        font-size: 14px;
+        color: #555;
+        font-weight: 500;
+        white-space: nowrap; /* 防止"優惠券"換行 */
       }
 
+      /* 自訂下拉選單 (Muji 風格 + 固定寬度) */
+      select#couponSelect {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+
+        /* ★ 解決寬度與字數問題 */
+        width: 260px;
+        min-width: 260px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        /* Muji 風格配色 */
+        padding: 9px 40px 9px 12px;
+        font-size: 14px;
+        color: #333;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        cursor: pointer;
+
+        /* 自訂深灰色箭頭 */
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        background-size: 14px;
+
+        transition: all 0.2s ease;
+
+        &:hover {
+          border-color: #999;
+          background-color: #fafafa;
+        }
+
+        &:focus {
+          outline: none;
+          border-color: #7f6a5f;
+          box-shadow: 0 0 0 3px rgba(127, 106, 95, 0.1);
+        }
+
+        &:disabled {
+          background-color: #f0f0f0;
+          color: #999;
+          cursor: not-allowed;
+          border-color: #e0e0e0;
+        }
+
+        option {
+          color: #333;
+          padding: 10px;
+          &:disabled {
+            color: #aaa;
+            font-style: italic;
+            background-color: #f9f9f9;
+          }
+        }
+      }
     }
 
+    /* 2. 價格資訊區塊 (使用新的結構以支援折扣顯示) */
+    .total-info {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
 
+      .price-row {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+      }
 
+      .original-price {
+        text-decoration: line-through;
+        color: #999;
+        font-size: 13px;
+      }
+
+      .final-price {
+        font-size: 24px;
+        /* 優先使用您原本設定的顏色變數，若沒定義則用深紅色 */
+        color: var(--muji-primary, #B94A48);
+        font-weight: bold;
+        margin-left: 10px;
+      }
+
+      .discount-text {
+        color: #4A7c59; /* 森林綠 */
+        font-size: 12px;
+        margin-top: 2px;
+      }
+    }
+
+    /* 3. 結帳按鈕 */
     .btn-checkout {
-
-      background: var(--muji-primary);
-
+      background: var(--muji-primary, #333); /* 優先使用變數，否則黑 */
       color: white;
-
       border: none;
-
       padding: 12px 40px;
-
       font-size: 16px;
-
       border-radius: 2px;
-
       cursor: pointer;
-
-      transition: background 0.3s;
-
-
+      transition: opacity 0.2s, background 0.3s;
 
       &:hover {
-        background: var(--muji-primary-dark);
+        opacity: 0.9;
       }
 
       &:disabled {
-        background: #d0d0d0;
+        background-color: #ccc;
         cursor: not-allowed;
       }
-
     }
 
-  }
+  } /* 結束 .bar-right */
+} /* 結束 .checkout-bar */
 
+
+/* 空購物車樣式 */
+.empty-cart {
+  text-align: center;
+  padding: 50px;
+  color: #999;
 }
 
+/* 手機版響應式 */
+@media (max-width: 768px) {
+  .checkout-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+    height: auto; /* 確保高度自動 */
 
+    .bar-right {
+      flex-direction: column;
+      width: 100%;
+      align-items: stretch;
 
-.empty-cart {
+      .coupon-selector {
+        margin-right: 0;
+        justify-content: space-between;
 
-  text-align: center;
+        select#couponSelect {
+          width: 100%;
+          min-width: 0;
+          flex: 1;
+        }
+      }
 
-  padding: 50px;
+      .total-info {
+        align-items: center;
+        flex-direction: row;
+        justify-content: space-between;
+      }
 
-  color: #999;
-
+      .btn-checkout {
+        width: 100%;
+      }
+    }
+  }
 }
