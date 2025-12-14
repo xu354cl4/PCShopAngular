@@ -4,6 +4,7 @@ import { AuthStateService } from '../Services/auth-state.service';
 import { Observable } from 'rxjs';
 import { ExternalUser } from '../models/external-login-response';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -17,9 +18,14 @@ export class HeaderComponent {
 
  user$!: Observable<ExternalUser | null>;  // ⭐ 先宣告，不初始化
 
-  constructor(private authState: AuthStateService) {
+  constructor(private authState: AuthStateService , private router: Router,) {
     this.user$ = this.authState.user$;      // ⭐ 這裡再接
   }
+    goRegister() {
+      localStorage.removeItem('user');
+      localStorage.removeItem('token');
+      this.authState.clear();   // ⭐ 非常重要
+    }
 
   logout(): void {
   localStorage.removeItem('token');
