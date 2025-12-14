@@ -2,7 +2,6 @@ export interface ExternalLoginResponse {
   message: string;
   token: string;
   user: ExternalUser;
-  profileCompleted: boolean;
 }
 
 export interface ExternalUser {
@@ -10,4 +9,6 @@ export interface ExternalUser {
   mail: string;
   fullName: string;
   imageUrl: string | null;
+  profileCompleted: boolean;
 }
+

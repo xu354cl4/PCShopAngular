@@ -1,0 +1,47 @@
+<div class="register-wrapper">
+  <div class="register-card">
+    <h2 class="register-title">會員註冊</h2>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+
+      <div class="form-row">
+        <label>Full Name</label>
+        <input formControlName="fullName" />
+        <small *ngIf="hasError('fullName')">請輸入姓名</small>
+      </div>
+
+      <div class="form-row">
+        <label>Email</label>
+        <input formControlName="mail" />
+        <small *ngIf="hasError('mail')">Email 格式錯誤</small>
+      </div>
+
+      <div class="form-row">
+        <label>Phone</label>
+        <input formControlName="phone" />
+        <small *ngIf="hasError('phone')">手機必填</small>
+      </div>
+
+      <div class="form-row">
+        <label>Address</label>
+        <input formControlName="address" />
+        <small *ngIf="hasError('address')">地址必填</small>
+      </div>
+
+      <div class="form-row">
+        <label>Shipping Address</label>
+        <input formControlName="shippingAddress" />
+      </div>
+
+      <div class="form-row">
+        <label>BirthDay</label>
+        <input type="date" formControlName="birthDay" />
+      </div>
+
+      <button type="submit" class="submit-btn">
+        {{ isExternalLogin ? '完成註冊' : '註冊' }}
+      </button>
+
+    </form>
+  </div>
+</div>

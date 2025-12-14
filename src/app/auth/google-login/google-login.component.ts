@@ -1,7 +1,10 @@
+import { CompleteProfileRequest } from './../../models/CompleteProfileRequest';
+import { ExternalUser } from './../../models/external-login-response';
 import { AfterViewInit, Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../Services/auth.service';
+import { AuthStateService } from '../../Services/auth-state.service';
 
 declare const google: any;
 
@@ -14,9 +17,11 @@ declare const google: any;
 })
 export class GoogleLoginComponent implements AfterViewInit {
 
+
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private authState:AuthStateService
   ) { }
 
   ngAfterViewInit(): void {
@@ -48,13 +53,14 @@ export class GoogleLoginComponent implements AfterViewInit {
         localStorage.setItem('token', res.token);
         localStorage.setItem('user', JSON.stringify(res.user));
 
+        this.authState.setUser(res.user);
         // ✅ 登入成功後導到首頁（或你要的頁面）
-        if (!res.profileCompleted) {
+        if (!res.user.profileCompleted) {
           // ⭐ 尚未補齊資料
-          this.router.navigate(['/home']);
+          this.router.navigate(['/register']);
         } else {
           // ⭐ 已完成
-          this.router.navigate(['/']);
+          this.router.navigate(['/home']);
         }
       },
       error: err => console.error(err)
