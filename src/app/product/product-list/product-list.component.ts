@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { ProductFilter } from '../models/product-filter.model';
+import { ProductFilterComponent } from '../product-filter/product-filter.component';
 
 interface Product {
   id: number;
@@ -15,7 +17,7 @@ interface Product {
 @Component({
   selector: 'app-product-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, ProductFilterComponent],
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.css']
 })
@@ -65,10 +67,25 @@ export class ProductListComponent implements OnInit {
   pagedProducts: Product[] = [];
   displayPages: (number | string)[] = [];
 
+  // filter 狀態
+  activeFilter: ProductFilter = {
+    minPrice: null,
+    maxPrice: null,
+    categories: []
+  };
+
   ngOnInit(): void {
     this.updateProducts();
   }
 
+  /** filter 變動時呼叫 */
+  onFilterChange(filter: ProductFilter): void {
+    this.activeFilter = filter;
+    this.currentPage = 1;
+    this.updateProducts();
+  }
+
+  /** 更新產品列表（搜尋 + 排序 + filter + 分頁） */
   updateProducts(): void {
     let filtered = [...this.products];
 
@@ -76,6 +93,19 @@ export class ProductListComponent implements OnInit {
     if (this.searchKeyword.trim()) {
       const keyword = this.searchKeyword.toLowerCase();
       filtered = filtered.filter(p => p.name.toLowerCase().includes(keyword));
+    }
+
+    // 分類篩選
+    if (this.activeFilter.categories && this.activeFilter.categories.length > 0) {
+      filtered = filtered.filter(p => this.activeFilter.categories!.includes(p.category));
+    }
+
+    // 價格篩選
+    if (this.activeFilter.minPrice != null) {
+      filtered = filtered.filter(p => p.price >= this.activeFilter.minPrice!);
+    }
+    if (this.activeFilter.maxPrice != null) {
+      filtered = filtered.filter(p => p.price <= this.activeFilter.maxPrice!);
     }
 
     // 排序
@@ -91,21 +121,17 @@ export class ProductListComponent implements OnInit {
         break;
     }
 
-    // 分頁總數
+    // 分頁
     this.totalPages = Math.ceil(filtered.length / this.itemsPerPage);
-    if (this.currentPage > this.totalPages) {
-      this.currentPage = this.totalPages || 1;
-    }
-
-    // 分頁切片
+    if (this.currentPage > this.totalPages) this.currentPage = this.totalPages || 1;
     const start = (this.currentPage - 1) * this.itemsPerPage;
     const end = start + this.itemsPerPage;
     this.pagedProducts = filtered.slice(start, end);
 
-    // 顯示分頁區塊
     this.generateDisplayPages();
   }
 
+  /** 分頁切換 */
   onClickPage(p: number | string): void {
     if (typeof p === 'string') return;
     this.changePage(p);
@@ -118,11 +144,12 @@ export class ProductListComponent implements OnInit {
   }
 
   changeItemsPerPage(): void {
-    this.itemsPerPage = Number(this.itemsPerPage);  // ←★ 防止變成字串
+    this.itemsPerPage = Number(this.itemsPerPage);
     this.currentPage = 1;
     this.updateProducts();
   }
 
+  /** 產生頁碼 */
   private generateDisplayPages(): void {
     const pages: (number | string)[] = [];
     const startPage = Math.max(1, this.currentPage - 2);
