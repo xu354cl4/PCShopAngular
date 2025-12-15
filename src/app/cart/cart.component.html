@@ -90,7 +90,13 @@
       </small>
     </div>
 
-    <button class="btn-checkout" [disabled]="selectedCount === 0">去買單</button>
+    <!-- //檢查使用者是否登入？並跳轉到結帳畫面// -->
+<button
+  class="btn-checkout"
+  [disabled]="selectedCount === 0"
+  (click)="goToCheckout()">
+  去買單
+</button>
   </div>
 </div>
 

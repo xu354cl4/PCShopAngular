@@ -19,7 +19,13 @@ export const routes: Routes = [
     path: 'order-list', loadComponent: () => import('./order-list/order-list.component').then(m => m.OrderListComponent)
   },
   {
-    path: 'cart', loadComponent: () => import('./cart/cart.component').then(m => m.CartComponent)
+    path: 'cart', loadComponent: () => import('./cart/cart.component').then(m => m.CartComponent),
+    title: '我的購物車'
   },
+  {
+    path: 'checkout', loadComponent: () => import('./checkout/checkout.component').then(m => m.CheckoutComponent),
+    title: '結帳作業'
+  },
+
   // 未來其他頁面也放這裡
 ];

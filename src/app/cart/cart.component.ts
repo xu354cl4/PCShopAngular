@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common'; // <--- 1. 引入
+import { Router } from '@angular/router'; // 1. 引入 Router
 import { FormsModule } from '@angular/forms';
 
 
@@ -77,8 +78,20 @@ export class CartComponent { // 2. 這裡不用寫 implements OnInit
     }
   ];
 
-  constructor() { }
+  constructor(private router: Router) { }
 
+  goToCheckout() {
+    // 使用你剛剛寫好的 selectedCount 來檢查
+    if (this.selectedCount === 0) {
+      alert('請至少勾選一項商品才能結帳！');
+      return; // 中斷執行，不跳轉
+    }
+
+    // 檢查通過，執行跳轉
+    this.router.navigate(['/checkout']);
+  }
+
+  //購物車清單//
   ngOnInit(): void { }
 
   // 2. 修改：取得"商品小計" (尚未扣除折扣的金額)
