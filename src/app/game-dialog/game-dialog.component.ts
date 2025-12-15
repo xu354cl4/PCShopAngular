@@ -4,6 +4,8 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { UpperCasePipe } from '@angular/common';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
+import { GameService } from '../Services/game.service';
+
 
 @Component({
   selector: 'app-game-dialog',
@@ -23,7 +25,8 @@ export class GameDialogComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { game: string },  //只有在寫了@Inject(MAT_DIALOG_DATA)後才會接收到資料
     private dialogRef: MatDialogRef<GameDialogComponent>,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private gameService: GameService
   ) {
 
     // 安全 iframe 網址
@@ -40,12 +43,21 @@ export class GameDialogComponent {
   }
 
   receiveMessage = (event: any) => {
-    if (event.data?.type === 'gameScore') {
-      console.log("🎮 收到遊戲分數:", event.data.score);
+    if (event.data?.type !== 'gameScore') return;
 
-      // 你可以在這裡呼叫 API
-      // this.gameService.saveScore(data.game, event.data.score).subscribe(...)
+    const { gameCode, score } = event.data;
+
+    if (!gameCode) {
+      console.warn("❌ 未帶 gameCode，忽略分數");
+      return;
     }
+
+    console.log(`🎮 遊戲：${gameCode}｜分數：${score}`);
+
+    this.gameService.submitScore({
+      gameCode,
+      score
+    }).subscribe();
   };
 
   close() {

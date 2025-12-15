@@ -1,0 +1,22 @@
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+export interface SubmitGameScoreDto {
+  gameCode: string;
+  score: number;
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class GameService {
+
+  private apiUrl = 'https://localhost:7001/api/game';
+
+  constructor(private http: HttpClient) { }
+
+  submitScore(dto: SubmitGameScoreDto): Observable<any> {
+    return this.http.post(`${this.apiUrl}/submit-score`, dto);
+  }
+}

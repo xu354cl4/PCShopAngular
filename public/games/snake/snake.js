@@ -1,83 +1,224 @@
 /*
 Create by Learn Web Developement
-Rewritten & Debugged for Angular iframe communication
+Merged + Stabilized
+- Click to Start
+- Pause / Resume
+- Speed Increase
+- Rounded snake + eyes
+- iframe safe
 */
 
 const cvs = document.getElementById("snake");
 const ctx = cvs.getContext("2d");
 
 const box = 32;
-
-// Background
+const PLAY_MIN_X = 1 * box;
+const PLAY_MAX_X = 17 * box;
+const PLAY_MIN_Y = 3 * box;
+const PLAY_MAX_Y = 17 * box;
+// ================= ASSETS =================
 const ground = new Image();
 ground.src = "img/ground.png";
 
-// Food image
 const foodImg = new Image();
 foodImg.src = "img/food.png";
 
 // Sounds
-let dead = new Audio();
-let eat = new Audio();
-let up = new Audio();
-let right = new Audio();
-let left = new Audio();
-let down = new Audio();
+const dead = new Audio("audio/dead.mp3");
+const eat = new Audio("audio/eat.mp3");
+const up = new Audio("audio/up.mp3");
+const right = new Audio("audio/right.mp3");
+const left = new Audio("audio/left.mp3");
+const down = new Audio("audio/down.mp3");
 
-dead.src = "audio/dead.mp3";
-eat.src = "audio/eat.mp3";
-up.src = "audio/up.mp3";
-right.src = "audio/right.mp3";
-left.src = "audio/left.mp3";
-down.src = "audio/down.mp3";
+// ================= GAME STATE =================
+let snake;
+let food;
+let score;
+let d = "RIGHT";          // ⭐ 預設方向
+let game = null;
+let speed = 120;
+const MIN_SPEED = 50;
+let isPaused = false;
+let isRunning = false;
 
-// Snake Array
-let snake = [{ x: 9 * box, y: 10 * box }];
+// ================= INIT =================
+showStartScreen();
 
-// Food
-let food = generateFood();
+// ================= INPUT =================
+document.addEventListener("keydown", e => {
+  if (!isRunning) return;
 
+  const key = e.keyCode;
+  if (key === 37 && d !== "RIGHT") { left.play(); d = "LEFT"; }
+  else if (key === 38 && d !== "DOWN") { up.play(); d = "UP"; }
+  else if (key === 39 && d !== "LEFT") { right.play(); d = "RIGHT"; }
+  else if (key === 40 && d !== "UP") { down.play(); d = "DOWN"; }
+  else if (key === 32) togglePause(); // Space
+});
+
+// ================= GAME FLOW =================
+function startGame() {
+  clearInterval(game);
+
+  snake = [{ x: 9 * box, y: 10 * box }];
+  score = 0;
+  d = "RIGHT";
+  speed = 120;
+  isPaused = false;
+  isRunning = true;
+
+  food = generateFood();
+  game = setInterval(draw, speed);
+}
+
+function togglePause() {
+  isPaused = !isPaused;
+}
+
+function endGame() {
+  clearInterval(game);
+  isRunning = false;
+  dead.play();
+
+  try {
+    window.parent.postMessage({
+      type: "gameScore",
+      gameCode: "SNAKE",
+      score: score
+    }, "*");
+  } catch { }
+
+  showRestartButton();
+}
+
+// ================= FOOD =================
 function generateFood() {
-  let newFood;
-  let overlap = true;
-
-  while (overlap) {
-    newFood = {
-      x: Math.floor(Math.random() * 17 + 1) * box,
-      y: Math.floor(Math.random() * 15 + 3) * box
+  let pos;
+  do {
+    pos = {
+      x: (Math.floor(Math.random() * (PLAY_MAX_X / box - PLAY_MIN_X / box + 1)) + (PLAY_MIN_X / box)) * box,
+      y: (Math.floor(Math.random() * (PLAY_MAX_Y / box - PLAY_MIN_Y / box + 1)) + (PLAY_MIN_Y / box)) * box
     };
+  } while (snake.some(s => s.x === pos.x && s.y === pos.y));
+  return pos;
+}
 
-    // 檢查是否與蛇身重疊
-    overlap = snake.some(part => part.x === newFood.x && part.y === newFood.y);
+
+// ================= DRAW =================
+function draw() {
+  if (isPaused) {
+    drawPauseOverlay();
+    return;
   }
 
-  return newFood;
-}
+  ctx.drawImage(ground, 0, 0);
 
-// Score + Direction
-let score = 0;
-let d;
+  // Draw snake
+  snake.forEach((s, i) => {
+    if (i === 0) drawSnakeHead(s.x, s.y, d);
+    else drawSnakeBody(s.x, s.y);
+  });
 
-// Key Listener
-document.addEventListener("keydown", direction);
+  ctx.drawImage(foodImg, food.x, food.y);
 
-function direction(event) {
-  let key = event.keyCode;
-  if (key == 37 && d != "RIGHT") { left.play(); d = "LEFT"; }
-  else if (key == 38 && d != "DOWN") { up.play(); d = "UP"; }
-  else if (key == 39 && d != "LEFT") { right.play(); d = "RIGHT"; }
-  else if (key == 40 && d != "UP") { down.play(); d = "DOWN"; }
-}
+  let head = { ...snake[0] };
 
-// Collision detection
-function collision(head, array) {
-  for (let i = 0; i < array.length; i++) {
-    if (head.x === array[i].x && head.y === array[i].y) return true;
+  if (d === "LEFT") head.x -= box;
+  else if (d === "UP") head.y -= box;
+  else if (d === "RIGHT") head.x += box;
+  else if (d === "DOWN") head.y += box;
+
+  if (isWallCollision(head) || isSelfCollision(head)) {
+    endGame();
+    return;
   }
-  return false;
+
+  if (head.x === food.x && head.y === food.y) {
+    score++;
+    eat.play();
+    food = generateFood();
+    increaseSpeed();
+  } else {
+    snake.pop();
+  }
+
+  snake.unshift(head);
+
+  drawScore();
 }
 
-// Draw Snake with rounded head
+// ================= COLLISION =================
+function isWallCollision(h) {
+  return (
+    h.x < PLAY_MIN_X || h.x > PLAY_MAX_X ||
+    h.y < PLAY_MIN_Y || h.y > PLAY_MAX_Y
+  );
+}
+
+
+function isSelfCollision(h) {
+  return snake.slice(1).some(p => p.x === h.x && p.y === h.y);
+}
+
+// ================= SPEED =================
+function increaseSpeed() {
+  if (speed > MIN_SPEED) {
+    speed -= 5;
+    clearInterval(game);
+    game = setInterval(draw, speed);
+  }
+}
+
+// ================= UI =================
+function drawScore() {
+  ctx.save();
+  ctx.fillStyle = "white";
+  ctx.font = "28px Arial";
+  ctx.textAlign = "right";
+  ctx.fillText(`Score: ${score}`, cvs.width - box, 1.6 * box); // 右上角
+  ctx.restore();
+}
+
+
+function drawPauseOverlay() {
+  ctx.fillStyle = "rgba(0,0,0,0.4)";
+  ctx.fillRect(0, 0, cvs.width, cvs.height);
+  ctx.fillStyle = "white";
+  ctx.font = "36px Arial";
+  ctx.textAlign = "center";
+  ctx.fillText("PAUSED", cvs.width / 2, cvs.height / 2);
+}
+
+function showStartScreen() {
+  ctx.fillStyle = "rgba(0,0,0,0.6)";
+  ctx.fillRect(0, 0, cvs.width, cvs.height);
+  ctx.fillStyle = "white";
+  ctx.font = "36px Arial";
+  ctx.textAlign = "center";
+  ctx.fillText("Click to Start", cvs.width / 2, cvs.height / 2);
+  cvs.addEventListener("click", startClickHandler);
+}
+
+function showRestartButton() {
+  ctx.fillStyle = "rgba(0,0,0,0.6)";
+  ctx.fillRect(0, 0, cvs.width, cvs.height);
+
+  ctx.fillStyle = "white";
+  ctx.font = "36px Arial";
+  ctx.textAlign = "center";
+  ctx.fillText("Game Over", cvs.width / 2, cvs.height / 2 - 30);
+  ctx.fillText("Click to Restart", cvs.width / 2, cvs.height / 2 + 30);
+
+  cvs.addEventListener("click", startClickHandler);
+}
+
+function startClickHandler() {
+  cvs.removeEventListener("click", startClickHandler);
+  startGame();
+}
+
+// ================= SNAKE DRAW =================
 function drawSnakeHead(x, y, dir) {
   ctx.fillStyle = "#4CAF50";
   ctx.beginPath();
@@ -112,124 +253,9 @@ function drawSnakeHead(x, y, dir) {
   ctx.fill();
 }
 
-// Snake body
 function drawSnakeBody(x, y) {
   ctx.fillStyle = "#66BB6A";
   ctx.beginPath();
   ctx.roundRect(x, y, box, box, 6);
   ctx.fill();
-}
-
-// Main Draw function
-function draw() {
-  ctx.drawImage(ground, 0, 0);
-
-  // Draw Snake
-  for (let i = 0; i < snake.length; i++) {
-    if (i === 0) drawSnakeHead(snake[i].x, snake[i].y, d);
-    else drawSnakeBody(snake[i].x, snake[i].y);
-  }
-
-  ctx.drawImage(foodImg, food.x, food.y);
-
-  let snakeX = snake[0].x;
-  let snakeY = snake[0].y;
-
-  if (d === "LEFT") snakeX -= box;
-  else if (d === "UP") snakeY -= box;
-  else if (d === "RIGHT") snakeX += box;
-  else if (d === "DOWN") snakeY += box;
-
-  // let ateFood = snakeX === food.x && snakeY === food.y;
-
-  // if (ateFood) {
-  //   score++;
-  //   eat.play();
-  //   food = {
-  //     x: Math.floor(Math.random() * 17 + 1) * box,
-  //     y: Math.floor(Math.random() * 15 + 3) * box
-  //   };
-  // } else {
-  //   snake.pop();
-  // }
-
-
-  if (snakeX == food.x && snakeY == food.y) {
-    score++;
-    eat.play();
-    food = generateFood();
-  } else {
-    snake.pop();
-  }
-
-  let newHead = { x: snakeX, y: snakeY };
-
-  // Game Over Check
-  if (
-    snakeX < box || snakeX > 17 * box ||
-    snakeY < 3 * box || snakeY > 17 * box ||
-    collision(newHead, snake)
-  ) {
-    clearInterval(game);
-    dead.play();
-
-    window.parent.postMessage({ type: "gameScore", score }, "*");
-    showRestartButton();
-    return;
-  }
-
-  snake.unshift(newHead);
-
-  ctx.fillStyle = "white";
-  ctx.font = "45px Changa one";
-  ctx.fillText(score, 2 * box, 1.6 * box);
-}
-
-let game = setInterval(draw, 100);
-
-// Game Over Overlay
-function showRestartButton() {
-  ctx.fillStyle = "rgba(0,0,0,0.6)";
-  ctx.fillRect(0, 0, cvs.width, cvs.height);
-
-  ctx.fillStyle = "white";
-  ctx.font = "40px Arial";
-  ctx.textAlign = "center";
-  ctx.fillText("Game Over!", cvs.width / 2, cvs.height / 2 - 40);
-
-  ctx.fillStyle = "#4CAF50";
-  ctx.fillRect(cvs.width / 2 - 100, cvs.height / 2, 200, 60);
-
-  ctx.fillStyle = "white";
-  ctx.font = "30px Arial";
-  ctx.fillText("Restart", cvs.width / 2, cvs.height / 2 + 40);
-
-  cvs.addEventListener("click", restartClickHandler);
-}
-
-function restartClickHandler(event) {
-  let rect = cvs.getBoundingClientRect();
-  let x = event.clientX - rect.left;
-  let y = event.clientY - rect.top;
-
-  if (
-    x >= cvs.width / 2 - 100 && x <= cvs.width / 2 + 100 &&
-    y >= cvs.height / 2 && y <= cvs.height / 2 + 60
-  ) {
-    cvs.removeEventListener("click", restartClickHandler);
-    restartGame();
-  }
-}
-
-function restartGame() {
-  snake = [{ x: 9 * box, y: 10 * box }];
-  score = 0;
-  d = undefined;
-
-  food = {
-    x: Math.floor(Math.random() * 17 + 1) * box,
-    y: Math.floor(Math.random() * 15 + 3) * box
-  };
-
-  game = setInterval(draw, 100);
 }

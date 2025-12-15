@@ -21,6 +21,4 @@ export class FaqService {
     return this.http.get<FaqDetail>(`${this.api}/${faqId}`);
   }
 
-
-
 }
