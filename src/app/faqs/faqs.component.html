@@ -1,39 +1,50 @@
 <div class="row">
   <!-- 左側分類 -->
-  <div class="col-3 border-end">
+  <div class="col-3 border-end faq-left">
     <ng-container *ngFor="let c of categories">
-      <div class="fw-bold py-1" (click)="selectCategory(c.id)">
-        {{ c.categoryName }}
-      </div>
+      <div class="faq-root">{{ c.categoryName }}</div>
 
-      <div class="ms-3" *ngFor="let child of c.children">
-        <div class="py-1" (click)="selectCategory(child.id)">
-          - {{ child.categoryName }}
-        </div>
+      <div class="faq-sub" *ngFor="let child of c.children" (click)="selectSubCategory(child.id)"
+        [class.active]="child.id === activeCategoryId">
+        - {{ child.categoryName }}
       </div>
     </ng-container>
   </div>
 
-  <!-- 右側內容 -->
+  <!-- 右側：清單 + 內容 -->
   <div class="col-9">
-    <!-- FAQ 清單 -->
-    <ul *ngIf="!faqDetail">
-      <li *ngFor="let f of faqs" (click)="openFaq(f.FaqId)">
-        {{ f.question }}
-      </li>
-    </ul>
+    <div class="row g-0">
+      <!-- 清單（像 8591 list） -->
+      <div class="col-4 border-end faq-list">
+        <div class="faq-list-title">問題清單</div>
 
-    <!-- FAQ 詳細 -->
-    <div *ngIf="faqDetail">
-      <h4>{{ faqDetail.question }}</h4>
-      <p>{{ faqDetail.answer }}</p>
+        <div *ngFor="let f of faqs" class="faq-item" (click)="openFaq(f.faQid)"
+          [class.active]="f.faQid === activeFaqId">
+          {{ f.question }}
+        </div>
+      </div>
 
-      <div *ngFor="let b of faqDetail.blocks">
-        <p *ngIf="b.blockType === 'TEXT'">
-          {{ b.content }}
-        </p>
+      <!-- 內容 -->
+      <div class="col-8 faq-content">
+        <div *ngIf="!faqDetail" class="faq-empty">
+          請先從左側選擇分類，並點選問題查看內容
+        </div>
 
-        <img *ngIf="b.blockType === 'IMAGE'" [src]="b.imageUrl" class="img-fluid mb-2">
+        <div *ngIf="faqDetail">
+          <h2 class="faq-title">{{ faqDetail.question }}</h2>
+
+          <ng-container *ngFor="let b of faqDetail.blocks">
+            <h5 *ngIf="b.blockType === 'STEP_TITLE'" class="faq-step">
+              {{ b.content }}
+            </h5>
+
+            <p *ngIf="b.blockType === 'TEXT'" class="faq-text">
+              {{ b.content }}
+            </p>
+
+            <img *ngIf="b.blockType === 'IMAGE'" [src]="b.imageUrl" class="faq-image" />
+          </ng-container>
+        </div>
       </div>
     </div>
   </div>

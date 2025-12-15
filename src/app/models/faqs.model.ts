@@ -6,10 +6,12 @@ export interface FaqCategory {
   children?: FaqCategory[]; // 前端自己組樹用
 }
 
+
 export interface FaqList {
-  FaqId: number;
+  faQid: number;   // ⚠️ 一模一樣
   question: string;
 }
+
 
 export interface FaqBlock {
   blockType: string;

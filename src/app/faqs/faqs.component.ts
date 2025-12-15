@@ -28,23 +28,10 @@ export class FaqsComponent implements OnInit {
     });
   }
 
-  selectCategory(categoryId: number) {
-    this.faqService.getFaqs(categoryId).subscribe(res => {
 
-      console.log('faqs from api:', res);
 
-      this.faqs = res;
-      this.faqDetail = undefined;
-    });
-  }
 
-  openFaq(faqId: number) {
-    this.faqService.getFaqDetail(faqId).subscribe(res => {
-      this.faqDetail = res;
-    });
-  }
-
-  // 把平的分類資料組成樹狀
+  // Tree 組裝（你原本的是 OK 的）
   buildTree(data: FaqCategory[]): FaqCategory[] {
     const map = new Map<number, FaqCategory>();
     const roots: FaqCategory[] = [];
@@ -53,7 +40,7 @@ export class FaqsComponent implements OnInit {
 
     map.forEach(c => {
       if (c.parentCategoryId) {
-        map.get(c.parentCategoryId)?.children?.push(c);
+        map.get(c.parentCategoryId)?.children!.push(c);
       } else {
         roots.push(c);
       }
@@ -61,4 +48,39 @@ export class FaqsComponent implements OnInit {
 
     return roots;
   }
+
+
+
+  activeCategoryId?: number;
+  activeFaqId?: number;
+
+  selectSubCategory(categoryId: number) {
+    this.activeCategoryId = categoryId;
+
+    this.faqs = [];
+    this.faqDetail = undefined;
+    this.activeFaqId = undefined;
+
+    this.faqService.getFaqsByCategory(categoryId).subscribe(list => {
+      this.faqs = list;
+
+      // 8591 風格：先顯示清單；但通常會預設選第一筆（可選）
+      if (this.faqs.length) {
+        this.openFaq(this.faqs[0].faQid);
+      }
+    });
+  }
+
+  openFaq(faqId: number) {
+    if (!faqId) return;
+
+    this.activeFaqId = faqId;
+    this.faqDetail = undefined;
+
+    this.faqService.getFaqDetail(faqId).subscribe(res => {
+      this.faqDetail = res;
+    });
+  }
+
 }
+

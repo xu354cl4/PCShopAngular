@@ -1,0 +1,83 @@
+/* 左側分類 */
+.faq-root {
+  font-weight: 700;
+  margin: 14px 0 6px;
+}
+
+.faq-sub {
+  padding: 6px 10px;
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  color: #444;
+}
+
+.faq-sub:hover {
+  background: #f6f6f6;
+}
+
+.faq-sub.active {
+  background: #eef5ff;
+  border-left-color: #0d6efd;
+  color: #0d6efd;
+  font-weight: 700;
+}
+
+/* 右側清單 */
+.faq-list {
+  min-height: 60vh;
+}
+
+.faq-list-title {
+  padding: 12px 12px;
+  font-weight: 700;
+  border-bottom: 1px solid #eee;
+}
+
+.faq-item {
+  padding: 10px 12px;
+  cursor: pointer;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.faq-item:hover {
+  background: #f7f7f7;
+}
+
+.faq-item.active {
+  background: #eef5ff;
+  color: #0d6efd;
+  font-weight: 700;
+}
+
+/* 右側內容 */
+.faq-content {
+  padding: 14px 18px;
+}
+
+.faq-empty {
+  color: #777;
+  padding: 20px 0;
+}
+
+.faq-title {
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 14px;
+}
+
+.faq-step {
+  font-size: 16px;
+  font-weight: 800;
+  margin-top: 18px;
+}
+
+.faq-text {
+  margin-left: 12px;
+  color: #333;
+}
+
+.faq-image {
+  max-width: 100%;
+  margin: 10px 0 16px;
+  border: 1px solid #eee;
+}
