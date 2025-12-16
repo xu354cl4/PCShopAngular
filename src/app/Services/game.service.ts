@@ -3,8 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface SubmitGameScoreDto {
-  gameCode: string;
+  gameId: number;
   score: number;
+  gameCode?: string;
 }
 
 @Injectable({

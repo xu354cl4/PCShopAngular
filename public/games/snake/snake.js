@@ -85,6 +85,7 @@ function endGame() {
     window.parent.postMessage({
       type: "gameScore",
       gameCode: "SNAKE",
+      gameId: 2,
       score: score
     }, "*");
   } catch { }

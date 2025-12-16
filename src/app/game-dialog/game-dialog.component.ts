@@ -4,7 +4,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { UpperCasePipe } from '@angular/common';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
-import { GameService } from '../Services/game.service';
+import { GameService, SubmitGameScoreDto } from '../Services/game.service';
 
 
 @Component({
@@ -42,23 +42,26 @@ export class GameDialogComponent {
     window.removeEventListener("message", this.receiveMessage);
   }
 
-  receiveMessage = (event: any) => {
-    if (event.data?.type !== 'gameScore') return;
+  receiveMessage = (event: MessageEvent) => {
+    if (!event.data || event.data.type !== 'gameScore') return;
 
-    const { gameCode, score } = event.data;
+    // ⭐ 一定要先宣告
+    const gameId = Number(event.data.gameId);
+    const score = Number(event.data.score);
 
-    if (!gameCode) {
-      console.warn("❌ 未帶 gameCode，忽略分數");
+    if (!gameId || gameId <= 0) {
+      console.warn('Invalid gameId', event.data);
       return;
     }
 
-    console.log(`🎮 遊戲：${gameCode}｜分數：${score}`);
+    const payload = {
+      gameId: gameId,
+      score: score
+    };
 
-    this.gameService.submitScore({
-      gameCode,
-      score
-    }).subscribe();
+    this.gameService.submitScore(payload).subscribe();
   };
+
 
   close() {
     this.dialogRef.close();

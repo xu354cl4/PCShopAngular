@@ -806,8 +806,10 @@
       window.parent.postMessage({
         type: "gameScore",
         gameCode: "DINO",
+        gameId: 1,
         score: Math.round(this.distanceRan * DistanceMeter.config.COEFFICIENT)
       }, "*");
+
 
       // Reset the time clock.
       this.time = getTimeStamp();
