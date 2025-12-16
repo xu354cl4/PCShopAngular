@@ -16,20 +16,20 @@ import { Router } from '@angular/router';
 export class HeaderComponent {
 
 
- user$!: Observable<ExternalUser | null>;  // ⭐ 先宣告，不初始化
+  user$!: Observable<ExternalUser | null>;  // ⭐ 先宣告，不初始化
 
-  constructor(private authState: AuthStateService , private router: Router,) {
+  constructor(private authState: AuthStateService, private router: Router,) {
     this.user$ = this.authState.user$;      // ⭐ 這裡再接
   }
-    goRegister() {
-      localStorage.removeItem('user');
-      localStorage.removeItem('token');
-      this.authState.clear();   // ⭐ 非常重要
-    }
+  goRegister() {
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
+    this.authState.clear();   // ⭐ 非常重要
+  }
 
   logout(): void {
-  localStorage.removeItem('token');
-  localStorage.removeItem('user');
-  this.authState.clear();
-}
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    this.authState.clear();
+  }
 }

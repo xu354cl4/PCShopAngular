@@ -1,45 +1,75 @@
 <div class="register-wrapper">
   <div class="register-card">
-    <h2 class="register-title">會員註冊</h2>
 
-    <form [formGroup]="form" (ngSubmit)="submit()">
+    <h2 class="register-title">
+      {{ isExternalLogin ? '會員資料補全' : '會員註冊' }}
+    </h2>
+
+    <form [formGroup]="form" (ngSubmit)="Submit()">
 
       <div class="form-row">
         <label>Full Name</label>
-        <input formControlName="fullName" />
-        <small *ngIf="hasError('fullName')">請輸入姓名</small>
+        <input type="text" formControlName="fullName" placeholder="請輸入姓名" />
+
+        @if (form.get('fullName')?.invalid && form.get('fullName')?.touched) {
+        <small class="error-text">請輸入姓名</small>
+        }
       </div>
 
       <div class="form-row">
         <label>Email</label>
-        <input formControlName="mail" />
-        <small *ngIf="hasError('mail')">Email 格式錯誤</small>
+        <input type="email" formControlName="mail" placeholder="請輸入 Email" />
+
+        @if (form.get('mail')?.invalid && form.get('mail')?.touched) {
+        <small class="error-text">Email 格式錯誤</small>
+        }
       </div>
+
+      @if (!isExternalLogin) {
+      <div class="form-row">
+        <label>Password</label>
+        <input type="password" formControlName="password" placeholder="請輸入密碼" />
+
+        @if (form.get('password')?.invalid && form.get('password')?.touched) {
+        <small class="error-text">密碼必填 (6-20字)</small>
+        }
+      </div>
+      }
 
       <div class="form-row">
         <label>Phone</label>
-        <input formControlName="phone" />
-        <small *ngIf="hasError('phone')">手機必填</small>
+        <input type="tel" formControlName="phone" placeholder="例如: 0912345678" />
+
+        @if (form.get('phone')?.invalid && form.get('phone')?.touched) {
+        <small class="error-text">手機格式錯誤</small>
+        }
       </div>
 
       <div class="form-row">
         <label>Address</label>
-        <input formControlName="address" />
-        <small *ngIf="hasError('address')">地址必填</small>
+        <input type="text" formControlName="address" placeholder="請輸入地址" />
+
+        @if (form.get('address')?.invalid && form.get('address')?.touched) {
+        <small class="error-text">地址必填</small>
+        }
       </div>
 
       <div class="form-row">
-        <label>Shipping Address</label>
-        <input formControlName="shippingAddress" />
+        <label>Shipping Address (選填)</label>
+        <input type="text" formControlName="shippingAddress" placeholder="同上可不填" />
       </div>
 
       <div class="form-row">
         <label>BirthDay</label>
-        <input type="date" formControlName="birthDay" />
+        <input type="date" formControlName="birthDay" [max]="getTodayString()" />
+
+        @if (form.get('birthDay')?.invalid && form.get('birthDay')?.touched) {
+        <small class="error-text">生日日期無效</small>
+        }
       </div>
 
-      <button type="submit" class="submit-btn">
-        {{ isExternalLogin ? '完成註冊' : '註冊' }}
+      <button type="submit" class="submit-btn" [disabled]="form.invalid">
+        {{ isExternalLogin ? '完成資料' : '註冊' }}
       </button>
 
     </form>

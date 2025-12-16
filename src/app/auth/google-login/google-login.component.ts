@@ -21,7 +21,7 @@ export class GoogleLoginComponent implements AfterViewInit {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private authState:AuthStateService
+    private authState: AuthStateService
   ) { }
 
   ngAfterViewInit(): void {
@@ -58,6 +58,7 @@ export class GoogleLoginComponent implements AfterViewInit {
         if (!res.user.profileCompleted) {
           // ⭐ 尚未補齊資料
           this.router.navigate(['/register']);
+          this.authService.pendingGoogleUser = res.user;
         } else {
           // ⭐ 已完成
           this.router.navigate(['/home']);
