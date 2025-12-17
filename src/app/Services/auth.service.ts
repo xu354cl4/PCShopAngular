@@ -42,4 +42,12 @@ export class AuthService {
   }): Observable<any> {
     return this.http.post(`${this.apiUrl}/register`, dto);
   }
+
+
+  login(dto: { mail: string; password: string }) {
+    return this.http.post<ExternalLoginResponse>(
+      `${this.apiUrl}/login`,
+      dto
+    );
+  }
 }
