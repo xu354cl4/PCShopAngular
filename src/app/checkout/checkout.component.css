@@ -1,0 +1,272 @@
+/* 定義無印風格色票變數 */
+:host {
+  --bg-color: #FDFCF8;
+  /* 溫潤奶白 */
+  --card-bg: #FFFFFF;
+  /* 純白 */
+  --text-primary: #454545;
+  /* 深灰 */
+  --text-secondary: #7A7A7A;
+  /* 次要文字 */
+  --border-color: #E6E3DE;
+  /* 淺杏灰 */
+  --accent-color: #9E8B78;
+  /* 霧面杏色 */
+  --accent-hover: #8C7B6A;
+  /* 按鈕 Hover */
+  --input-bg: #F7F7F5;
+  /* 輸入框極淺灰 */
+
+  display: block;
+  background-color: var(--bg-color);
+  min-height: 100vh;
+  font-family: "Helvetica Neue", Arial, "PingFang TC", "Heiti TC", "Microsoft JhengHei", sans-serif;
+  color: var(--text-primary);
+  padding-bottom: 4rem;
+}
+
+.muji-layout {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+/* --- 1. Stepper Customization (覆寫 PrimeNG) --- */
+.stepper-container {
+  margin-bottom: 2rem;
+}
+
+/* 使用 ::ng-deep 穿透元件樣式來修改 PrimeNG 內部 */
+.stepper-container ::ng-deep .p-steps .p-steps-item .p-menuitem-link {
+  background: transparent;
+}
+
+.stepper-container ::ng-deep .p-steps .p-steps-item .p-menuitem-link .p-steps-number {
+  background-color: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  font-family: inherit;
+}
+
+.stepper-container ::ng-deep .p-steps .p-steps-item .p-menuitem-link .p-steps-title {
+  color: var(--text-secondary);
+}
+
+/* Active/Highlight 狀態 */
+.stepper-container ::ng-deep .p-steps .p-steps-item.p-highlight .p-steps-number {
+  background: var(--accent-color);
+  border-color: var(--accent-color);
+  color: #fff;
+}
+
+.stepper-container ::ng-deep .p-steps .p-steps-item.p-highlight .p-steps-title {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+/* --- 2. Summary Bar --- */
+.summary-bar {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.summary-bar .label {
+  color: var(--text-secondary);
+  margin-right: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.summary-bar .price {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  letter-spacing: 0.5px;
+}
+
+/* --- 3. Grid Layout --- */
+.main-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  /* 手機版預設單欄 */
+  gap: 1.5rem;
+}
+
+/* 平板與桌面版雙欄 */
+@media (min-width: 768px) {
+  .main-grid {
+    grid-template-columns: 1.2fr 1fr;
+    /* 左寬右窄 */
+    align-items: start;
+  }
+}
+
+/* --- 4. Common Card Style --- */
+.muji-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+}
+
+.muji-card .card-header {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+  color: var(--text-primary);
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #F0EFED;
+  /* 比邊框再淺一點 */
+}
+
+.muji-card .card-header.flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* --- Form Fields --- */
+.form-field {
+  margin-bottom: 1.25rem;
+}
+
+.form-field label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+/* 輸入框樣式 */
+.form-field input,
+.form-field textarea {
+  width: 100%;
+  background-color: var(--input-bg);
+  border: 1px solid transparent;
+  border-radius: 4px;
+  padding: 0.75rem;
+  color: var(--text-primary);
+  transition: all 0.2s;
+  box-sizing: border-box;
+  /* 確保 padding 不會撐開寬度 */
+}
+
+.form-field input:focus,
+.form-field textarea:focus {
+  background-color: #fff;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 1px rgba(158, 139, 120, 0.2);
+  outline: none;
+}
+
+/* --- Special Inputs (電話含國碼) --- */
+.phone-group {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.phone-group .code-select {
+  width: 130px;
+}
+
+/* 針對 Dropdown 內部的 PrimeNG 樣式覆寫 */
+.phone-group ::ng-deep .p-dropdown {
+  width: 100%;
+  background-color: var(--input-bg);
+  border: 1px solid transparent;
+}
+
+.phone-group ::ng-deep .p-dropdown:not(.p-disabled).p-focus {
+  border-color: var(--accent-color);
+  box-shadow: none;
+}
+
+.phone-group ::ng-deep .p-dropdown .p-dropdown-label {
+  text-align: center;
+  padding-left: 0.5rem;
+  /* 微調以確保視覺置中 */
+  padding-right: 0.5rem;
+}
+
+/* --- Store Selection --- */
+.store-section {
+  margin-top: 1.5rem;
+}
+
+.store-section .selected-store {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.store-section .selected-store i {
+  color: var(--accent-color);
+}
+
+.store-section .btn-store-search {
+  width: 100%;
+  background-color: #F0EFED;
+  color: var(--text-primary);
+  border: none;
+  font-weight: 500;
+  padding: 0.8rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.store-section .btn-store-search:hover {
+  background-color: #E0DFDD;
+}
+
+/* --- Payment Display --- */
+.payment-display {
+  background-color: var(--input-bg);
+  padding: 1rem;
+  border-radius: 4px;
+}
+
+.payment-display .method {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.payment-display .info-text {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+/* --- Submit Button --- */
+.btn-submit {
+  width: 100%;
+  background-color: var(--accent-color);
+  color: #fff;
+  border: none;
+  padding: 1rem;
+  font-size: 1rem;
+  letter-spacing: 1px;
+  margin-top: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-submit:hover {
+  background-color: var(--accent-hover);
+}
+
+/* --- Checkbox Color Override --- */
+::ng-deep .p-checkbox .p-checkbox-box.p-highlight {
+  background-color: var(--accent-color);
+  border-color: var(--accent-color);
+}

@@ -1,1 +1,95 @@
-<p>checkout works!</p>
+<div class="muji-layout">
+
+  <div class="stepper-container">
+    <p-steps [model]="steps" [(activeIndex)]="activeIndex" [readonly]="true"></p-steps>
+  </div>
+
+  <div class="summary-bar">
+    <span class="label">共 {{ totalItems }} 件商品，合計</span>
+    <span class="price">NT$ {{ totalAmount | number }}</span>
+  </div>
+
+  <form [formGroup]="checkoutForm" (ngSubmit)="onSubmit()">
+    <div class="main-grid">
+
+      <div class="col-left">
+
+        <div class="muji-card" formGroupName="customer">
+          <div class="card-header">顧客資料</div>
+
+          <div class="form-field">
+            <label for="c-name">顧客名稱</label>
+            <input id="c-name" type="text" pInputText formControlName="name" placeholder="請輸入真實姓名" />
+          </div>
+
+          <div class="form-field">
+            <label for="c-email">電子信箱</label>
+            <input id="c-email" type="email" pInputText formControlName="email" placeholder="example@email.com" />
+          </div>
+
+          <div class="form-field">
+            <label for="c-phone">電話號碼</label>
+            <div class="phone-group">
+              <p-dropdown [options]="countryCodes" formControlName="countryCode" optionLabel="label" optionValue="value"
+                class="code-select" panelStyleClass="phone-dropdown-panel" appendTo="body"></p-dropdown>
+              <input id="c-phone" type="text" pInputText formControlName="phone" placeholder="0912345678" />
+            </div>
+          </div>
+        </div>
+
+        <div class="muji-card">
+          <div class="card-header">訂單備註</div>
+          <textarea rows="5" class="p-inputtext" formControlName="note" placeholder="有什麼想告訴我們的嗎？(選填)"></textarea>
+        </div>
+
+      </div>
+
+      <div class="col-right">
+
+        <div class="muji-card" formGroupName="delivery">
+          <div class="card-header flex-between">
+            <span>送貨資料</span>
+            <div class="checkbox-wrapper">
+              <p-checkbox formControlName="sameAsCustomer" [binary]="true" label="同顧客資料"></p-checkbox>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label for="d-name">收件人名稱</label>
+            <input id="d-name" type="text" pInputText formControlName="recipientName" />
+          </div>
+
+          <div class="form-field">
+            <label for="d-phone">收件人電話</label>
+            <input id="d-phone" type="text" pInputText formControlName="recipientPhone" />
+          </div>
+
+          <div class="store-section">
+            <div class="selected-store" *ngIf="checkoutForm.get('delivery.storeName')?.value">
+              <i class="pi pi-map-marker"></i>
+              <span>{{ checkoutForm.get('delivery.storeName')?.value }}</span>
+            </div>
+
+            <button pButton type="button" label="搜尋門市" class="btn-store-search"></button>
+          </div>
+        </div>
+
+        <div class="muji-card payment-card">
+          <div class="card-header">付款資料</div>
+          <div class="payment-display">
+            <div class="method">
+              <i class="pi pi-credit-card"></i>
+              <span>ATM 虛擬帳號</span>
+            </div>
+            <div class="info-text">
+              訂單成立後，將提供一組虛擬帳號供您轉帳。
+            </div>
+          </div>
+        </div>
+
+        <button pButton type="submit" label="前往結帳" class="btn-submit"></button>
+
+      </div>
+    </div>
+  </form>
+</div>
