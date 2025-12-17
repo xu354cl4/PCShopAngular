@@ -1,0 +1,138 @@
+/* 原本 CSS 保留 */
+.page-wrapper {
+  padding: 20px 0;
+}
+
+.d-flex.gap-3.mb-4 {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 1.5rem;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin: 0 -7.5px;
+}
+
+.col-md-3 {
+  flex: 0 0 23%;
+  max-width: 23%;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+}
+
+.card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+}
+
+.card img {
+  width: 100%;
+  height: auto;
+}
+
+.card-body h5 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.card-body p {
+  font-weight: 700;
+  color: #007bff;
+  margin-bottom: 0.5rem;
+}
+
+.text-warning {
+  display: flex;
+  gap: 2px;
+  font-size: 0.9rem;
+}
+
+.pagination {
+  display: flex !important;
+  flex-wrap: nowrap;
+  justify-content: center;
+  gap: 5px;
+  padding-left: 0;
+  margin: 1rem 0;
+  list-style: none;
+}
+
+.page-item {
+  display: inline-block;
+}
+
+.page-item.disabled .page-link,
+.page-item.active .page-link {
+  pointer-events: none;
+}
+
+.page-link {
+  display: inline-block;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  color: #007bff;
+  background-color: #fff;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.page-link:hover {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.page-item.disabled .page-link {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 新增：左右主容器 */
+.d-flex.align-items-start {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+/* 左側篩選 sticky */
+.filter-sidebar {
+  width: 280px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 20px; /* 距離頂部 */
+}
+
+/* 右側商品區自適應 */
+.product-area {
+  flex-grow: 1;
+}
+
+/* 小螢幕自動上下排列，取消 sticky */
+@media (max-width: 767.98px) {
+  .d-flex.align-items-start {
+    flex-direction: column !important;
+  }
+
+  .filter-sidebar {
+    width: 100%;
+    position: relative !important;
+    top: auto;
+  }
+
+  .product-area {
+    width: 100%;
+  }
+}

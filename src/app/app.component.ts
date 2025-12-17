@@ -8,10 +8,12 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { GamehomeComponent } from './gamehome/gamehome.component';
 @Component({
   selector: 'app-root',
+
   standalone: true,
   imports: [RouterOutlet,
     LoginpageComponent,
     CommonModule,
+
     RouterModule,
     HeaderComponent,
     FooterComponent,

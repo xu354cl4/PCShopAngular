@@ -19,4 +19,15 @@ export const routes: Routes = [
     path: 'register', loadComponent: () => import('./register/register.component').then(m => m.RegisterComponent)
   },
   // 未來其他頁面也放這裡
+  {
+    path: 'products',
+    loadChildren: () =>
+      import('./product/product.module').then(m => m.ProductModule)
+  },
+
+  {
+    path: '**',
+    redirectTo: ''
+  }
+
 ];
