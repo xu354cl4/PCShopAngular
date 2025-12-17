@@ -1,19 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
-export interface ExternalLoginResponse {
-  token: string;
-  user: boolean
-  profileCompleted: boolean;
-}
+import { CompleteProfileRequest } from './../models/CompleteProfileRequest';
+import { ExternalLoginResponse } from '../models/external-login-response';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  private apiUrl = 'https://localhost:7001/api/auth'; // 改成你的後端 URL
+  private apiUrl = 'https://localhost:7001/api/Auth'; // 改成你的後端 URL
 
   constructor(private http: HttpClient) { }
 
@@ -23,7 +19,6 @@ export class AuthService {
       idToken: idToken,
     });
   }
-
 
   loginWithFacebook(accessToken: string): Observable<ExternalLoginResponse> {
     return this.http.post<ExternalLoginResponse>(`${this.apiUrl}/external-login`, {
@@ -38,5 +33,15 @@ export class AuthService {
       idToken: idToken,
     });
   }
-}
 
+  completeProfile(dto: CompleteProfileRequest): Observable<any> {
+    return this.http.post(`${this.apiUrl}/complete-profile`, dto);
+  }
+
+  register(dto: CompleteProfileRequest & {
+    fullName: string;
+    mail: string;
+  }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/register`, dto);
+  }
+}

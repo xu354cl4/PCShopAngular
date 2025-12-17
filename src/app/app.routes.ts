@@ -15,5 +15,8 @@ export const routes: Routes = [
   {
     path: 'loginpage', loadComponent: () => import('./loginpage/loginpage.component').then(m => m.LoginpageComponent)
   },
+  {
+    path: 'register', loadComponent: () => import('./register/register.component').then(m => m.RegisterComponent)
+  },
   // 未來其他頁面也放這裡
 ];
