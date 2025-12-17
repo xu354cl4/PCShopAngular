@@ -1,0 +1,101 @@
+/* 設定圖片本體 */
+.avatar {
+  width: 40px;
+  /* 設定寬度，依照你的導覽列高度調整，通常 32px ~ 45px */
+  height: 40px;
+  /* 設定高度，跟寬度一樣 */
+  border-radius: 50%;
+  /* 讓圖片變成圓形 (如果不想要圓形就拿掉這行) */
+  object-fit: cover;
+  /* ⭐關鍵：確保圖片縮放時不會變形/被壓扁 */
+  margin-right: 10px;
+  /* 讓圖片跟旁邊的名字保持一點距離 */
+
+}
+
+
+/* 讓使用者資訊、連結跟按鈕橫向排列並垂直置中 */
+.user-box {
+  display: flex;
+  align-items: center;
+}
+
+/* 針對「會員中心」連結和「登出」按鈕的共同設定 */
+.link,
+.btn-logout {
+  background: transparent;
+  /* 移除底色 */
+  border: none;
+  /* 移除按鈕邊框 */
+  color: white;
+  /* 文字改成白色 */
+  font-size: 16px;
+  /* 設定字體大小 (可依需求調整) */
+  margin-left: 20px;
+  /* 加上左邊的間隔 */
+  text-decoration: none;
+  /* 移除連結預設的底線 */
+  padding: 0;
+  /* 移除按鈕預設的內距 */
+  font-family: inherit;
+  /* 繼承原本的字體設定 */
+}
+
+/* 滑鼠放上去時的效果 */
+.link:hover,
+.btn-logout:hover {
+  text-decoration: underline;
+  /* 加上底線 */
+  cursor: pointer;
+  /* 變更游標為小手 */
+}
+
+/* 確保使用者名稱也是白色的 */
+.username {
+  color: white;
+  font-weight: 500;
+  /* 稍微加粗一點 */
+}
+
+
+/* 1. 設定最外層的父容器：強制左右兩邊垂直置中 */
+.top-end {
+  display: flex;
+  align-items: center;
+  /* ⭐ 關鍵：讓左邊的「訪客」跟右邊的「會員」在同一條水平線上 */
+  justify-content: flex-end;
+  /* 靠右對齊 */
+  height: 100%;
+  /* 確保高度撐滿 */
+}
+
+/* 2. 設定左邊的訪客區塊 */
+.user {
+  display: flex;
+  align-items: center;
+  /* 讓圖示跟文字垂直置中 */
+  margin-right: 20px;
+  /* 跟右邊保持距離 */
+  color: white;
+}
+
+.lni-user {
+  margin-right: 5px;
+  /* 圖示跟文字的間距 */
+  font-size: 18px;
+  /* 微調圖示大小 */
+  color: white;
+}
+
+/* 3. 設定右邊的容器 (修正 ul 標籤的預設邊距) */
+.user-login {
+  display: flex;
+  /* 讓內容橫向排列 */
+  align-items: center;
+  /* 垂直置中 */
+
+  /* ⭐ 超級關鍵：歸零 ul 的預設邊距，不然會對不齊 */
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}

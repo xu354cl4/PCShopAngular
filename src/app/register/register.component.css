@@ -1,91 +1,124 @@
-/* 整個畫面置中 */
+/* 外層容器：負責把卡片置中，並加上淺灰背景 */
 .register-wrapper {
-  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #f5f6fa;
+  min-height: 100vh;
+  /* 佔滿整個視窗高度 */
+  background-color: #f3f4f6;
+  /* 淺灰色背景，讓白色卡片浮出來 */
+  padding: 20px;
 }
 
-/* 卡片 */
+/* 卡片本體 */
 .register-card {
+  background-color: #ffffff;
   width: 100%;
-  max-width: 420px;
-  background: #ffffff;
-  padding: 32px;
-  border-radius: 10px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  max-width: 450px;
+  /* 限制最大寬度，避免在電腦螢幕上太寬 */
+  padding: 2.5rem;
+  /* 內距加大，讓畫面呼吸 */
+  border-radius: 12px;
+  /* 圓角 */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  /* 柔和的陰影 */
 }
 
 /* 標題 */
 .register-title {
   text-align: center;
-  margin-bottom: 4px;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1f2937;
+  /* 深灰色 */
+  margin-bottom: 2rem;
+  /* 與下方表單的距離 */
 }
 
-.register-subtitle {
-  text-align: center;
-  font-size: 14px;
-  color: #777;
-  margin-bottom: 24px;
-}
-
-/* 表單列 */
+/* 每一行的容器 */
 .form-row {
+  margin-bottom: 1.25rem;
+  /* 欄位之間的間距 */
   display: flex;
   flex-direction: column;
-  margin-bottom: 16px;
+  /* 讓 Label 和 Input 垂直排列 */
 }
 
+/* 文字標籤 Label */
 .form-row label {
-  font-size: 13px;
-  color: #555;
-  margin-bottom: 6px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.5rem;
+  /* Label 與 Input 的距離 */
 }
 
-/* 輸入框 */
+/* 輸入框 Input */
+/* 這裡同時針對一般 input 和 PrimeNG 的 class 調整 */
 .form-row input {
-  height: 40px;
-  padding: 8px 12px;
-  font-size: 14px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  /* 增加輸入框高度，比較好點 */
+  font-size: 1rem;
+  border: 1px solid #d1d5db;
+  /* 淺灰邊框 */
+  border-radius: 8px;
+  /* 輸入框圓角 */
+  background-color: #fff;
+  transition: all 0.2s;
+  box-sizing: border-box;
+  /* 確保 padding 不會撐爆寬度 */
 }
 
+/* 輸入框 Focus 狀態 (點擊時變藍色) */
 .form-row input:focus {
   outline: none;
-  border-color: #4f46e5;
-  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.15);
+  border-color: #3b82f6;
+  /* 亮藍色 */
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  /* 藍色光暈 */
 }
 
-/* disabled 欄位 */
+/* 如果是唯讀狀態 (Google 登入帶入的資料) */
 .form-row input:disabled {
-  background: #f0f0f0;
-  color: #888;
+  background-color: #f9fafb;
+  color: #6b7280;
   cursor: not-allowed;
+}
+
+/* 錯誤訊息 */
+.error-text {
+  color: #dc2626;
+  /* 紅色 */
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+  display: block;
 }
 
 /* 送出按鈕 */
 .submit-btn {
   width: 100%;
-  height: 42px;
-  margin-top: 12px;
-  background: #4f46e5;
-  color: #fff;
+  margin-top: 1rem;
+  padding: 0.875rem;
+  background-color: #2563eb;
+  /* 標準藍色 */
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
   border: none;
-  border-radius: 6px;
-  font-size: 15px;
-  font-weight: bold;
+  border-radius: 8px;
   cursor: pointer;
+  transition: background-color 0.2s;
 }
 
 .submit-btn:hover {
-  background: #4338ca;
+  background-color: #1d4ed8;
+  /* 滑鼠移過去變深藍 */
 }
 
-small {
-  color: #e11d48;
-  font-size: 12px;
-  margin-top: 4px;
+.submit-btn:disabled {
+  background-color: #9ca3af;
+  /* 不能按的時候變灰 */
+  cursor: not-allowed;
 }

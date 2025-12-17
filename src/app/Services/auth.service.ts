@@ -8,15 +8,13 @@ import { ExternalLoginResponse } from '../models/external-login-response';
   providedIn: 'root'
 })
 export class AuthService {
-
   private apiUrl = 'https://localhost:7001/api/Auth'; // 改成你的後端 URL
 
   constructor(private http: HttpClient) { }
-
-  loginWithGoogle(idToken: string): Observable<ExternalLoginResponse> {
+  pendingGoogleUser: any = null;
+  loginWithGoogle(idToken: string) {
     return this.http.post<ExternalLoginResponse>(`${this.apiUrl}/google-login`, {
-      provider: 'google',
-      idToken: idToken,
+      idToken
     });
   }
 
@@ -43,5 +41,13 @@ export class AuthService {
     mail: string;
   }): Observable<any> {
     return this.http.post(`${this.apiUrl}/register`, dto);
+  }
+
+
+  login(dto: { mail: string; password: string }) {
+    return this.http.post<ExternalLoginResponse>(
+      `${this.apiUrl}/login`,
+      dto
+    );
   }
 }

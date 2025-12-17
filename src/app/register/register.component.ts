@@ -1,5 +1,6 @@
+import { AuthStateService } from '../Services/auth-state.service';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, ValidationErrors, AbstractControl } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../Services/auth.service';
 import { Router } from '@angular/router';
@@ -18,56 +19,92 @@ export class RegisterComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router) { }
+    private router: Router,
+    private authState: AuthStateService) { }
 
   ngOnInit(): void {
+    // 這裡建議改用 Service 拿資料，但如果你暫時用 localStorage 也可以
     const user = JSON.parse(localStorage.getItem('user') || '{}');
+
+    // 判斷是否有 provider (例如 "Google")
     this.isExternalLogin = !!user?.provider;
 
     this.form = this.fb.group({
-      fullName: [{ value: user?.fullName || '', disabled: this.isExternalLogin }, Validators.required],
+      // 如果是第三方登入，名字跟信箱鎖定 (disabled)
+      fullName: [{ value: user?.fullName || '', disabled: this.isExternalLogin }, Validators.required, Validators.minLength(2), Validators.maxLength(50)],
       mail: [{ value: user?.mail || '', disabled: this.isExternalLogin }, [Validators.required, Validators.email]],
-      phone: ['', Validators.required],
-      address: ['', Validators.required],
+
+      // ⭐ [加入這裡] 密碼欄位
+      // 邏輯：如果是外部登入(Google)，密碼不用填(Validators為空)；如果是本地註冊，密碼必填
+      password: ['', this.isExternalLogin ? [] : [Validators.required, Validators.minLength(6), Validators.maxLength(20)]],
+
+      phone: ['', Validators.required, Validators.pattern(/^09\d{8}$/)],
+      address: ['', Validators.required, Validators.maxLength(200)],
       shippingAddress: [''],
-      birthDay: [null]
+      birthDay: [
+        null,
+        // ⭐ 注意這裡：一定要用 [] 包起來
+        Validators.compose([Validators.required, this.dateValidator])
+      ]
     });
   }
 
- submit(): void {
-  console.log('payload', this.form.value);
 
-  if (this.form.invalid) {
-    this.form.markAllAsTouched();
-    return;
+  dateValidator = (control: AbstractControl): ValidationErrors | null => {
+    const value = control.value;
+    if (!value) return null;
+
+    const inputDate = new Date(value);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (inputDate > today) {
+      return { futureDate: true };
+    }
+
+    const minDate = new Date('1900-01-01');
+    if (inputDate < minDate) {
+      return { tooOld: true };
+    }
+
+    return null;
+  };
+
+  getTodayString(): string {
+    return new Date().toISOString().split('T')[0]; // 回傳 '2025-12-16' 格式
   }
 
-  const dto = this.form.getRawValue();
+  // ⭐ [加入這個方法] 提交表單
+  Submit(): void {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched(); // 觸發所有紅字錯誤提示
+      return;
+    }
 
-  if (this.isExternalLogin) {
-    // 🔹 第三方登入補資料
-    this.authService.completeProfile(dto).subscribe(() => {
+    const formData = this.form.getRawValue(); // 使用 getRawValue 以確保拿到 disabled 的欄位值
 
-      // ⭐⭐ 關鍵：同步更新前端狀態 ⭐⭐
-      const user = JSON.parse(localStorage.getItem('user')!);
-      user.profileCompleted = true;
-      localStorage.setItem('user', JSON.stringify(user));
 
-      // 導回首頁
-      this.router.navigate(['/']);
-    });
+    if (this.isExternalLogin) {
+      // --- 情況 A: Google 補全資料 ---
+      // 呼叫 CompleteProfile API (不需要密碼)
+      this.authService.completeProfile(formData).subscribe({
+        next: () => {
+          alert('資料補全成功！');
+          this.router.navigate(['/']); // 跳轉回首頁
+        },
+        error: (err) => console.error('補全失敗', err)
+      });
 
-  } else {
-    // 🔹 一般註冊
-    this.authService.register(dto).subscribe(() => {
-      this.router.navigate(['/loginpage']);
-    });
-  }
-}
-
-  // HTML 用的小工具
-  hasError(name: string): boolean {
-    const c = this.form.get(name);
-    return !!(c && c.invalid && c.touched);
+    } else {
+      // --- 情況 B: 本地一般註冊 ---
+      // 呼叫 Register API (需要密碼)
+      this.authService.register(formData).subscribe({
+        next: () => {
+          alert('註冊成功，請登入');
+          this.router.navigate(['/home']); // 跳轉去登入頁
+        },
+        error: (err) => console.error('註冊失敗', err)
+      });
+    }
   }
 }

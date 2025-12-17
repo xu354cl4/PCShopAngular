@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { GoogleLoginComponent } from "../auth/google-login/google-login.component";
+import { GoogleLoginComponent } from '../auth/google-login/google-login.component';
+import { HttpClient } from '@angular/common/http';
 
 declare const google: any;
 @Component({
@@ -10,6 +11,9 @@ declare const google: any;
 })
 export class LoginpageComponent {
 
+  constructor(private httpclient: HttpClient) {
+
+  }
   num = 1;
   selectedPanel: string = 'overview'; // 預設帳戶總覽
 
@@ -17,8 +21,12 @@ export class LoginpageComponent {
   selectPanel(panel: string) {
     this.selectedPanel = panel;
   }
-onGoogleLogin(){
- console.log("🔥 手動呼叫 Google 登入");
-  google.accounts.id.prompt();
+  onGoogleLogin() {
+    console.log("🔥 手動呼叫 Google 登入");
+    google.accounts.id.prompt();
+  }
+
+  sumbit() {
+
   }
 }
