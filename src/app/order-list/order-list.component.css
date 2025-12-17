@@ -1,0 +1,213 @@
+/* --- 基礎變數定義 (方便日後微調色系) --- */
+:root {
+  --muji-bg: #f5f5f0;        /* 整體背景：帶點灰的米色 */
+  --card-bg: #ffffff;        /* 卡片背景：純白 */
+  --text-main: #4a4a4a;      /* 主要文字：炭灰色 (非純黑) */
+  --text-sub: #999990;       /* 次要文字：暖灰色 */
+  --accent-color: #bfae9a;   /* 裝飾色：奶茶/亞麻色 */
+  --border-color: #eaeaea;   /* 邊框色：極淺灰 */
+  --price-color: #d95e50;    /* 金額色：磚紅色 (比正紅柔和) */
+  --radius: 8px;             /* 統一圓角 */
+}
+
+/* 容器：設定全域字體與背景 */
+.order-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 20px; /* 增加上下留白 */
+  /* 使用更適合中文閱讀的字體設定 */
+  font-family: "Helvetica Neue", Helvetica, "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+  background-color: var(--muji-bg);
+  min-height: 100vh;
+  color: var(--text-main);
+}
+
+.page-title {
+  margin-bottom: 25px;
+  color: var(--text-main);
+  font-size: 1.6rem;
+  font-weight: 500; /* 不用過粗的字體 */
+  letter-spacing: 1px; /* 增加字距，提升質感 */
+  text-align: center; /* Pinkoi 風格標題常置中 */
+}
+
+/* 訂單卡片本體 */
+.order-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  /* 移除原本明顯的陰影，改用極淡的邊框或微陰影 */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  margin-bottom: 25px;
+  overflow: hidden;
+  border: 1px solid white; /* 讓邊框融入背景 */
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.order-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+}
+
+/* 1. 頭部：訂號與狀態 */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 24px;
+  /* 移除明顯的分隔線，改用極細線或留白 */
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--card-bg);
+}
+
+.order-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.order-id {
+  font-weight: 600;
+  color: var(--text-main);
+  font-size: 1.05rem;
+  letter-spacing: 0.5px;
+}
+
+.order-date {
+  color: var(--text-sub);
+  font-size: 0.85rem;
+  margin-top: 6px;
+  font-family: 'Consolas', monospace; /* 日期用等寬字體更有設計感 */
+}
+
+/* 狀態標籤 (優化版) */
+.status-badge {
+  padding: 6px 14px;
+  border-radius: 4px; /* 改為小圓角矩形，比橢圓更俐落 */
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 1px;
+}
+
+/* 狀態顏色：改為莫蘭迪色系 (低飽和度) */
+.status-pending {
+  background-color: #fdf6ec; /* 淺杏色 */
+  color: #e6a23c;
+}
+
+.status-shipped {
+  background-color: #ecf5ff; /* 淺灰藍 */
+  color: #79a1cc;
+}
+
+.status-completed {
+  background-color: #f0f9eb; /* 淺草綠 */
+  color: #67c23a;
+}
+
+.status-cancelled {
+  background-color: #f4f4f5; /* 淺霧灰 */
+  color: #909399;
+}
+
+/* 2. 中間：商品列表 */
+.card-body {
+  padding: 20px 24px;
+  /* 移除原本的灰色背景，改成純白，讓空間感更大 */
+  background-color: var(--card-bg);
+}
+
+.order-item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* 垂直置中 */
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px dashed #f0f0f0; /* 使用虛線增加設計感 */
+  font-size: 0.95rem;
+  color: var(--text-main);
+}
+
+.order-item-row:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.item-name {
+    /* 假設你有包一層 span class="item-name" 給商品名 */
+    font-weight: 500;
+}
+
+.item-qty {
+  color: var(--text-sub);
+  font-size: 0.9rem;
+  margin-left: 10px;
+}
+
+/* 3. 底部：金額與按鈕 */
+.card-footer {
+  padding: 18px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fcfcfb; /* 極淺的米色底，區分區塊 */
+  border-top: 1px solid var(--border-color);
+}
+
+.total-section {
+  display: flex;
+  align-items: baseline; /* 讓文字底部對齊 */
+  gap: 10px;
+}
+
+.total-label {
+  font-size: 0.85rem;
+  color: var(--text-sub);
+}
+
+.total-price {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--price-color);
+  font-family: 'Segoe UI', sans-serif; /* 數字維持清楚的字體 */
+}
+
+.action-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+/* 按鈕樣式 (重點改造) */
+button {
+  padding: 8px 20px;
+  border-radius: 4px; /* 俐落的小圓角 */
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 0.5px;
+}
+
+/* 次要按鈕：細灰框 */
+.btn-outline {
+  background: transparent;
+  border: 1px solid #dcdfe6;
+  color: #606266;
+}
+
+.btn-outline:hover {
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+  background-color: transparent;
+}
+
+/* 主要按鈕：無印風多用深灰或大地色，少用亮藍 */
+.btn-primary {
+  background: #5a5a5a; /* 深暖灰 */
+  border: 1px solid #5a5a5a;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #404040;
+  border-color: #404040;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15); /* 懸浮時加一點陰影 */
+}

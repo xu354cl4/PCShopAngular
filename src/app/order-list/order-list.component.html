@@ -1,0 +1,52 @@
+<div class="order-container">
+  <h2 class="page-title">我的訂單記錄</h2>
+
+  <div class="order-list">
+    @for (order of orders; track order.orderId) {
+    <div class="order-card">
+
+      <div class="card-header">
+        <div class="order-info">
+          <span class="order-id">#{{ order.orderId }}</span>
+          <span class="order-date">{{ order.orderDate | date:'yyyy/MM/dd HH:mm' }}</span>
+        </div>
+        <div class="status-badge" [ngClass]="getStatusClass(order.status)">
+          {{ getStatusLabel(order.status) }}
+        </div>
+      </div>
+
+      <div class="card-body">
+        <!-- <div class="order-item-row">
+          <span class="item-name">無印風純棉 T-shirt / 白色</span>
+          <span class="item-qty">x 1</span>
+        </div> -->
+        @for (item of order.items; track item.name) {
+        <div class="order-item-row">
+          <span class="item-name">{{ item.name }}</span>
+          <span class="item-qty">x{{ item.quantity }}</span>
+        </div>
+        }
+      </div>
+
+      <div class="card-footer">
+        <div class="total-section">
+          <span class="total-label">訂單總額</span>
+          <span class="total-price">{{ order.totalAmount | currency:'TWD':'symbol':'1.0-0' }}</span>
+        </div>
+
+        <div class="action-buttons">
+          <button class="btn-outline">查看詳情</button>
+          @if (order.status === 'Completed') {
+          <button class="btn-primary">再次購買</button>
+          }
+        </div>
+      </div>
+
+    </div>
+    } @empty {
+    <div class="empty-state">
+      <p>目前沒有訂單記錄</p>
+    </div>
+    }
+  </div>
+</div>

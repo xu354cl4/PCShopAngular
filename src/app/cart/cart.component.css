@@ -1,0 +1,335 @@
+.muji-container {
+  max-width: 1100px;
+  margin: 40px auto 80px;
+  padding: 0 20px;
+}
+
+.page-title {
+  font-weight: 500;
+  color: var(--muji-text);
+  margin-bottom: 25px;
+  border-left: 4px solid var(--muji-primary);
+  padding-left: 12px;
+}
+
+/* Grid Layout Setup */
+.cart-header,
+.cart-item {
+  display: grid;
+  grid-template-columns: 50px 4fr 1.5fr 2fr 1.5fr 1fr; /* 仿蝦皮比例 */
+  align-items: center;
+  gap: 10px;
+  padding: 15px 20px;
+}
+
+/* Header Style */
+.cart-header {
+  background: var(--muji-card);
+  color: var(--muji-text-light);
+  font-size: 14px;
+  margin-bottom: 15px;
+  border-radius: 3px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+/* Item Style */
+.cart-item {
+  background: var(--muji-card);
+  border: 1px solid var(--muji-border);
+  margin-bottom: 12px;
+  border-radius: 3px;
+  transition: all 0.2s;
+
+  &:hover {
+    border-color: #dcdcdc;
+  }
+}
+
+.item-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+
+  img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    background: #f5f5f5;
+  }
+
+  .details {
+    .name {
+      font-size: 16px;
+      color: var(--muji-text);
+      margin-bottom: 6px;
+    }
+
+    .spec-badge {
+      display: inline-block;
+      font-size: 12px;
+      color: #888;
+      background: #f0f0f0;
+      padding: 2px 8px;
+      border-radius: 2px;
+    }
+  }
+}
+
+/* Quantity Control */
+.qty-control {
+  display: flex;
+  width: fit-content;
+  border: 1px solid var(--muji-border);
+
+  button {
+    background: #fff;
+    border: none;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    color: #666;
+    transition: background 0.2s;
+    &:hover {
+      background: #f5f5f5;
+    }
+
+    &:disabled {
+      color: #ccc;
+      cursor: default;
+    }
+  }
+
+  input {
+    width: 40px;
+    text-align: center;
+    border: none;
+    border-left: 1px solid var(--muji-border);
+    border-right: 1px solid var(--muji-border);
+    color: var(--muji-text);
+    font-size: 14px;
+  }
+}
+
+.highlight-text {
+  color: var(--muji-primary);
+  font-weight: 600;
+}
+
+.btn-delete {
+  background: transparent;
+  border: none;
+  color: var(--muji-text-light);
+  cursor: pointer;
+  font-size: 14px;
+  &:hover {
+    color: var(--muji-danger);
+    text-decoration: underline;
+  }
+}
+
+/* Sticky Footer (結帳列) */
+.checkout-bar {
+  position: sticky;
+  bottom: 0; /* 確保它是黏在底部 (原本可能漏了這個或在上面) */
+  width: 100%;
+  background-color: #fcfaf8;
+  border-top: 1px solid var(--muji-primary, #B94A48); /* 確保有邊框顏色 */
+  padding: 15px 20px;
+  margin-top: 20px;
+  border-radius: 3px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.05);
+  z-index: 100;
+
+  /* 左側全選區塊 */
+  .bar-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    color: #333;
+    white-space: nowrap; /* 防止文字換行 */
+  }
+
+  /* 右側區塊 (包含 輸入框、折價券、總價、按鈕) */
+  .bar-right {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* 控制各個元件之間的距離 */
+    flex-wrap: wrap; /* 如果螢幕稍小允許換行，避免破版 */
+    justify-content: flex-end; /* 靠右對齊 */
+
+    /* --- 新增：折扣碼輸入區塊樣式 --- */
+    .code-input-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      label {
+        font-size: 14px;
+        color: #555;
+        font-weight: 500;
+        white-space: nowrap;
+        display: none; /* 桌面版空間若不足可隱藏 label，若要顯示請拿掉這行 */
+      }
+      @media (min-width: 1200px) {
+         label { display: block; } /* 螢幕夠寬才顯示 label */
+      }
+
+      input {
+        width: 120px;
+        padding: 9px 12px;
+        font-size: 14px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        outline: none;
+        transition: border 0.2s;
+
+        &:focus {
+          border-color: #7f6a5f; /* Muji 棕色系 */
+        }
+      }
+    }
+
+    /* 1. 折價券選單區塊 */
+    .coupon-selector {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      label {
+        font-size: 14px;
+        color: #555;
+        font-weight: 500;
+        white-space: nowrap;
+      }
+
+      select#couponSelect {
+        appearance: none;
+        width: 180px; /* 稍微調小一點以免太擠 */
+        max-width: 260px;
+        padding: 9px 30px 9px 12px;
+        font-size: 14px;
+        color: #333;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        cursor: pointer;
+
+        /* 箭頭樣式 */
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        background-size: 14px;
+
+        &:focus {
+          outline: none;
+          border-color: #7f6a5f;
+        }
+      }
+    }
+
+    /* 2. 價格資訊區塊 */
+    .total-info {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      min-width: 120px; /* 確保價格區塊不會一直跳動 */
+
+      .price-row {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+        white-space: nowrap;
+      }
+
+      .original-price {
+        text-decoration: line-through;
+        color: #999;
+        font-size: 13px;
+      }
+
+      .final-price {
+        font-size: 20px; /* 稍微調整字體大小平衡視覺 */
+        color: var(--muji-primary, #B94A48);
+        font-weight: bold;
+      }
+
+      .discount-text {
+        color: #4A7c59;
+        font-size: 12px;
+        margin-top: 2px;
+      }
+    }
+
+    /* 3. 結帳按鈕 */
+    .btn-checkout {
+      background: var(--muji-primary, #333);
+      color: white;
+      border: none;
+      padding: 12px 30px; /* 稍微調整寬度 */
+      font-size: 16px;
+      border-radius: 2px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: opacity 0.2s;
+
+      &:hover {
+        opacity: 0.9;
+      }
+    }
+  }
+}
+
+/* 手機版響應式修正 */
+@media (max-width: 768px) {
+  .checkout-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+
+    .bar-left {
+        padding-bottom: 10px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .bar-right {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 15px;
+
+      .code-input-group,
+      .coupon-selector {
+        width: 100%;
+        justify-content: space-between;
+
+        label { display: block; } /* 手機版顯示 label */
+
+        input, select#couponSelect {
+            flex: 1; /* 填滿剩餘空間 */
+            width: auto;
+        }
+      }
+
+      .total-info {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        margin: 10px 0;
+
+        .price-row {
+            margin-left: auto; /* 靠右 */
+        }
+      }
+
+      .btn-checkout {
+        width: 100%;
+        padding: 14px; /* 手機版按鈕大一點好按 */
+      }
+    }
+  }
+}

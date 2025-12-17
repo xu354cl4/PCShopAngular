@@ -1,3 +1,35 @@
 /* You can add global styles to this file, and also import other style files */
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+/* Global Theme Variables */
+:root {
+  --muji-primary: #7F0019;
+  /* Muji 常用的深紅 (或你原本的 #B94A48) */
+  --muji-text: #333333;
+  /* 深灰黑 */
+  --muji-text-light: #777777;
+  /* 淺灰 */
+  --muji-card: #FFFFFF;
+  /* 純白卡片 */
+  --muji-border: #E0E0E0;
+  /* 淺灰邊框 */
+  --muji-danger: #D32F2F;
+  /* 錯誤/刪除紅 */
+}
+
+/* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}

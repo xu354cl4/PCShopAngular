@@ -21,3 +21,8 @@ body {
   cursor: pointer;
   z-index: 2147483647;
 }
+
+
+.floating-btn i {
+  font-size: 28px;
+}
