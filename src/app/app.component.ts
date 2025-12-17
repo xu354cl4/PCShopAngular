@@ -13,7 +13,6 @@ import { GamehomeComponent } from './gamehome/gamehome.component';
   imports: [RouterOutlet,
     LoginpageComponent,
     CommonModule,
-
     RouterModule,
     HeaderComponent,
     FooterComponent,
@@ -23,15 +22,24 @@ import { GamehomeComponent } from './gamehome/gamehome.component';
 })
 export class AppComponent {
   title = 'PcShop';
+  isGameHomeOpened = false;
 
   constructor(private dialog: MatDialog) { }
 
   openGameHome() {
-    this.dialog.open(GamehomeComponent, {
-      width: '80vw',
-      height: '80vh',
+    //  一點就先藏按鈕
+    this.isGameHomeOpened = true;
+
+    const dialogRef = this.dialog.open(GamehomeComponent, {
+      width: '95vw',
+      height: '95vh',
       maxWidth: '100vw',
-      maxHeight: '100vh',
+      maxHeight: '100vh'
+    });
+
+    //  Gamehome 關閉 → 按鈕回來
+    dialogRef.afterClosed().subscribe(() => {
+      this.isGameHomeOpened = false;
     });
   }
 

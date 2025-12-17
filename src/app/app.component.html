@@ -20,7 +20,7 @@
 <app-footer></app-footer>
 
 <!-- Floating Game Button -->
-<button class="floating-btn" (click)="openGameHome()">
+<button class="floating-btn" *ngIf="!isGameHomeOpened" (click)="openGameHome()">
   <i class="lni lni-game"></i>
 </button>
 
