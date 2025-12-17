@@ -1,7 +1,6 @@
 <div class="page-wrapper">
   <div class="container-fluid mt-4">
 
-    <!-- 左右主容器 -->
     <div class="d-flex align-items-start gap-4 flex-nowrap">
 
       <!-- 左側篩選 -->
@@ -17,12 +16,12 @@
 
           <!-- 搜尋 -->
           <div class="flex-grow-1">
-            <input class="form-control" placeholder="搜尋產品..." [(ngModel)]="searchKeyword" (input)="updateProducts()" />
+            <input class="form-control" placeholder="搜尋產品..." [(ngModel)]="searchKeyword" (input)="fetchProducts()" />
           </div>
 
           <!-- 排序 -->
           <div style="width: 180px;">
-            <select class="form-control" [(ngModel)]="sortBy" (change)="updateProducts()">
+            <select class="form-control" [(ngModel)]="sortBy" (change)="fetchProducts()">
               <option value="name">依名稱排序</option>
               <option value="priceAsc">價格由低到高</option>
               <option value="priceDesc">價格由高到低</option>
@@ -40,8 +39,13 @@
 
         </div>
 
+        <!-- loading -->
+        <div *ngIf="loading" class="text-center my-5">
+          <div class="spinner-border text-primary" role="status"></div>
+        </div>
+
         <!-- 商品列表 -->
-        <div class="row g-3">
+        <div class="row g-3" *ngIf="!loading && pagedProducts.length">
           <div class="col-xl-3 col-lg-4 col-md-6 col-12" *ngFor="let product of pagedProducts">
             <div class="card h-100">
               <a [routerLink]="['/products', product.id]">
@@ -60,6 +64,11 @@
               </div>
             </div>
           </div>
+        </div>
+
+        <!-- 沒有資料 -->
+        <div *ngIf="!loading && pagedProducts.length === 0" class="text-center my-5">
+          <p>沒有符合條件的產品</p>
         </div>
 
         <!-- 分頁 -->

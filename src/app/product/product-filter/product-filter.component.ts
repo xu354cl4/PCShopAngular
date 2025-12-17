@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProductFilter } from '../models/product-filter.model';
@@ -10,59 +10,35 @@ import { ProductFilter } from '../models/product-filter.model';
   templateUrl: './product-filter.component.html',
   styleUrls: ['./product-filter.component.css']
 })
-export class ProductFilterComponent implements OnInit {
+export class ProductFilterComponent {
 
   @Output() filterChange = new EventEmitter<ProductFilter>();
 
-  // 篩選條件
-  filter: ProductFilter = {
-    minPrice: null,
-    maxPrice: null,
-    categories: []
-  };
+  minPrice: number | null = null;
+  maxPrice: number | null = null;
+  categories: { name: string, checked: boolean }[] = [
+    { name: 'Watches', checked: false },
+    { name: 'Phones', checked: false },
+    { name: 'Headphones', checked: false },
+    { name: 'TV', checked: false },
+    { name: 'Speaker', checked: false },
+    { name: 'Camera', checked: false },
+    { name: 'Laptop', checked: false },
+  ];
 
-  categories: string[] = ['Watches', 'Phones', 'Headphones', 'TV', 'Speaker', 'Camera', 'Laptop'];
-
-  ngOnInit(): void {
-    this.emitFilterChange();
+  onFilterChange(): void {
+    const selectedCategories = this.categories.filter(c => c.checked).map(c => c.name);
+    this.filterChange.emit({
+      minPrice: this.minPrice,
+      maxPrice: this.maxPrice,
+      categories: selectedCategories
+    });
   }
 
-  /** 切換分類選項 */
-  toggleCategory(category: string, checked: boolean): void {
-    if (!this.filter.categories) this.filter.categories = [];
-
-    if (checked) {
-      if (!this.filter.categories.includes(category)) {
-        this.filter.categories.push(category);
-      }
-    } else {
-      this.filter.categories = this.filter.categories.filter(c => c !== category);
-    }
-
-    this.emitFilterChange();
-  }
-
-  /** 更新價格範圍 */
-  updatePrice(): void {
-    // null 安全處理：將 undefined 或非數字轉為 null
-    this.filter.minPrice = this.filter.minPrice != null && !isNaN(this.filter.minPrice) ? this.filter.minPrice : null;
-    this.filter.maxPrice = this.filter.maxPrice != null && !isNaN(this.filter.maxPrice) ? this.filter.maxPrice : null;
-
-    this.emitFilterChange();
-  }
-
-  /** 重設篩選條件 */
   resetFilter(): void {
-    this.filter = {
-      minPrice: null,
-      maxPrice: null,
-      categories: []
-    };
-    this.emitFilterChange();
-  }
-
-  /** 發送篩選條件給父組件 */
-  private emitFilterChange(): void {
-    this.filterChange.emit({ ...this.filter });
+    this.minPrice = null;
+    this.maxPrice = null;
+    this.categories.forEach(c => c.checked = false);
+    this.onFilterChange();
   }
 }
