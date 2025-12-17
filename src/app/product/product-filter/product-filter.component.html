@@ -1,13 +1,17 @@
 <div class="filter-container p-3 border rounded">
+  <!-- 價格篩選 -->
   <h6>價格篩選</h6>
   <input type="number" class="form-control mb-2" placeholder="最低價" [(ngModel)]="minPrice" (input)="onFilterChange()">
   <input type="number" class="form-control mb-3" placeholder="最高價" [(ngModel)]="maxPrice" (input)="onFilterChange()">
 
+  <!-- 商品分類篩選 -->
   <h6>商品分類</h6>
   <div *ngFor="let c of categories" class="form-check">
+    <!-- 綁定 checked 狀態，並在改變時觸發 onFilterChange -->
     <input type="checkbox" class="form-check-input" [(ngModel)]="c.checked" (change)="onFilterChange()" [id]="c.name">
     <label class="form-check-label" [for]="c.name">{{ c.name }}</label>
   </div>
 
+  <!-- 清除篩選按鈕 -->
   <button class="btn btn-sm btn-secondary w-100 mt-2" (click)="resetFilter()">清除篩選</button>
 </div>

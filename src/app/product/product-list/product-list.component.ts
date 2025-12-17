@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 import { ProductFilterComponent } from '../product-filter/product-filter.component';
 import { ProductFilter } from '../models/product-filter.model';
 import { Product } from '../models/product.model';
-import { ProductService } from '../services/product.service';
+import { ProductService, ApiResponse } from '../services/product.service'; // 匯入 ApiResponse
 
 @Component({
   selector: 'app-product-list',
@@ -16,7 +16,7 @@ import { ProductService } from '../services/product.service';
 })
 export class ProductListComponent implements OnInit {
 
-  pagedProducts: Product[] = [];  // 永遠初始化
+  pagedProducts: Product[] = [];
   totalItems = 0;
 
   searchKeyword = '';
@@ -30,7 +30,7 @@ export class ProductListComponent implements OnInit {
   activeFilter: ProductFilter = {
     minPrice: null,
     maxPrice: null,
-    categories: []
+    categories: []  // 篩選器選的分類
   };
 
   loading = false;
@@ -38,15 +38,17 @@ export class ProductListComponent implements OnInit {
   constructor(private productService: ProductService) { }
 
   ngOnInit(): void {
-    this.fetchProducts();
+    this.fetchProducts(); // 初始化抓商品
   }
 
+  // ProductFilterComponent 發出事件時觸發
   onFilterChange(filter: ProductFilter): void {
     this.activeFilter = filter;
-    this.currentPage = 1;
+    this.currentPage = 1; // 篩選後回到第1頁
     this.fetchProducts();
   }
 
+  // 抓取商品列表
   fetchProducts(): void {
     this.loading = true;
 
@@ -55,16 +57,23 @@ export class ProductListComponent implements OnInit {
       this.currentPage,
       this.itemsPerPage,
       this.sortBy,
-      this.activeFilter.categories,
+      this.activeFilter.categories,           // 傳送篩選器選的分類
       this.activeFilter.minPrice ?? undefined,
       this.activeFilter.maxPrice ?? undefined
     ).subscribe({
-      next: res => {
-        this.pagedProducts = res.items || []; // 保證不為 undefined
+      next: (res: ApiResponse<Product[]>) => {
+        // 使用 res.data 取得商品列表
+        this.pagedProducts = res.data || [];
+
+        // 使用 res.totalItems 更新總筆數
         this.totalItems = res.totalItems || 0;
+
+        // 分頁計算
         this.totalPages = Math.ceil(this.totalItems / this.itemsPerPage);
         if (this.currentPage > this.totalPages) this.currentPage = this.totalPages || 1;
         this.generateDisplayPages();
+
+        if (res.message) console.log(res.message);
       },
       error: err => {
         console.error('取得產品資料失敗', err);
