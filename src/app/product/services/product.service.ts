@@ -16,7 +16,7 @@ export interface ApiResponse<T> {
 export class ProductService {
 
   private apiUrl = 'http://localhost:5000/api/products'; // 後端產品 API
-  private categoryApiUrl = 'http://localhost:5000/api/categories'; // 🔹 新增：後端分類 API
+  private categoryApiUrl = 'http://localhost:5000/api/categories'; // 新增：後端分類 API
 
   constructor(private http: HttpClient) { }
 

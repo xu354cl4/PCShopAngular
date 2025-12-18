@@ -1,27 +1,28 @@
 <div class="page-wrapper">
   <div class="container-fluid mt-4">
+    <div class="d-flex gap-4 flex-nowrap">
 
-    <div class="d-flex align-items-start gap-4 flex-nowrap">
-
-      <!-- 左側篩選 -->
-      <div class="filter-sidebar sticky-top">
+      <!-- 左側篩選欄 -->
+      <div class="filter-sidebar sticky-top" style="min-width: 250px;">
         <app-product-filter (filterChange)="onFilterChange($event)"></app-product-filter>
       </div>
 
-      <!-- 右側商品區 -->
+      <!-- 中間商品區 -->
       <div class="product-area flex-grow-1">
 
-        <!-- 搜尋 / 排序 / 每頁筆數 -->
-        <div class="d-flex flex-wrap gap-3 mb-4">
+        <!-- 搜尋 / 排序 / 每頁筆數 區塊 -->
+        <div class="d-flex flex-wrap align-items-center gap-3 mb-4">
 
-          <!-- 搜尋 -->
-          <div class="flex-grow-1">
-            <input class="form-control" placeholder="搜尋產品..." [(ngModel)]="searchKeyword" (input)="fetchProducts()" />
+          <!-- 搜尋欄 + 按鈕 -->
+          <div class="d-flex flex-grow-1 gap-2 align-items-center min-w-0">
+            <input class="form-control flex-grow-1" placeholder="搜尋產品..." [(ngModel)]="searchKeyword"
+              (keyup.enter)="onSearchClick()" />
+            <button class="btn btn-primary" style="white-space: nowrap;" (click)="onSearchClick()">搜尋</button>
           </div>
 
-          <!-- 排序 -->
-          <div style="width: 180px;">
-            <select class="form-control" [(ngModel)]="sortBy" (change)="fetchProducts()">
+          <!-- 排序選單 -->
+          <div class="d-flex" style="min-width: 180px;">
+            <select class="form-control" [(ngModel)]="sortBy" (change)="triggerFetch()">
               <option value="name">依名稱排序</option>
               <option value="priceAsc">價格由低到高</option>
               <option value="priceDesc">價格由高到低</option>
@@ -29,7 +30,7 @@
           </div>
 
           <!-- 每頁顯示筆數 -->
-          <div style="width: 150px;">
+          <div class="d-flex" style="min-width: 150px;">
             <select class="form-control" [(ngModel)]="itemsPerPage" (change)="changeItemsPerPage()">
               <option *ngFor="let opt of itemsPerPageOptions" [ngValue]="opt">
                 每頁 {{ opt }} 筆
@@ -46,7 +47,8 @@
 
         <!-- 商品列表 -->
         <div class="row g-3" *ngIf="!loading && pagedProducts.length">
-          <div class="col-xl-3 col-lg-4 col-md-6 col-12" *ngFor="let product of pagedProducts">
+          <div class="col-xl-3 col-lg-4 col-md-6 col-12"
+            *ngFor="let product of pagedProducts; trackBy: trackByProductId">
             <div class="card h-100">
               <a [routerLink]="['/products', product.id]">
                 <img [src]="product.imageUrl" class="card-img-top" [alt]="product.name" />
@@ -100,7 +102,12 @@
         </nav>
 
       </div>
-    </div>
 
+      <!-- 右側空白欄位（可作廣告或其他展示用） -->
+      <div class="filter-sidebar sticky-top" style="min-width: 250px;">
+        <!-- 留空或放置廣告 -->
+      </div>
+
+    </div>
   </div>
 </div>

@@ -1,11 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { Subject } from 'rxjs';
+import { switchMap, takeUntil, finalize, tap } from 'rxjs/operators';
+
 import { ProductFilterComponent } from '../product-filter/product-filter.component';
 import { ProductFilter } from '../models/product-filter.model';
 import { Product } from '../models/product.model';
-import { ProductService, ApiResponse } from '../services/product.service'; // 匯入 ApiResponse
+import { ProductService, ApiResponse } from '../services/product.service';
 
 @Component({
   selector: 'app-product-list',
@@ -14,15 +17,17 @@ import { ProductService, ApiResponse } from '../services/product.service'; // �
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.css']
 })
-export class ProductListComponent implements OnInit {
+export class ProductListComponent implements OnInit, OnDestroy {
 
   pagedProducts: Product[] = [];
   totalItems = 0;
 
   searchKeyword = '';
   sortBy = 'name';
+
   itemsPerPageOptions = [5, 10, 15];
   itemsPerPage = 5;
+
   currentPage = 1;
   totalPages = 1;
   displayPages: (number | string)[] = [];
@@ -30,59 +35,86 @@ export class ProductListComponent implements OnInit {
   activeFilter: ProductFilter = {
     minPrice: null,
     maxPrice: null,
-    categories: []  // 篩選器選的分類
+    categories: []
   };
 
   loading = false;
 
+  /** RxJS 觸發器 */
+  private fetchTrigger$ = new Subject<void>();
+  private destroy$ = new Subject<void>();
+
   constructor(private productService: ProductService) { }
 
   ngOnInit(): void {
-    this.fetchProducts(); // 初始化抓商品
+    this.fetchTrigger$
+      .pipe(
+        tap(() => this.loading = true),
+        switchMap(() =>
+          this.productService.getProducts(
+            this.searchKeyword,
+            this.currentPage,
+            this.itemsPerPage,
+            this.sortBy,
+            this.activeFilter.categories,
+            this.activeFilter.minPrice ?? undefined,
+            this.activeFilter.maxPrice ?? undefined
+          ).pipe(finalize(() => this.loading = false))
+        ),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (res: ApiResponse<Product[]>) => {
+          this.pagedProducts = res.data || [];
+          this.totalItems = res.totalItems || 0;
+
+          this.totalPages = Math.ceil(this.totalItems / this.itemsPerPage);
+          if (this.currentPage > this.totalPages) {
+            this.currentPage = this.totalPages || 1;
+          }
+
+          this.generateDisplayPages();
+        },
+        error: (err) => {
+          console.error('取得產品資料失敗', err);
+          this.pagedProducts = [];
+          this.totalItems = 0;
+          this.totalPages = 1;
+        }
+      });
+
+    // 初始化載入一次
+    this.triggerFetch();
   }
 
-  // ProductFilterComponent 發出事件時觸發
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  /** 外部呼叫觸發搜尋 */
+  triggerFetch(): void {
+    this.fetchTrigger$.next();
+  }
+
+  /** 搜尋按鈕或 Enter */
+  onSearchClick(): void {
+    this.currentPage = 1;
+    this.triggerFetch();
+  }
+
+  /** 篩選改變 */
   onFilterChange(filter: ProductFilter): void {
     this.activeFilter = filter;
-    this.currentPage = 1; // 篩選後回到第1頁
-    this.fetchProducts();
+    this.currentPage = 1;
+    this.triggerFetch();
   }
 
-  // 抓取商品列表
-  fetchProducts(): void {
-    this.loading = true;
-
-    this.productService.getProducts(
-      this.searchKeyword,
-      this.currentPage,
-      this.itemsPerPage,
-      this.sortBy,
-      this.activeFilter.categories,           // 傳送篩選器選的分類
-      this.activeFilter.minPrice ?? undefined,
-      this.activeFilter.maxPrice ?? undefined
-    ).subscribe({
-      next: (res: ApiResponse<Product[]>) => {
-        // 使用 res.data 取得商品列表
-        this.pagedProducts = res.data || [];
-
-        // 使用 res.totalItems 更新總筆數
-        this.totalItems = res.totalItems || 0;
-
-        // 分頁計算
-        this.totalPages = Math.ceil(this.totalItems / this.itemsPerPage);
-        if (this.currentPage > this.totalPages) this.currentPage = this.totalPages || 1;
-        this.generateDisplayPages();
-
-        if (res.message) console.log(res.message);
-      },
-      error: err => {
-        console.error('取得產品資料失敗', err);
-        this.pagedProducts = [];
-        this.totalItems = 0;
-        this.totalPages = 1;
-      },
-      complete: () => this.loading = false
-    });
+  /** 分頁 */
+  changePage(page: number): void {
+    if (page < 1 || page > this.totalPages) return;
+    this.currentPage = page;
+    this.triggerFetch();
   }
 
   onClickPage(p: number | string): void {
@@ -90,17 +122,13 @@ export class ProductListComponent implements OnInit {
     this.changePage(p);
   }
 
-  changePage(page: number): void {
-    if (page < 1 || page > this.totalPages) return;
-    this.currentPage = page;
-    this.fetchProducts();
-  }
-
+  /** 每頁筆數改變 */
   changeItemsPerPage(): void {
     this.currentPage = 1;
-    this.fetchProducts();
+    this.triggerFetch();
   }
 
+  /** 計算分頁顯示 */
   private generateDisplayPages(): void {
     const pages: (number | string)[] = [];
     const startPage = Math.max(1, this.currentPage - 2);
@@ -111,7 +139,9 @@ export class ProductListComponent implements OnInit {
       if (startPage > 2) pages.push('...');
     }
 
-    for (let i = startPage; i <= endPage; i++) pages.push(i);
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
 
     if (endPage < this.totalPages) {
       if (endPage < this.totalPages - 1) pages.push('...');
@@ -119,5 +149,10 @@ export class ProductListComponent implements OnInit {
     }
 
     this.displayPages = pages;
+  }
+
+  /** trackBy 避免閃爍 */
+  trackByProductId(index: number, item: Product): number {
+    return item.id;
   }
 }
