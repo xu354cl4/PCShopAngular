@@ -1,23 +1,20 @@
+/* 全局頁面布局，支援 footer 貼底 */
 body {
   margin: 0;
   font-family: Arial, sans-serif;
+
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* 撐滿整個視窗高度 */
 }
 
-.floating-btn {
-  position: fixed;
-  top: 450px;
-  right: 30px;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background-color: #ff5722;
-  color: white;
-  border: none;
-  font-size: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  cursor: pointer;
-  z-index: 2147483647;
+main {
+  flex: 1 0 auto; /* 主內容自動撐滿剩餘空間 */
+}
+
+footer {
+  flex-shrink: 0; /* footer 不會縮小 */
+  padding: 20px 0;
+  text-align: center;
+  border-top: 1px solid #e0e0e0;
 }
