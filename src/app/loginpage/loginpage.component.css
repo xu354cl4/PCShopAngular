@@ -1,3 +1,22 @@
+.google-login-wrapper {
+  width: 240px;
+  height: 40px;
+}
+
+.google-login-wrapper app-google-login {
+  opacity: 0;
+}
+
+.google-login-wrapper.ready app-google-login {
+  opacity: 1;
+}
+
+.login-container *,
+.login-container *::before,
+.login-container *::after {
+  transition: none !important;
+}
+
 .login-container {
   display: flex;
   justify-content: center;
@@ -20,6 +39,7 @@
   margin-bottom: 28px;
   font-size: 24px;
   color: #333;
+  margin-top: 0;
 }
 
 .form-group {
@@ -39,6 +59,7 @@ input {
   border: 1px solid #ddd;
   border-radius: 8px;
   font-size: 15px;
+  width: 100%;
   transition: border-color 0.2s ease;
 }
 
@@ -112,6 +133,7 @@ input:focus {
   color: #fff;
   font-weight: 500;
   transition: opacity .2s ease;
+  width: 100%;
 }
 
 .social-btn img {
@@ -126,22 +148,22 @@ input:focus {
   color: #444;
 }
 
-/* Facebook */
+/* Facebook
 .social-btn.facebook {
   background: #1877f2;
 }
 
-/* LINE */
+ LINE
 .social-btn.line {
   background: #06c755;
 }
 
-/* Apple */
+ Apple
 .social-btn.apple {
   background: #000;
 }
 
-.social-btn.fb-outline {
+ .social-btn.fb-outline {
   background: #fff;
   color: #1877f2;
   border: 1px solid #1877f2;
@@ -149,7 +171,7 @@ input:focus {
 
 .social-btn.fb-outline img {
   filter: invert(27%) sepia(96%) saturate(3609%) hue-rotate(205deg) brightness(94%) contrast(90%);
-}
+}*/
 
 .links {
   display: flex;
@@ -168,13 +190,58 @@ input:focus {
   text-decoration: underline;
 }
 
+.error-alert {
+  /* 外框與背景 */
+  background-color: #fff2f0;
+  /* 極淺紅背景 */
+  border: 1px solid #ffccc7;
+  /* 淺紅邊框 */
+  border-radius: 4px;
+  /* 圓角 */
+  padding: 8px 15px;
+  /* 內距 */
+
+  /* 排版 */
+  display: flex;
+  align-items: center;
+  /* 垂直置中 */
+  margin-bottom: 16px;
+  /* 與下方元素的距離 */
+}
+
+.alert-icon {
+  color: #ff4d4f;
+  /* Icon 紅色 */
+  font-size: 16px;
+  /* Icon 大小 */
+  margin-right: 8px;
+  /* Icon 與文字的間距 */
+  flex-shrink: 0;
+  /* 防止 Icon 被壓縮 */
+}
+
+.alert-message {
+  color: #000000d9;
+  /* 文字顏色 (深灰偏黑) */
+  font-size: 14px;
+  /* 文字大小 */
+  line-height: 1.5;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+
+
+
+
+
+
 .container-3 {
   width: 500px;
   background: #fff;
   padding: 20px;
   margin: auto;
   border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .title-3 {
@@ -219,7 +286,7 @@ input:focus {
   background: #fff;
   border-radius: 12px;
   padding: 20px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   font-family: 'Segoe UI', sans-serif;
 }
 
@@ -285,7 +352,7 @@ input:focus {
   display: none;
 }
 
-.toggle-4:checked + label .arrow-4 {
+.toggle-4:checked+label .arrow-4 {
   transform: rotate(180deg);
 }
 
@@ -298,7 +365,7 @@ input:focus {
   border-left: 2px solid #f0f0f0;
 }
 
-.toggle-4:checked + label + .submenu-4 {
+.toggle-4:checked+label+.submenu-4 {
   max-height: 500px;
   padding-left: 10px;
 }
@@ -374,7 +441,7 @@ input:focus {
   margin-bottom: 20px;
   padding: 15px;
   border-radius: 4px;
-  box-shadow: 0 0 4px rgba(0,0,0,0.05);
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.05);
 }
 
 .content-title-5 {
@@ -431,15 +498,34 @@ input:focus {
   font-size: 12px;
 }
 
-.order-status.pending { background-color: #ff9800; } /* 橘 */
-.order-status.shipping { background-color: #2196f3; } /* 藍 */
-.order-status.completed { background-color: #4caf50; } /* 綠 */
+.order-status.pending {
+  background-color: #ff9800;
+}
 
-.order-id { flex: 1; }
-.order-amount { flex: 1; text-align: right; }
+/* 橘 */
+.order-status.shipping {
+  background-color: #2196f3;
+}
+
+/* 藍 */
+.order-status.completed {
+  background-color: #4caf50;
+}
+
+/* 綠 */
+
+.order-id {
+  flex: 1;
+}
+
+.order-amount {
+  flex: 1;
+  text-align: right;
+}
 
 /* 設定 & 優惠 */
-.settings-list-5 li, .coupon-list-5 li {
+.settings-list-5 li,
+.coupon-list-5 li {
   display: flex;
   justify-content: space-between;
   padding: 5px 0;
@@ -447,11 +533,11 @@ input:focus {
   transition: background-color 0.2s;
 }
 
-.settings-list-5 li:hover, .coupon-list-5 li:hover {
+.settings-list-5 li:hover,
+.coupon-list-5 li:hover {
   background-color: #fff3e0;
 }
 
 .icon {
   margin-left: 5px;
 }
-

@@ -44,7 +44,7 @@ export class AuthService {
   }
 
 
-  login(dto: { mail: string; password: string }) {
+  login(dto: { Mail: string; Password: string }) {
     return this.http.post<ExternalLoginResponse>(
       `${this.apiUrl}/login`,
       dto

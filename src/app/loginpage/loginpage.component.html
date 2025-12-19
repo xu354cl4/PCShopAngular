@@ -3,17 +3,33 @@
   <div class="card">
     <h2 class="title">會員登入</h2>
 
+    @if((errorMessage)){
+    <div class="error-alert">
+      <svg viewBox="64 64 896 896" focusable="false" data-icon="close-circle" width="1em" height="1em"
+        fill="currentColor" aria-hidden="true" class="alert-icon">
+        <path
+          d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z">
+        </path>
+      </svg>
+
+      <span class="alert-message">
+        {{errorMessage}}
+      </span>
+    </div>
+
+    }
+
     <div class="form-group">
       <label>Email</label>
-      <input type="email" placeholder="請輸入 Email" />
+      <input type="email" placeholder="請輸入 Email" [(ngModel)]="dto.Mail" />
     </div>
 
     <div class="form-group">
       <label>密碼</label>
-      <input type="password" placeholder="請輸入密碼" />
+      <input type="password" placeholder="請輸入密碼" [(ngModel)]="dto.Password" />
     </div>
 
-    <button class="login-btn" (click)="sumbit()">登入</button>
+    <button class="login-btn" (click)="submit()">登入</button>
     <div class="links">
       <a href="#">忘記密碼？</a>
       <a href="#">註冊帳號</a>
@@ -47,7 +63,10 @@
         </svg>
         LINE 登入
       </button>  -->
-      <app-google-login></app-google-login>
+      <div class="google-login-wrapper"
+        style="min-height:40px;height: 40px; display:flex; justify-content: center;align-items: center;overflow: hidden;margin-top: 10px;">
+        <app-google-login></app-google-login>
+      </div>
     </div>
   </div>
 </div>
