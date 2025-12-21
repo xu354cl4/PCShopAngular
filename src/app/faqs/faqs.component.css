@@ -1,3 +1,12 @@
+.faq-wrapper {
+  max-width: 1280px;
+  /* ⭐ 控制整體寬度 */
+  margin: 0 auto;
+  /* ⭐ 左右置中 */
+  padding: 0 16px;
+  /* ⭐ 小螢幕避免貼邊 */
+}
+
 /* 左側分類 */
 .faq-root {
   font-weight: 700;
@@ -52,11 +61,25 @@
 /* 右側內容 */
 .faq-content {
   padding: 14px 18px;
+  min-height: 60vh;
+  /* ⭐ 給高度，垂直置中才有依據 */
+
 }
 
 .faq-empty {
   color: #777;
   padding: 20px 0;
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  /* 垂直置中 */
+  justify-content: center;
+  /* 水平置中 */
+
+  text-align: center;
+  color: #777;
+  font-size: 16px;
 }
 
 .faq-title {
