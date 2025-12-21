@@ -50,4 +50,29 @@ export class AuthService {
       dto
     );
   }
+
+  forgotPassword(mail: string) {
+    return this.http.post<any>(
+      `${this.apiUrl}/forgot-password`,
+      { mail }
+    );
+  }
+
+  resetPassword(token: string, newPassword: string) {
+    return this.http.post<any>(
+      `${this.apiUrl}/reset-password`,
+      { token, newPassword }
+    );
+  }
+
+  verifyEmail(token: string) {
+    return this.http.get<any>(
+      `${this.apiUrl}/verify-email`,
+      { params: { token } }
+    );
+  }
+
+
+
+
 }

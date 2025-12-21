@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { LoginpageComponent } from "./loginpage/loginpage.component";
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterModule } from '@angular/router';
 import { HeaderComponent } from './header/header.component';
@@ -11,7 +10,6 @@ import { GamehomeComponent } from './gamehome/gamehome.component';
 
   standalone: true,
   imports: [RouterOutlet,
-    LoginpageComponent,
     CommonModule,
 
     RouterModule,

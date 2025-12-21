@@ -1,0 +1,34 @@
+<h2>帳號驗證</h2>
+
+<!-- here for forgotPasswordPage-->
+@if (mode === 'request') {
+<input type="email" placeholder="請輸入 Email" [(ngModel)]="mail" />
+
+<button (click)="sendResetMail()" [disabled]="loading">
+  {{ loading ? '寄送中...' : '寄送驗證信' }}
+</button>
+}
+
+<!-- here for Resetpassword-->
+@if (mode === 'reset') {
+<input type="password" placeholder="新密碼" [(ngModel)]="newPassword" />
+
+<input type="password" placeholder="確認密碼" [(ngModel)]="confirmPassword" />
+
+<button (click)="resetPassword()">重設密碼</button>
+}
+
+<!-- here for Verfity Mail-->
+@if (mode === 'verify') {
+<p>信箱驗證中...</p>
+}
+
+@if (message) {
+<p class="success">{{ message }}</p>
+}
+
+@if (errorMessage) {
+<p class="error">{{ errorMessage }}</p>
+}
+
+<a routerLink="/login" *ngIf="message">回登入</a>

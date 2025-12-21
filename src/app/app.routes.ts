@@ -1,3 +1,4 @@
+import { ResetpageComponent } from './resetpage/resetpage.component';
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
@@ -35,6 +36,18 @@ export const routes: Routes = [
     path: 'products',
     loadChildren: () =>
       import('./product/product.module').then(m => m.ProductModule)
+  },
+  {
+    path: 'forgot-password', loadComponent: () => import('./resetpage/resetpage.component').then(m => m.ResetpageComponent),
+    title: '忘記密碼Page'
+  },
+  {
+    path: 'reset-password', loadComponent: () => import('./resetpage/resetpage.component').then(m => m.ResetpageComponent),
+    title: '忘記密碼Page'
+  },
+  {
+    path: 'verify-email', loadComponent: () => import('./resetpage/resetpage.component').then(m => m.ResetpageComponent),
+    title: '忘記密碼Page'
   },
 
   {

@@ -1,15 +1,17 @@
+import { map } from 'rxjs';
+import { routes } from './../app.routes';
 import { AfterViewInit, Component } from '@angular/core';
 import { GoogleLoginComponent } from '../auth/google-login/google-login.component';
 import { HttpClient } from '@angular/common/http';
 import { AuthStateService } from '../Services/auth-state.service';
 import { AuthService } from '../Services/auth.service';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 declare const google: any;
 @Component({
   selector: 'app-loginpage',
-  imports: [GoogleLoginComponent, FormsModule],
+  imports: [GoogleLoginComponent, FormsModule, RouterLink],
   templateUrl: './loginpage.component.html',
   styleUrl: './loginpage.component.css'
 })
@@ -30,8 +32,17 @@ export class LoginpageComponent implements AfterViewInit {
     Mail: '',
     Password: ''
   }
-  num = 4;
+  num = 1;
   selectedPanel: string = 'overview'; // 預設帳戶總覽
+
+  goRegister() {
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
+    this.authstate.clear();   // ⭐ 非常重要
+  }
+  goForgotpassword() {
+    this.router.navigate(['forgot-password']);
+  }
 
 
   selectPanel(panel: string) {
