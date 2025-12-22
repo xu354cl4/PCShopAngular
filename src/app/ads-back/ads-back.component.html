@@ -1,0 +1,35 @@
+<div class="card p-3" style="max-width:720px;">
+  <h3>新增/修改廣告</h3>
+
+  <label>標題</label>
+  <input class="form-control mb-2" [(ngModel)]="model.title" />
+
+  <label>位置</label>
+  <select class="form-select mb-2" [(ngModel)]="model.positionID">
+    <option [ngValue]="undefined">（可不選）</option>
+    <option *ngFor="let p of positions" [ngValue]="p.positionID">
+      {{p.code}} - {{p.name}} ({{p.size}})
+    </option>
+  </select>
+
+  <label>導向 LinkUrl（先用這個，之後可改商品頁）</label>
+  <input class="form-control mb-2" [(ngModel)]="model.linkUrl" />
+
+  <label>上傳圖片/影片</label>
+  <input class="form-control mb-2" type="file" (change)="onFileChange($event.target.files[0])" />
+  <div *ngIf="uploading">上傳中...</div>
+
+  <div *ngIf="model.mediaUrl" class="mb-2">
+    <div>預覽：</div>
+    <img *ngIf="!model.mediaUrl.toLowerCase().endsWith('.mp4')" [src]="model.mediaUrl"
+      style="max-width:100%;border:1px solid #eee;">
+    <video *ngIf="model.mediaUrl.toLowerCase().endsWith('.mp4')" [src]="model.mediaUrl" controls
+      style="max-width:100%;"></video>
+  </div>
+
+  <label class="me-2">
+    <input type="checkbox" [(ngModel)]="model.status" /> 啟用
+  </label>
+
+  <button class="btn btn-primary mt-3" (click)="save()">儲存</button>
+</div>
