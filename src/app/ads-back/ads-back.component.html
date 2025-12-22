@@ -16,7 +16,7 @@
   <input class="form-control mb-2" [(ngModel)]="model.linkUrl" />
 
   <label>上傳圖片/影片</label>
-  <input class="form-control mb-2" type="file" (change)="onFileChange($event.target.files[0])" />
+  <input class="form-control mb-2" type="file" (change)="onFileChange($event)" />
   <div *ngIf="uploading">上傳中...</div>
 
   <div *ngIf="model.mediaUrl" class="mb-2">

@@ -6,26 +6,28 @@ import { AdDto, AdUpsertDto, PositionDto } from '../models/ad.models';
 @Injectable({ providedIn: 'root' })
 export class AdsApiService {
   constructor(private http: HttpClient) { }
+  private api = 'https://localhost:7001/api/ads';
+  private apiUrl = 'https://localhost:7001/api/upload';
 
   getAds(positionCode: string) {
-    return this.http.get<AdDto[]>(`/api/ads?positionCode=${positionCode}`);
+    return this.http.get<AdDto[]>(`${this.api}?positionCode=${positionCode}`);
   }
 
   getPositions() {
-    return this.http.get<PositionDto[]>(`/api/ads/positions`);
+    return this.http.get<PositionDto[]>(`${this.api}/positions`);
   }
 
   upsertAd(dto: AdUpsertDto) {
-    return this.http.post(`/api/ads`, dto);
+    return this.http.post(`${this.api}`, dto);
   }
 
   trackClick(adId: number) {
-    return this.http.post(`/api/ads/${adId}/click`, {});
+    return this.http.post(`${this.api}/${adId}/click`, {});
   }
 
   uploadMedia(file: File) {
     const form = new FormData();
     form.append('file', file);
-    return this.http.post<{ mediaUrl: string }>(`/api/upload/ad-media`, form);
+    return this.http.post<{ mediaUrl: string }>(`${this.apiUrl}/ad-media`, form);
   }
 }

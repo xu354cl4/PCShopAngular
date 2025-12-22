@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { AdDto } from '../models/ad.models';
 import { AdsApiService } from '../Services/ads.service';
 import { Router } from '@angular/router';
+import { CarouselModule } from 'primeng/carousel';
 
 @Component({
   selector: 'app-ads-front',
-  imports: [],
+  imports: [CarouselModule],
   templateUrl: './ads-front.component.html',
   styleUrl: './ads-front.component.css'
 })
