@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common'; // <--- 1. 引入
 import { Router } from '@angular/router'; // 1. 引入 Router
 import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 
 
 // 1. 定義介面 (確保放在 @Component 之前)
@@ -48,6 +49,7 @@ export class CartComponent { // 2. 這裡不用寫 implements OnInit
 
 
   // 模擬假資料：電腦周邊
+  /*
   cartItems: CartItem[] = [
     {
       id: 1,
@@ -77,8 +79,10 @@ export class CartComponent { // 2. 這裡不用寫 implements OnInit
       selected: false
     }
   ];
+  */
+  cartItems: CartItem[] = [];
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private http: HttpClient) { }
 
   goToCheckout() {
     // 使用你剛剛寫好的 selectedCount 來檢查
@@ -92,7 +96,21 @@ export class CartComponent { // 2. 這裡不用寫 implements OnInit
   }
 
   //購物車清單//
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.http.get<CartItem[]>('https://localhost:7001/api/Cart').subscribe({
+      next: (data) => {
+        this.cartItems = data;
+        // 確保所有從 API 來的資料都有 selected 狀態 (如果 API 沒給的話)
+        this.cartItems.forEach(item => {
+          if (item.selected === undefined) item.selected = false;
+        });
+        this.checkAllStatus();
+      },
+      error: (err) => {
+        console.error('載入購物車失敗', err);
+      }
+    });
+  }
 
   // 2. 修改：取得"商品小計" (尚未扣除折扣的金額)
   // 原本您的 totalAmount 邏輯移到這裡
@@ -145,10 +163,25 @@ export class CartComponent { // 2. 這裡不用寫 implements OnInit
   // ★ 變更數量 (您原本報錯的地方)
   updateQty(item: CartItem, delta: number): void {
     const newQty = item.quantity + delta;
+    console.log(item);
     if (newQty >= 1) {
-      item.quantity = newQty;
-      // 數量變更可能導致金額不足低消，需重新驗證
-      this.validateCoupon();
+      // 呼叫 API 更新後端購物車數量
+      this.http.post('https://localhost:7001/api/Cart/Update', {
+        cartItemId: item.id,
+        quantity: newQty
+      }).subscribe({
+        next: () => {
+          // API 成功後再修改前端畫面
+          item.quantity = newQty;
+          // 數量變更可能導致金額不足低消，需重新驗證
+          this.validateCoupon();
+        },
+        error: (err) => {
+          console.error('更新數量失敗', err);
+          // 這裡可以視需求加入報錯提示，例如：
+          // alert('更新數量失敗，請稍重試');
+        }
+      });
     }
   }
 
