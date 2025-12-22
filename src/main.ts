@@ -9,6 +9,7 @@ import { routes } from './app/app.routes';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { AuthInterceptor } from './app/interceptors/auth.interceptor';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { providePrimeNG } from 'primeng/config';
 
 
 bootstrapApplication(AppComponent, {
@@ -17,5 +18,6 @@ bootstrapApplication(AppComponent, {
     provideRouter(routes),
     provideHttpClient(withInterceptorsFromDi()),
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+
   ]
 });

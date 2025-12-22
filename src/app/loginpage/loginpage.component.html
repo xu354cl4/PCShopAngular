@@ -3,20 +3,36 @@
   <div class="card">
     <h2 class="title">會員登入</h2>
 
+    @if((errorMessage)){
+    <div class="error-alert">
+      <svg viewBox="64 64 896 896" focusable="false" data-icon="close-circle" width="1em" height="1em"
+        fill="currentColor" aria-hidden="true" class="alert-icon">
+        <path
+          d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z">
+        </path>
+      </svg>
+
+      <span class="alert-message">
+        {{errorMessage}}
+      </span>
+    </div>
+
+    }
+
     <div class="form-group">
       <label>Email</label>
-      <input type="email" placeholder="請輸入 Email" />
+      <input type="email" placeholder="請輸入 Email" [(ngModel)]="dto.Mail" />
     </div>
 
     <div class="form-group">
       <label>密碼</label>
-      <input type="password" placeholder="請輸入密碼" />
+      <input type="password" placeholder="請輸入密碼" [(ngModel)]="dto.Password" />
     </div>
 
-    <button class="login-btn" (click)="sumbit()">登入</button>
+    <button class="login-btn" (click)="submit()">登入</button>
     <div class="links">
-      <a href="#">忘記密碼？</a>
-      <a href="#">註冊帳號</a>
+      <a routerLink="/forgot" (click)="goForgotpassword()">忘記密碼？</a>
+      <a routerLink="/register" (click)="goRegister()">註冊帳號</a>
     </div>
 
     <div class="divider">
@@ -47,41 +63,13 @@
         </svg>
         LINE 登入
       </button>  -->
-      <app-google-login></app-google-login>
+      <div class="google-login-wrapper"
+        style="min-height:40px;height: 40px; display:flex; justify-content: center;align-items: center;overflow: hidden;margin-top: 10px;">
+        <app-google-login></app-google-login>
+      </div>
     </div>
   </div>
 </div>
-}
-@if(num == 2 ){
-<div class="container vh-100 d-flex justify-content-center align-items-center">
-  <div class="row w-100 justify-content-center">
-    <div class="col-12 col-md-6 col-lg-4">
-
-      <h3 class="text-center mb-3">取回密碼</h3>
-
-      <p class="text-muted text-center mb-4">
-        請輸入您註冊時使用的 Email，我們會寄送一封重設密碼的連結給您。
-      </p>
-
-      <div class="mb-3">
-        <label for="email" class="form-label">Email 信箱</label>
-        <input type="email" id="email" class="form-control" placeholder="example@mail.com">
-      </div>
-
-      <!-- 預留訊息區塊（未來可由 Angular 控制顯示） -->
-      <div class="alert alert-info d-none" id="messageBox">
-        已寄送重設密碼信件！
-      </div>
-
-      <div class="d-flex justify-content-between mt-4">
-        <button class="btn btn-primary w-50 me-2">送出</button>
-        <button class="btn btn-outline-secondary w-50">取消</button>
-      </div>
-
-    </div>
-  </div>
-</div>
-
 }
 
 
@@ -162,113 +150,5 @@
 
 
 
-
-}
-
-
-@if(num ==5){
-<main class="member-center-5">
-
-  <!-- 側邊欄 -->
-  <aside class="sidebar-5">
-    <h3>會員中心</h3>
-    <ul>
-      <li>帳戶總覽</li>
-      <li>訂單管理
-        <ul>
-          <li>待付款</li>
-          <li>配送中</li>
-          <li>已完成</li>
-        </ul>
-      </li>
-      <li>個人設定
-        <ul>
-          <li>基本資料</li>
-          <li>地址管理</li>
-          <li>帳號安全</li>
-        </ul>
-      </li>
-      <li>優惠管理
-        <ul>
-          <li>折價券</li>
-          <li>蝦幣紀錄</li>
-          <li>回饋活動</li>
-        </ul>
-      </li>
-    </ul>
-  </aside>
-
-  <!-- 右側內容區 -->
-  <section class="content-5">
-
-    <!-- 帳戶總覽 -->
-    <div class="content-panel-5">
-      <h2 class="content-title-5">帳戶總覽</h2>
-      <div class="card-5">
-        <h3>個人資料</h3>
-        <div class="info-grid-5">
-          <div class="info-item-5">
-            <span class="info-label-5">姓名</span>
-            <span class="info-value-5">王小明</span>
-          </div>
-          <div class="info-item-5">
-            <span class="info-label-5">生日</span>
-            <span class="info-value-5">1995/05/20</span>
-          </div>
-          <div class="info-item-5">
-            <span class="info-label-5">手機</span>
-            <span class="info-value-5">0912345678</span>
-          </div>
-          <div class="info-item-5">
-            <span class="info-label-5">Email</span>
-            <span class="info-value-5">testcom</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 訂單管理 -->
-    <div class="content-panel-5">
-      <h2 class="content-title-5">訂單管理</h2>
-      <div class="card-5">
-        <h3>最新訂單</h3>
-        <ul class="order-list-5">
-          <li><span class="order-id">#12345</span> <span class="order-status pending">待付款</span> <span
-              class="order-amount">$2,500</span></li>
-          <li><span class="order-id">#12346</span> <span class="order-status shipping">配送中</span> <span
-              class="order-amount">$1,200</span></li>
-          <li><span class="order-id">#12347</span> <span class="order-status completed">已完成</span> <span
-              class="order-amount">$3,000</span></li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- 個人設定 -->
-    <div class="content-panel-5">
-      <h2 class="content-title-5">個人設定</h2>
-      <div class="card-5">
-        <ul class="settings-list-5">
-          <li>基本資料 <span class="icon">⚙️</span></li>
-          <li>地址管理 <span class="icon">🏠</span></li>
-          <li>帳號安全 <span class="icon">🔒</span></li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- 優惠管理 -->
-    <div class="content-panel-5">
-      <h2 class="content-title-5">優惠管理</h2>
-      <div class="card-5">
-        <ul class="coupon-list-5">
-          <li>折價券 <span class="icon">💰</span></li>
-          <li>蝦幣紀錄 <span class="icon">🪙</span></li>
-          <li>回饋活動 <span class="icon">🎁</span></li>
-        </ul>
-      </div>
-    </div>
-
-  </section>
-
-</main>
 
 }

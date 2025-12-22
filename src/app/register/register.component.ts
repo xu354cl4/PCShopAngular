@@ -101,7 +101,7 @@ export class RegisterComponent implements OnInit {
       this.authService.register(formData).subscribe({
         next: () => {
           alert('註冊成功，請登入');
-          this.router.navigate(['/home']); // 跳轉去登入頁
+          this.router.navigate(['/loginpage']); // 跳轉去登入頁
         },
         error: (err) => console.error('註冊失敗', err)
       });

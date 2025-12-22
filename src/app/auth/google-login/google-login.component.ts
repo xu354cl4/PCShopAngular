@@ -53,7 +53,7 @@ export class GoogleLoginComponent implements AfterViewInit {
         localStorage.setItem('token', res.token);
         localStorage.setItem('user', JSON.stringify(res.user));
 
-        this.authState.setUser(res.user);
+        this.authState.setUser(res.token, res.user);
         // ✅ 登入成功後導到首頁（或你要的頁面）
         if (!res.user.profileCompleted) {
           // ⭐ 尚未補齊資料

@@ -1,3 +1,4 @@
+import { ResetpageComponent } from './resetpage/resetpage.component';
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
@@ -22,6 +23,9 @@ export const routes: Routes = [
     path: 'register', loadComponent: () => import('./register/register.component').then(m => m.RegisterComponent)
   },
   {
+    path: 'membership', loadComponent: () => import('./membership/membership.component').then(m => m.MembershipComponent)
+  },
+  {
     path: 'order-list', loadComponent: () => import('./order-list/order-list.component').then(m => m.OrderListComponent)
   },
   {
@@ -36,6 +40,18 @@ export const routes: Routes = [
   // 未來其他頁面也放這裡
   {
     path: 'products', loadChildren: () => import('./product/product.module').then(m => m.ProductModule)
+  },
+  {
+    path: 'forgot-password', loadComponent: () => import('./resetpage/resetpage.component').then(m => m.ResetpageComponent),
+    title: '忘記密碼Page'
+  },
+  {
+    path: 'reset-password', loadComponent: () => import('./resetpage/resetpage.component').then(m => m.ResetpageComponent),
+    title: '忘記密碼Page'
+  },
+  {
+    path: 'verify-email', loadComponent: () => import('./resetpage/resetpage.component').then(m => m.ResetpageComponent),
+    title: '忘記密碼Page'
   },
 
   {
