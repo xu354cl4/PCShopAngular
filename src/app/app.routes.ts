@@ -20,6 +20,9 @@ export const routes: Routes = [
     path: 'register', loadComponent: () => import('./register/register.component').then(m => m.RegisterComponent)
   },
   {
+    path: 'membership', loadComponent: () => import('./membership/membership.component').then(m => m.MembershipComponent)
+  },
+  {
     path: 'order-list', loadComponent: () => import('./order-list/order-list.component').then(m => m.OrderListComponent)
   },
   {
