@@ -185,13 +185,27 @@ export class CartComponent { // 2. 這裡不用寫 implements OnInit
     }
   }
 
-  // ★ 刪除商品 (您原本報錯的地方)
+  // ★ 刪除商品
   removeItem(id: number): void {
+    console.log(`現在的id是${id}`);
     if (confirm('確定要將此商品移出購物車嗎？')) {
-      this.cartItems = this.cartItems.filter(item => item.id !== id);
-      this.checkAllStatus();
-      // 刪除後可能導致金額不足低消，需重新驗證
-      this.validateCoupon();
+      this.http.delete(`https://localhost:7001/api/Cart/Delete/${id}`).subscribe({
+        next: (response) => {
+          console.log('商品已成功刪除', response);
+          // API 成功後才過濾掉該商品並重新賦值，觸發 Angular 變更偵測
+          this.cartItems = this.cartItems.filter(item => item.id !== id);
+
+          // 更新全選狀態
+          this.checkAllStatus();
+
+          // 刪除後可能導致金額低於折價券門檻，需重新驗證
+          this.validateCoupon();
+        },
+        error: (err) => {
+          console.error('刪除商品過程中發生錯誤:', err);
+          alert('刪除失敗，請檢查網路連線或稍後再試');
+        }
+      });
     }
   }
 
