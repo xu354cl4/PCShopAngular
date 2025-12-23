@@ -1,0 +1,64 @@
+<div class="content-panel-5">
+  <h2 class="content-title-5">基本資料</h2>
+
+  @if (loading) {
+  <div class="card-5">載入中...</div>
+  }
+
+  @if (!loading && error) {
+  <div class="card-5">{{ error }}</div>
+  }
+
+  @if (!loading) {
+  <div class="card-5">
+    @if (success) {
+    <div style="margin-bottom:12px;">✅ {{ success }}</div>
+    }
+
+    <form [formGroup]="form">
+      <div class="info-grid-5">
+        <div class="info-item-5">
+          <span class="info-label-5">姓名</span>
+          <input class="info-value-5" formControlName="fullName" />
+          @if (form.controls.fullName.touched && form.controls.fullName.invalid) {
+          <small style="color:#d33;">姓名必填（至少 2 字）</small>
+          }
+        </div>
+
+        <div class="info-item-5">
+          <span class="info-label-5">生日</span>
+          <input class="info-value-5" type="date" formControlName="birthDate" />
+        </div>
+
+        <div class="info-item-5">
+          <span class="info-label-5">手機</span>
+          <input class="info-value-5" formControlName="phone" />
+        </div>
+      </div>
+
+      <div style="margin-top:16px;">
+        <button type="button" class="btn btn-primary" (click)="save()" [disabled]="loading">
+          儲存
+        </button>
+        <button type="button" class="btn btn-outline-secondary" (click)="load()" [disabled]="loading"
+          style="margin-left:8px;">
+          重新載入
+        </button>
+      </div>
+
+      <div style="display:flex; gap:12px; align-items:center; margin-bottom:12px;">
+        <input type="file" accept="image/*" (change)="onFileSelected($event)" />
+        <button type="button" class="btn btn-outline-primary" (click)="uploadAvatar()"
+          [disabled]="loading || !selectedFile">
+          上傳頭像
+        </button>
+      </div>
+
+      @if (previewUrl) {
+      <img [src]="previewUrl" style="width:80px;height:80px;border-radius:50%;object-fit:cover;" />
+      }
+
+    </form>
+  </div>
+  }
+</div>

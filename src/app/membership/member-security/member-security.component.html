@@ -1,0 +1,34 @@
+<div class="content-panel-5">
+  <h2 class="content-title-5">帳號安全</h2>
+
+  @if (error) { <div class="card-5">{{error}}</div> }
+
+  @if (!canChangePassword) {
+    <div class="card-5">
+      此帳號為 <b>{{provider}}</b> 第三方登入，不支援變更密碼。
+    </div>
+  } @else {
+    <div class="card-5">
+      @if (success) { <div style="margin-bottom:12px;">✅ {{success}}</div> }
+
+      <form [formGroup]="form">
+        <div class="info-grid-5">
+          <div class="info-item-5">
+            <span class="info-label-5">目前密碼</span>
+            <input class="info-value-5" type="password" formControlName="currentPassword" />
+          </div>
+          <div class="info-item-5">
+            <span class="info-label-5">新密碼</span>
+            <input class="info-value-5" type="password" formControlName="newPassword" />
+          </div>
+        </div>
+
+        <div style="margin-top:16px;">
+          <button type="button" class="btn btn-primary" (click)="save()" [disabled]="loading">
+            更新密碼
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+</div>

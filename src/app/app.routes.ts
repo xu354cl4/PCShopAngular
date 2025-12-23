@@ -49,7 +49,10 @@ export const routes: Routes = [
     path: 'verify-email', loadComponent: () => import('./resetpage/resetpage.component').then(m => m.ResetpageComponent),
     title: '忘記密碼Page'
   },
-
+ {
+    path: 'membercenter', loadComponent: () => import('./membercenter/membercenter.component').then(m => m.MembercenterComponent),
+    title: '忘記密碼Page'
+  },
   {
     path: '**',
     redirectTo: ''

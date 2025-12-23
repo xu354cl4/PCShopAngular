@@ -18,19 +18,19 @@ export class AuthService {
     });
   }
 
-  loginWithFacebook(accessToken: string): Observable<ExternalLoginResponse> {
-    return this.http.post<ExternalLoginResponse>(`${this.apiUrl}/external-login`, {
-      provider: 'facebook',
-      accessToken: accessToken,
-    });
-  }
+  // loginWithFacebook(accessToken: string): Observable<ExternalLoginResponse> {
+  //   return this.http.post<ExternalLoginResponse>(`${this.apiUrl}/external-login`, {
+  //     provider: 'facebook',
+  //     accessToken: accessToken,
+  //   });
+  // }
 
-  loginWithLine(idToken: string): Observable<ExternalLoginResponse> {
-    return this.http.post<ExternalLoginResponse>(`${this.apiUrl}/external-login`, {
-      provider: 'line',
-      idToken: idToken,
-    });
-  }
+  // loginWithLine(idToken: string): Observable<ExternalLoginResponse> {
+  //   return this.http.post<ExternalLoginResponse>(`${this.apiUrl}/external-login`, {
+  //     provider: 'line',
+  //     idToken: idToken,
+  //   });
+  // }
 
   completeProfile(dto: CompleteProfileRequest): Observable<any> {
     return this.http.post(`${this.apiUrl}/complete-profile`, dto);

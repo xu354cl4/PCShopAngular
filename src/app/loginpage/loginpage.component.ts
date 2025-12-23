@@ -44,7 +44,6 @@ export class LoginpageComponent implements AfterViewInit {
     this.router.navigate(['forgot-password']);
   }
 
-
   selectPanel(panel: string) {
     this.selectedPanel = panel;
   }

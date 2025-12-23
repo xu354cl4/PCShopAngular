@@ -14,22 +14,25 @@ import { Router } from '@angular/router';
   styleUrl: './header.component.css'
 })
 export class HeaderComponent {
-
-
+  avatarUrl$!: Observable<string | null>;
   user$!: Observable<ExternalUser | null>;  // ⭐ 先宣告，不初始化
 
   constructor(private authState: AuthStateService, private router: Router,) {
     this.user$ = this.authState.user$;      // ⭐ 這裡再接
+    this.avatarUrl$ = this.authState.avatarUrl$;
   }
+
   goRegister() {
     localStorage.removeItem('user');
     localStorage.removeItem('token');
     this.authState.clear();   // ⭐ 非常重要
   }
 
+
   logout(): void {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     this.authState.clear();
+    this.router.navigate(['home']);
   }
 }

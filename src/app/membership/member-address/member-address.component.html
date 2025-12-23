@@ -1,0 +1,29 @@
+<p>member-address works!</p>
+<div class="content-panel-5">
+  <h2 class="content-title-5">地址管理</h2>
+
+  @if (loading) { <div class="card-5">載入中...</div> }
+  @if (!loading && error) { <div class="card-5">{{error}}</div> }
+
+  <div class="card-5">
+    @if (success) { <div style="margin-bottom:12px;">✅ {{success}}</div> }
+
+    <form [formGroup]="form">
+      <div class="info-grid-5">
+        <div class="info-item-5">
+          <span class="info-label-5">地址</span>
+          <input class="info-value-5" formControlName="address" />
+        </div>
+
+        <div class="info-item-5">
+          <span class="info-label-5">收件地址</span>
+          <input class="info-value-5" formControlName="shipAddress" />
+        </div>
+      </div>
+
+      <div style="margin-top:16px;">
+        <button type="button" class="btn btn-primary" (click)="save()" [disabled]="loading">儲存</button>
+      </div>
+    </form>
+  </div>
+</div>
