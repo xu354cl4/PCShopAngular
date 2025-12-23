@@ -1,0 +1,30 @@
+/* 頁面基礎 */
+.page-wrapper {
+  padding-top: 20px;
+  padding-bottom: 80px; /* 預留 footer 空間 */
+}
+
+/* 商品圖片 */
+.product-image {
+  width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* 商品描述 */
+.description {
+  margin-bottom: 0.5rem;
+}
+
+/* 星星評價 */
+.text-warning {
+  font-size: 1.2rem;
+}
+
+/* 響應式調整 */
+@media (max-width: 767.98px) {
+  .product-image {
+    max-height: 300px;
+  }
+}

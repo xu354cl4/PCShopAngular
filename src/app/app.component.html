@@ -20,9 +20,12 @@
 <app-footer></app-footer>
 
 <!-- Floating Game Button -->
-<button class="floating-btn" (click)="openGameHome()">
-  <i class="lni lni-game"></i>
-</button>
+<div class="floating-wrap" *ngIf="showFloating">
+  <button class="close-btn" (click)="closeFloating()">X</button>
+  <button class="floating-btn" *ngIf="!isGameHomeOpened" (click)="openGameHome()">
+    <i class="lni lni-game"></i>
+  </button>
+</div>
 
 <!-- Scroll to Top -->
 <a class="scroll-top" (click)="scrollToTop()">

@@ -1,8 +1,35 @@
-/* 原本 CSS 保留 */
+/* =========================
+   頁面基礎
+========================= */
 .page-wrapper {
   padding: 20px 0;
 }
 
+/* =========================
+   左右主容器
+========================= */
+.d-flex.align-items-start {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+/* 左側篩選 sticky */
+.filter-sidebar {
+  width: 280px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 20px;
+}
+
+/* 右側商品區 */
+.product-area {
+  flex-grow: 1;
+}
+
+/* =========================
+   搜尋 / 排序 / 分頁列
+========================= */
 .d-flex.gap-3.mb-4 {
   display: flex;
   flex-wrap: wrap;
@@ -10,58 +37,80 @@
   margin-bottom: 1.5rem;
 }
 
-.row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  margin: 0 -7.5px;
-}
+/* =========================
+   商品卡片區
+========================= */
 
-.col-md-3 {
-  flex: 0 0 23%;
-  max-width: 23%;
-  box-sizing: border-box;
-  margin-bottom: 20px;
-}
-
+/* 卡片本體 */
 .card {
+  height: 100%;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
   overflow: hidden;
-  transition: transform 0.3s, box-shadow 0.3s;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+  transform: translateY(-4px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
 }
 
-.card img {
+/* 商品圖片 */
+.card-img-top {
   width: 100%;
-  height: auto;
+  height: 200px;
+  object-fit: cover;
 }
 
-.card-body h5 {
+/* =========================
+   卡片內容（高度統一）
+========================= */
+.card-body {
+  display: flex;
+  flex-direction: column;
+  min-height: 140px; /* ⭐ 關鍵：統一高度 */
+}
+
+/* 文字區塊 */
+.text-section {
+  flex-grow: 1;
+}
+
+.text-section h6 {
   font-size: 1rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
+  line-height: 1.2rem;
+  margin-bottom: 0.3rem;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
-.card-body p {
+.text-section p {
+  font-size: 0.95rem;
   font-weight: 700;
   color: #007bff;
   margin-bottom: 0.5rem;
 }
 
-.text-warning {
+/* =========================
+   星星評分（固定底部）
+========================= */
+.star-section {
+  margin-top: auto;
   display: flex;
   gap: 2px;
-  font-size: 0.9rem;
 }
 
+.star-section i {
+  font-size: 1rem;
+  color: #ffc107;
+}
+
+/* =========================
+   分頁
+========================= */
 .pagination {
   display: flex !important;
-  flex-wrap: nowrap;
   justify-content: center;
   gap: 5px;
   padding-left: 0;
@@ -73,20 +122,13 @@
   display: inline-block;
 }
 
-.page-item.disabled .page-link,
-.page-item.active .page-link {
-  pointer-events: none;
-}
-
 .page-link {
-  display: inline-block;
   padding: 0.5rem 0.75rem;
   border: 1px solid #dee2e6;
   border-radius: 4px;
   color: #007bff;
   background-color: #fff;
   cursor: pointer;
-  text-align: center;
   transition: background-color 0.2s, color 0.2s;
 }
 
@@ -100,39 +142,31 @@
   cursor: not-allowed;
 }
 
-/* 新增：左右主容器 */
-.d-flex.align-items-start {
-  display: flex;
-  align-items: flex-start;
-  gap: 20px;
+.page-item.active .page-link {
+  background-color: #007bff;
+  color: #fff;
+  border-color: #007bff;
 }
 
-/* 左側篩選 sticky */
-.filter-sidebar {
-  width: 280px;
-  flex-shrink: 0;
-  position: sticky;
-  top: 20px; /* 距離頂部 */
-}
-
-/* 右側商品區自適應 */
-.product-area {
-  flex-grow: 1;
-}
-
-/* 小螢幕自動上下排列，取消 sticky */
+/* =========================
+   響應式（手機）
+========================= */
 @media (max-width: 767.98px) {
   .d-flex.align-items-start {
-    flex-direction: column !important;
+    flex-direction: column;
   }
 
   .filter-sidebar {
     width: 100%;
-    position: relative !important;
+    position: relative;
     top: auto;
   }
 
   .product-area {
     width: 100%;
+  }
+
+  .card-img-top {
+    height: 180px;
   }
 }

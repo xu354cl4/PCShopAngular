@@ -1,0 +1,30 @@
+<p-carousel [value]="carouselAds" [numVisible]="1" [numScroll]="1" [circular]="true" [autoplayInterval]="3500">
+
+  <ng-template pTemplate="item" let-ad>
+    <div class="ad-slide" (click)="onClick(ad)">
+      <ng-container *ngIf="!isVideo(ad.mediaUrl); else videoTpl">
+        <img class="ad-media" [src]="ad.mediaUrl" [alt]="ad.title" />
+      </ng-container>
+
+      <ng-template #videoTpl>
+        <video class="ad-media" [src]="ad.mediaUrl" muted autoplay loop playsinline></video>
+      </ng-template>
+    </div>
+  </ng-template>
+</p-carousel>
+
+<!-- 左浮動 -->
+<div class="float left" *ngIf="leftAds.length">
+  <div class="float-body" (click)="onClick(leftAds[0])">
+    <img *ngIf="!isVideo(leftAds[0].mediaUrl)" [src]="leftAds[0].mediaUrl" />
+    <video *ngIf="isVideo(leftAds[0].mediaUrl)" [src]="leftAds[0].mediaUrl" muted autoplay loop playsinline></video>
+  </div>
+</div>
+
+<!-- 右浮動 -->
+<div class="float right" *ngIf="rightAds.length">
+  <div class="float-body" (click)="onClick(rightAds[0])">
+    <img *ngIf="!isVideo(rightAds[0].mediaUrl)" [src]="rightAds[0].mediaUrl" />
+    <video *ngIf="isVideo(rightAds[0].mediaUrl)" [src]="rightAds[0].mediaUrl" muted autoplay loop playsinline></video>
+  </div>
+</div>

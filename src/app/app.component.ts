@@ -11,7 +11,6 @@ import { GamehomeComponent } from './gamehome/gamehome.component';
   standalone: true,
   imports: [RouterOutlet,
     CommonModule,
-
     RouterModule,
     HeaderComponent,
     FooterComponent,
@@ -21,15 +20,38 @@ import { GamehomeComponent } from './gamehome/gamehome.component';
 })
 export class AppComponent {
   title = 'PcShop';
+  isGameHomeOpened = false;
+  showFloating = true;
 
   constructor(private dialog: MatDialog) { }
 
+  ngOnInit(): void {
+    this.showFloating = !sessionStorage.getItem('gameFloatingClosed');
+    //讀取到gameFloatingClosed有值後，就不顯示浮動按鈕
+  }
+
+  closeFloating() {
+    this.showFloating = false;
+    sessionStorage.setItem('gameFloatingClosed', '1');
+    //gameFloatingClosed賦予一個值代表關閉過
+  }
+
   openGameHome() {
-    this.dialog.open(GamehomeComponent, {
-      width: '80vw',
-      height: '80vh',
+    //  一點就先藏按鈕
+    this.isGameHomeOpened = true;
+    this.showFloating = false;
+
+    const dialogRef = this.dialog.open(GamehomeComponent, {
+      width: '95vw',
+      height: '95vh',
       maxWidth: '100vw',
-      maxHeight: '100vh',
+      maxHeight: '100vh'
+    });
+
+    //  Gamehome 關閉 → 按鈕回來
+    dialogRef.afterClosed().subscribe(() => {
+      this.isGameHomeOpened = false;
+      this.showFloating = true;
     });
   }
 

@@ -14,10 +14,16 @@ export const routes: Routes = [
     path: 'faqs', loadComponent: () => import('./faqs/faqs.component').then(m => m.FaqsComponent)
   },
   {
+    path: 'adsback', loadComponent: () => import('./ads-back/ads-back.component').then(m => m.AdsBackComponent)
+  },
+  {
     path: 'loginpage', loadComponent: () => import('./loginpage/loginpage.component').then(m => m.LoginpageComponent)
   },
   {
     path: 'register', loadComponent: () => import('./register/register.component').then(m => m.RegisterComponent)
+  },
+  {
+    path: 'membership', loadComponent: () => import('./membership/membership.component').then(m => m.MembershipComponent)
   },
   {
     path: 'order-list', loadComponent: () => import('./order-list/order-list.component').then(m => m.OrderListComponent)
@@ -33,9 +39,7 @@ export const routes: Routes = [
 
   // 未來其他頁面也放這裡
   {
-    path: 'products',
-    loadChildren: () =>
-      import('./product/product.module').then(m => m.ProductModule)
+    path: 'products', loadChildren: () => import('./product/product.module').then(m => m.ProductModule)
   },
   {
     path: 'forgot-password', loadComponent: () => import('./resetpage/resetpage.component').then(m => m.ResetpageComponent),

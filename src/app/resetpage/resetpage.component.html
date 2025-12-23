@@ -1,78 +1,95 @@
 <div class="auth-wrapper">
   <div class="auth-card">
     <h2>帳號驗證</h2>
-    <p class="subtitle">
-      請依照指示完成帳號驗證流程
-    </p>
+    <p class="subtitle">請依照指示完成帳號驗證流程</p>
 
-    <!-- Forgot Password / Send Mail -->
+    <!-- ================= Request Reset Mail ================= -->
     @if (mode === 'request') {
+    <form [formGroup]="requestForm" (ngSubmit)="sendResetMail()">
+
       <div class="form-group">
         <label>Email</label>
-        <input
-          type="email"
-          placeholder="請輸入註冊 Email"
-          [(ngModel)]="mail"
-        />
+        <input type="email" placeholder="請輸入註冊 Email" formControlName="email" />
+
+        @if (
+        requestForm.get('email')?.invalid &&
+        requestForm.get('email')?.touched
+        ) {
+        <small class="error">
+          請輸入正確 Email
+        </small>
+        }
       </div>
 
-      <button
-        class="primary-btn"
-        (click)="sendResetMail()"
-        [disabled]="loading"
-      >
+      <button class="primary-btn" type="submit" [disabled]="requestForm.invalid || loading">
         {{ loading ? '寄送中...' : '寄送驗證信' }}
       </button>
+    </form>
     }
 
-    <!-- Reset Password -->
+    <!-- ================= Reset Password ================= -->
     @if (mode === 'reset') {
+    <form [formGroup]="resetForm" (ngSubmit)="resetPassword()">
+
       <div class="form-group">
         <label>新密碼</label>
-        <input
-          type="password"
-          placeholder="至少 8 碼"
-          [(ngModel)]="newPassword"
-        />
+        <input type="password" placeholder="至少 8 碼" formControlName="newPassword" />
+
+        @if (
+        resetForm.get('newPassword')?.invalid &&
+        resetForm.get('newPassword')?.touched
+        ) {
+        <small class="error">
+          密碼至少 8 碼
+        </small>
+        }
       </div>
 
       <div class="form-group">
         <label>確認密碼</label>
-        <input
-          type="password"
-          placeholder="再次輸入密碼"
-          [(ngModel)]="confirmPassword"
-        />
+        <input type="password" placeholder="再次輸入密碼" formControlName="confirmPassword" />
+
+        @if (
+        resetForm.errors?.['passwordMismatch'] &&
+        resetForm.touched
+        ) {
+        <small class="error">
+          兩次密碼不一致
+        </small>
+        }
       </div>
 
-      <button class="primary-btn" (click)="resetPassword()">
+      <button class="primary-btn" type="submit" [disabled]="resetForm.invalid">
         重設密碼
       </button>
+    </form>
     }
 
-    <!-- Verify Email -->
+    <!-- ================= Verify Email ================= -->
     @if (mode === 'verify') {
-      <div class="loading-box">
-        <div class="spinner"></div>
-        <p>信箱驗證中，請稍候…</p>
-      </div>
+    <div class="loading-box">
+      <div class="spinner"></div>
+      <p>信箱驗證中，請稍候…</p>
+    </div>
     }
 
-    <!-- Success / Error -->
+    <!-- ================= Messages ================= -->
     @if (message) {
-      <div class="alert success">
-        {{ message }}
-      </div>
+    <div class="alert success">
+      {{ message }}
+    </div>
     }
 
     @if (errorMessage) {
-      <div class="alert error">
-        {{ errorMessage }}
-      </div>
+    <div class="alert error">
+      {{ errorMessage }}
+    </div>
     }
 
-    <a routerLink="/login" class="back-link" *ngIf="message">
+    @if (message) {
+    <a routerLink="/loginpage" class="back-link">
       回登入頁
     </a>
+    }
   </div>
 </div>
