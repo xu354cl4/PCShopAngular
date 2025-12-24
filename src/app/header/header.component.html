@@ -48,8 +48,8 @@
 
               <!-- 已登入 -->
               <div class="user-box">
-                <img class="avatar" [src]="(avatarUrl$ | async) || ((user$ | async)?.imageUrl) || '/images/no-image.png'"
-                  alt="avatar" />
+          <img class="avatar" [src]="(avatarUrl$ | async) || '/images/no-image.png'" alt="avatar" />
+
 
                 <span class="username">
                   {{ user.fullName }}

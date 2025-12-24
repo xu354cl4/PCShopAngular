@@ -1,29 +1,40 @@
-<p>member-address works!</p>
-<div class="content-panel-5">
-  <h2 class="content-title-5">地址管理</h2>
-
-  @if (loading) { <div class="card-5">載入中...</div> }
-  @if (!loading && error) { <div class="card-5">{{error}}</div> }
-
-  <div class="card-5">
-    @if (success) { <div style="margin-bottom:12px;">✅ {{success}}</div> }
-
-    <form [formGroup]="form">
-      <div class="info-grid-5">
-        <div class="info-item-5">
-          <span class="info-label-5">地址</span>
-          <input class="info-value-5" formControlName="address" />
-        </div>
-
-        <div class="info-item-5">
-          <span class="info-label-5">收件地址</span>
-          <input class="info-value-5" formControlName="shipAddress" />
-        </div>
-      </div>
-
-      <div style="margin-top:16px;">
-        <button type="button" class="btn btn-primary" (click)="save()" [disabled]="loading">儲存</button>
-      </div>
-    </form>
+<div class="shop-wrapper">
+  <div class="shop-header">
+    <h2 class="title">地址管理</h2>
+    <div class="subtitle">設定您的預設聯絡地址與收貨地址</div>
   </div>
+
+  @if (loading) {
+  <div class="alert-box loading">讀取中...</div>
+  }
+
+  @if (!loading) {
+  @if (error) { <div class="alert-box error">{{ error }}</div> }
+  @if (success) { <div class="alert-box success">✓ {{ success }}</div> }
+
+  <form [formGroup]="form" class="shop-form">
+
+    <div class="form-row">
+      <label class="row-label">聯絡地址</label>
+      <div class="row-content" style="width: 100%;">
+        <input type="text" class="shop-input" formControlName="address" placeholder="請輸入居住地址" />
+          </div>
+          </div>
+
+      <div class="form-row">
+        <label class="row-label">收件地址</label>
+        <div class="row-content" style="width: 100%;">
+          <input type="text" class="shop-input" formControlName="shippingAddress" placeholder="請輸入收貨地址" />
+          <div class="hint-text">若未填寫將預設使用聯絡地址</div>
+        </div>
+      </div>
+
+      <div class="form-footer">
+        <button type="button" class="btn-shop primary" (click)="save()" [disabled]="loading">
+          儲存設定
+        </button>
+      </div>
+
+    </form>
+  }
 </div>

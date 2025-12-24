@@ -25,26 +25,48 @@ export class MemberApiService {
 
 
 
-getAddress() {
-  return this.http.get<{ address: string; shippingAddress: string }>(`${this.apiUrl}/address`);
+  getAddress() {
+    return this.http.get<{ address: string; shippingAddress: string }>(`${this.apiUrl}/address`);
 }
 
-updateAddress(dto: { address: string; shippingAddress: string }) {
-  return this.http.put<void>(`${this.apiUrl}/address`, dto);
+  updateAddress(dto: { address: string; shippingAddress: string }) {
+    return this.http.put<void>(`${this.apiUrl}/address`, dto);
 }
 
-getSecurity() {
-  return this.http.get<{ provider: string; canChangePassword: boolean }>(`${this.apiUrl}/security`);
+  getSecurity() {
+    return this.http.get<{ provider: string; canChangePassword: boolean }>(`${this.apiUrl}/security`);
 }
 
-changePassword(dto: { currentPassword: string; newPassword: string }) {
-  return this.http.put<void>(`${this.apiUrl}/password`, dto);
+  changePassword(dto: { currentPassword: string; newPassword: string }) {
+    return this.http.put(`${this.apiUrl}/password`, dto);
 }
 
-uploadAvatar(file: File) {
-  const fd = new FormData();
-  fd.append('file', file);
-  return this.http.post<{ imageUrl: string }>(`${this.apiUrl}/avatar`, fd);
+
+  uploadAvatar(file: File) {
+    const fd = new FormData();
+    fd.append('file', file);
+    return this.http.post<{ imageUrl: string }>(`${this.apiUrl}/avatar`, fd);
 }
+
+  sendVerifyEmail(dto: { frontendUrl: string }) {
+    return this.http.post<void>(
+      `${this.apiUrl}/verify-email/send`,
+      dto
+    );
+  }
+
+  confirmVerifyEmail(token: string) {
+    return this.http.get(
+      `${this.apiUrl}/verify-email/confirm`,
+      { params: { token } }
+    );
+  }
+
+  updateEmail(dto: { newEmail: string; frontendUrl: string }) {
+    return this.http.put<void>(
+      `${this.apiUrl}/email`,
+      dto
+    );
+  }
 
 }

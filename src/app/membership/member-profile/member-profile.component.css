@@ -1,0 +1,220 @@
+/* --- 購物車/蝦皮風格變數 --- */
+:host {
+  --shop-orange: #ee4d2d;
+  /* 核心橘色 */
+  --shop-orange-dark: #d73211;
+  /* 深橘色 (Hover用) */
+  --shop-text-main: #333333;
+  /* 主要黑字 */
+  --shop-text-sub: #555555;
+  /* 次要灰字 */
+  --shop-border: #e8e8e8;
+  /* 淺灰分隔線 */
+  --shop-bg: #ffffff;
+  /* 純白背景 */
+  --shop-input-border: #rgba(0, 0, 0, 0.14);
+  /* 輸入框邊框 */
+  --radius: 2px;
+  /* 蝦皮風格通常比較方正 */
+}
+
+/* --- 主容器：白底、填滿 --- */
+.shop-wrapper {
+  width: 100%;
+  background-color: var(--shop-bg);
+  color: var(--shop-text-main);
+  font-family: "Helvetica Neue", Helvetica, Arial, "微軟正黑體", sans-serif;
+  padding: 30px 40px;
+  box-sizing: border-box;
+  border-radius: var(--radius);
+  /* 可以選擇是否要陰影，電商通常比較平展，這裡加一點點 */
+  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.05);
+}
+
+/* --- 標題區 --- */
+.shop-header {
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--shop-border);
+}
+
+.shop-header .title {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--shop-text-main);
+  margin: 0 0 5px 0;
+}
+
+.shop-header .subtitle {
+  font-size: 0.9rem;
+  color: var(--shop-text-sub);
+}
+
+/* --- 表單佈局：寬版條列式 (解決空洞感) --- */
+.shop-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  /* 左標籤固定，右邊填滿 */
+  gap: 20px;
+  padding: 25px 0;
+  border-bottom: 1px solid var(--shop-border);
+  /* 分隔線 */
+  align-items: flex-start;
+}
+
+/* RWD: 手機版變單欄 */
+@media (max-width: 600px) {
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    padding: 15px 0;
+  }
+
+  .shop-wrapper {
+    padding: 20px;
+  }
+}
+
+.row-label {
+  font-size: 0.95rem;
+  color: rgba(85, 85, 85, 0.8);
+  /* 稍微淡一點的標籤色 */
+  text-align: right;
+  /* 電商後台常用右對齊標籤 */
+  padding-top: 10px;
+  padding-right: 15px;
+  font-weight: 500;
+}
+
+@media (max-width: 600px) {
+  .row-label {
+    text-align: left;
+    padding-right: 0;
+  }
+}
+
+/* --- 輸入框：電商風格 --- */
+.shop-input {
+  width: 100%;
+  /* 填滿右側 */
+  max-width: 100%;
+  padding: 10px 12px;
+  font-size: 0.95rem;
+  color: var(--shop-text-main);
+  background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  border-radius: var(--radius);
+  outline: none;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+  height: 40px;
+}
+
+/* Focus 時發橘光 */
+.shop-input:focus {
+  border-color: var(--shop-text-sub);
+  /* 蝦皮原生其實是變深灰，不是變橘 */
+  /* 如果你堅持要橘色 focus，可以改用 var(--shop-orange) */
+}
+
+/* 錯誤狀態 */
+.shop-input.invalid {
+  border-color: var(--shop-orange);
+  background-color: #fff6f7;
+}
+
+/* --- 輔助文字 --- */
+.hint-text {
+  font-size: 0.8rem;
+  color: var(--shop-text-sub);
+  margin-top: 5px;
+}
+
+.error-msg {
+  color: var(--shop-orange);
+  font-size: 0.8rem;
+  margin-top: 5px;
+}
+
+/* --- 按鈕區 --- */
+.form-footer {
+  margin-top: 30px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+}
+
+.btn-shop {
+  padding: 0 24px;
+  height: 40px;
+  /* 統一高度 */
+  font-size: 0.95rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+  border: 1px solid transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+/* 次要按鈕：白底灰框 */
+.btn-shop.secondary {
+  background-color: #fff;
+  border-color: rgba(0, 0, 0, 0.09);
+  color: #555;
+}
+
+.btn-shop.secondary:hover {
+  background-color: #f8f8f8;
+}
+
+/* 主要按鈕：亮橘色 */
+.btn-shop.primary {
+  background-color: var(--shop-orange);
+  color: #fff;
+  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.09);
+}
+
+.btn-shop.primary:hover:not(:disabled) {
+  background-color: var(--shop-orange-dark);
+  /* 深一點的橘 */
+}
+
+.btn-shop.primary:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* --- 狀態框 --- */
+.alert-box {
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+  border-radius: var(--radius);
+}
+
+.alert-box.loading {
+  background-color: #f5f5f5;
+  color: #666;
+  text-align: center;
+}
+
+.alert-box.success {
+  background-color: #f0f9eb;
+  /* 淺綠底 */
+  color: #52c41a;
+  border: 1px solid #b7eb8f;
+}
+
+.alert-box.error {
+  background-color: #fff6f7;
+  /* 淺橘紅底 */
+  color: var(--shop-orange);
+  border: 1px solid var(--shop-orange);
+}

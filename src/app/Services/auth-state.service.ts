@@ -1,3 +1,4 @@
+import { MatDialog } from '@angular/material/dialog';
 import { Injectable } from '@angular/core';
 import { ExternalUser } from '../models/external-login-response';
 import { BehaviorSubject } from 'rxjs';
@@ -5,6 +6,7 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthStateService {
+  private readonly api = 'https://localhost:7001';
   private userSubject = new BehaviorSubject<ExternalUser | null>(null);
   user$ = this.userSubject.asObservable();
 
@@ -31,16 +33,16 @@ export class AuthStateService {
     localStorage.setItem('token', token);
     localStorage.setItem('user', JSON.stringify(user));
 
+    const avatar =
+      user.imageUrl
+        ? (user.imageUrl.startsWith('http')
+          ? user.imageUrl
+          : `${this.api}${user.imageUrl}`)
+        : '/images/no-image.png';
 
-    const base = 'https://localhost:7001';
-    const img = user.imageUrl
-      ? (user.imageUrl.startsWith('http') ? user.imageUrl : `${base}${user.imageUrl}`)
-      : null;
-
-    this.avatarUrlSubject.next(img);
+    this.avatarUrlSubject.next(avatar);
     this.userSubject.next(user);
   }
-
   clear() {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
@@ -60,4 +62,38 @@ export class AuthStateService {
       return true;
     }
   }
+  markEmailVerified() {
+    const user = this.userSubject.value;
+    if (!user) return;
+
+    this.userSubject.next({
+      ...user,
+      isMailVerified: true
+    });
+  }
+
+
+  markEmailUnverified() {
+    const user = this.userSubject.value;
+    if (!user) return;
+
+    this.userSubject.next({
+      ...user,
+      isMailVerified: false
+    });
+  }
+
+  updateEmail(mail: string) {
+    const user = this.userSubject.value;
+    if (!user) return;
+
+    this.userSubject.next({
+      ...user,
+      mail
+    });
+  }
+  getCurrentUser(): ExternalUser | null {
+    return this.userSubject.value;
+  }
+
 }

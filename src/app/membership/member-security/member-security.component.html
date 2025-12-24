@@ -1,34 +1,75 @@
-<div class="content-panel-5">
-  <h2 class="content-title-5">帳號安全</h2>
-
-  @if (error) { <div class="card-5">{{error}}</div> }
+<div class="shop-wrapper">
+  <div class="shop-header">
+    <h2 class="title">帳號安全</h2>
+    <div class="subtitle">為了保護您的帳號安全，請定期更換密碼。</div>
+  </div>
 
   @if (!canChangePassword) {
-    <div class="card-5">
-      此帳號為 <b>{{provider}}</b> 第三方登入，不支援變更密碼。
-    </div>
-  } @else {
-    <div class="card-5">
-      @if (success) { <div style="margin-bottom:12px;">✅ {{success}}</div> }
-
-      <form [formGroup]="form">
-        <div class="info-grid-5">
-          <div class="info-item-5">
-            <span class="info-label-5">目前密碼</span>
-            <input class="info-value-5" type="password" formControlName="currentPassword" />
-          </div>
-          <div class="info-item-5">
-            <span class="info-label-5">新密碼</span>
-            <input class="info-value-5" type="password" formControlName="newPassword" />
-          </div>
-        </div>
-
-        <div style="margin-top:16px;">
-          <button type="button" class="btn btn-primary" (click)="save()" [disabled]="loading">
-            更新密碼
-          </button>
-        </div>
-      </form>
+    <div class="alert-box warning">
+      此帳號使用第三方登入 (Google/Line)，無需設定密碼。
     </div>
   }
-</div>
+
+  @if (loading) { <div class="alert-box loading">處理中...</div> }
+  @if (error) { <div class="alert-box error">{{ error }}</div> }
+  @if (success) { <div class="alert-box success">✓ {{ success }}</div> }
+
+  <form [formGroup]="form" class="shop-form">
+
+    <div class="form-row">
+      <label class="row-label">目前密碼</label>
+      <div class="row-content">
+        <input type="password" class="shop-input" formControlName="currentPassword"
+          [disabled]="loading || !canChangePassword"
+          [class.invalid]="form.get('currentPassword')?.touched && form.get('currentPassword')?.invalid"
+          placeholder="請輸入目前使用的密碼" />
+        @if (form.get('currentPassword')?.touched && form.get('currentPassword')?.invalid) {
+        <div class="error-msg">
+          @if (form.get('currentPassword')?.hasError('required')) { 請輸入目前密碼 }
+          @if (form.get('currentPassword')?.hasError('incorrect')) { 目前密碼輸入錯誤 }
+          </div>
+        }
+        </div>
+        </div>
+
+    <div class="form-row">
+      <label class="row-label">新密碼</label>
+      <div class="row-content">
+        <input type="password" class="shop-input" formControlName="newPassword" [disabled]="loading || !canChangePassword"
+          [class.invalid]="form.get('newPassword')?.touched && form.get('newPassword')?.invalid"
+          placeholder="請輸入新密碼 (至少 8 碼)" />
+
+        @if (form.get('newPassword')?.touched && form.get('newPassword')?.invalid) {
+        <div class="error-msg">
+          @if (form.get('newPassword')?.hasError('required')) { 請輸入新密碼 }
+          @if (form.get('newPassword')?.hasError('minlength')) { 密碼長度需至少 8 碼 }
+        </div>
+        }
+        </div>
+        </div>
+
+        <div class="form-row">
+          <label class="row-label">確認新密碼</label>
+          <div class="row-content">
+            <input type="password" class="shop-input" formControlName="confirmPassword"
+              [disabled]="loading || !canChangePassword"
+              [class.invalid]="form.get('confirmPassword')?.touched && form.get('confirmPassword')?.invalid"
+              placeholder="請再次輸入新密碼" />
+
+            @if (form.get('confirmPassword')?.touched || form.get('confirmPassword')?.hasError('mismatch')) {
+            <div class="error-msg">
+              @if (form.get('confirmPassword')?.hasError('required') && form.get('confirmPassword')?.touched) { 請再次輸入新密碼 }
+              @if (form.get('confirmPassword')?.hasError('mismatch')) { 兩次輸入的密碼不一致 }
+            </div>
+            }
+          </div>
+    </div>
+
+    <div class="form-footer">
+      <button type="button" class="btn-shop primary" (click)="save()" [disabled]="loading || !canChangePassword">
+        @if (loading) { 更新中... } @else { 儲存變更 }
+      </button>
+    </div>
+
+  </form>
+  </div>

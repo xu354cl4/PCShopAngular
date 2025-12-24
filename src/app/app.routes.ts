@@ -26,6 +26,9 @@ export const routes: Routes = [
     path: 'membership', loadComponent: () => import('./membership/membership.component').then(m => m.MembershipComponent)
   },
   {
+    path: 'verify-email', loadComponent: () => import('./Memberpages/verify-email/verify-email.component').then(m => m.VerifyEmailComponent)
+  },
+  {
     path: 'order-list', loadComponent: () => import('./order-list/order-list.component').then(m => m.OrderListComponent)
   },
   {

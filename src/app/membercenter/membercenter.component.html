@@ -38,7 +38,7 @@
     @if (!loading && !error && mainView === 'settings') {
 
     @if (settingsView === 'profile') {
-    <app-member-profile (saved)="onProfileSaved()" (avatarChanged)="onAvatarChanged($event)"></app-member-profile>
+    <app-member-profile (saved)="onProfileSaved()"></app-member-profile>
     }
 
     @if (settingsView === 'address') {
