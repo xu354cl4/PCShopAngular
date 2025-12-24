@@ -10,8 +10,8 @@ import { take } from 'rxjs';
 // 1. 定義介面 (確保放在 @Component 之前) UserID(下拉選單)
 export interface Coupon {
   userCouponID: number; // 新增：後端對應的 UserCouponID
-  code: string; 
-  name: string; 
+  code: string;
+  name: string;
   type: 'amount' | 'percent';
   value: number;
   minSpend: number;
@@ -107,6 +107,7 @@ export class CartComponent { // 2. 這裡不用寫 implements OnInit
       if (user) {
         this.userId = user.userId;
         this.loadCoupons(user.userId);
+        console.log(user);
       }
     });
 
@@ -126,7 +127,7 @@ export class CartComponent { // 2. 這裡不用寫 implements OnInit
   }
 
   loadCoupons(userId: number): void {
-    this.http.get<Coupon[]>(`https://localhost:7001/api/Coupons/${userId}`).subscribe({
+    this.http.get<Coupon[]>(`https://localhost:7001/api/Cart/Coupons/${userId}`).subscribe({
       next: (data) => {
         this.rawCoupons = data;
       },
