@@ -10,12 +10,13 @@ import { take } from 'rxjs';
 // 1. 定義介面 (確保放在 @Component 之前) UserID(下拉選單)
 export interface Coupon {
   userCouponID: number; // 新增：後端對應的 UserCouponID
-  code: string;
+  couponCode: string;
   name: string;
-  type: 'amount' | 'percent';
-  value: number;
-  minSpend: number;
-  disabled?: boolean;
+  discountType: string;
+  discountValue: number;
+  minOrderAmount: number;
+  isActive: boolean;
+  disabled?: boolean; // 新增：用於前端 UI 門檻判斷
 }
 
 export interface CartItem {
@@ -106,7 +107,7 @@ export class CartComponent { // 2. 這裡不用寫 implements OnInit
     this.authStateService.user$.pipe(take(1)).subscribe(user => {
       if (user) {
         this.userId = user.userId;
-        this.loadCoupons(user.userId);
+        this.loadCoupons();
         console.log(user);
       }
     });
@@ -126,9 +127,10 @@ export class CartComponent { // 2. 這裡不用寫 implements OnInit
     });
   }
 
-  loadCoupons(userId: number): void {
-    this.http.get<Coupon[]>(`https://localhost:7001/api/Cart/Coupons/${userId}`).subscribe({
+  loadCoupons(): void {
+    this.http.get<Coupon[]>(`https://localhost:7001/api/Cart/Coupons`).subscribe({
       next: (data) => {
+        console.log(data);
         this.rawCoupons = data;
       },
       error: (err) => {
@@ -149,27 +151,29 @@ export class CartComponent { // 2. 這裡不用寫 implements OnInit
   get couponsList(): Coupon[] {
     return this.rawCoupons.map(coupon => ({
       ...coupon,
-      disabled: this.subTotal < coupon.minSpend
+      disabled: this.subTotal < coupon.minOrderAmount
     }));
   }
 
   // 折扣金額計算
   get discountAmount(): number {
     // 防呆：沒選券 或 未達低消 -> 折扣為 0
-    if (!this.selectedCoupon || this.subTotal < this.selectedCoupon.minSpend) {
+    if (!this.selectedCoupon || this.subTotal < this.selectedCoupon.minOrderAmount) {
       return 0;
     }
 
-    if (this.selectedCoupon.type === 'amount') {
-      return this.selectedCoupon.value;
+    if (this.selectedCoupon.discountType === 'Fixed') {
+      return this.selectedCoupon.discountValue;
     } else {
       // 百分比折扣 (例如 0.9 折) -> 總額 * (1 - 0.9)
-      return Math.round(this.subTotal * (1 - this.selectedCoupon.value));
+      console.log(this.selectedCoupon.discountValue);
+      return Math.round(this.subTotal * (this.selectedCoupon.discountValue));
     }
   }
 
   // 最終金額
   get totalAmount(): number {
+    console.log(this.subTotal,'減',this.discountAmount);
     const final = this.subTotal - this.discountAmount;
     return final > 0 ? final : 0;
   }
@@ -236,7 +240,7 @@ export class CartComponent { // 2. 這裡不用寫 implements OnInit
 
   // ★ 輔助驗證方法 (前端基礎驗證)
   validateCoupon(): void {
-    if (this.selectedCoupon && this.subTotal < this.selectedCoupon.minSpend) {
+    if (this.selectedCoupon && this.subTotal < this.selectedCoupon.minOrderAmount) {
       this.selectedCoupon = null;
       alert('商品總額未達門檻，已取消折價券套用');
     }
@@ -261,15 +265,15 @@ export class CartComponent { // 2. 這裡不用寫 implements OnInit
 
     this.http.post<Coupon>('https://localhost:7001/api/ValidateCoupon/', payload).subscribe({
       next: (coupon) => {
-        if (this.subTotal < coupon.minSpend) {
-          alert(`此折扣碼最低消費門檻為 NT$ ${coupon.minSpend}，目前尚未達成。`);
+        if (this.subTotal < coupon.minOrderAmount) {
+          alert(`此折扣碼最低消費門檻為 NT$ ${coupon.minOrderAmount}，目前尚未達成。`);
           return;
         }
 
         // 成功套用
         this.selectedCoupon = coupon;
         // 如果這個手動輸入的券不在清單中，可以考慮加入或直接選中
-        const exists = this.rawCoupons.find(c => c.code === coupon.code);
+        const exists = this.rawCoupons.find(c => c.couponCode === coupon.couponCode);
         if (!exists) {
           this.rawCoupons = [...this.rawCoupons, coupon];
         }
@@ -292,7 +296,7 @@ export class CartComponent { // 2. 這裡不用寫 implements OnInit
     if (!c1 || !c2) return false;
 
     // 3. 如果兩個都有值，比較它們的 code (唯一代碼) 是否相同
-    return c1.code === c2.code;
+    return c1.couponCode === c2.couponCode;
   }
 
 }
