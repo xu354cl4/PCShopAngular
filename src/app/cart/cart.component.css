@@ -173,23 +173,46 @@
         color: #555;
         font-weight: 500;
         white-space: nowrap;
-        display: none; /* 桌面版空間若不足可隱藏 label，若要顯示請拿掉這行 */
+        display: none;
       }
       @media (min-width: 1200px) {
-         label { display: block; } /* 螢幕夠寬才顯示 label */
+         label { display: block; }
       }
 
-      input {
-        width: 120px;
-        padding: 9px 12px;
-        font-size: 14px;
+      .input-with-button {
+        display: flex;
+        align-items: center;
         border: 1px solid #ddd;
         border-radius: 4px;
-        outline: none;
-        transition: border 0.2s;
+        overflow: hidden;
+        background: #fff;
 
-        &:focus {
-          border-color: #7f6a5f; /* Muji 棕色系 */
+        input {
+          width: 100px;
+          padding: 9px 12px;
+          font-size: 14px;
+          border: none;
+          outline: none;
+          background: transparent;
+
+          &:focus {
+            border: none;
+          }
+        }
+
+        .btn-apply-code {
+          background: #7f6a5f;
+          color: #fff;
+          border: none;
+          padding: 9px 12px;
+          font-size: 13px;
+          cursor: pointer;
+          white-space: nowrap;
+          transition: background 0.2s;
+
+          &:hover {
+            background: #5e4d44;
+          }
         }
       }
     }

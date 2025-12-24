@@ -62,7 +62,10 @@
 
     <div class="code-input-group">
       <label for="codeInput"><i class="fas fa-keyboard"></i> 輸入折扣碼</label>
-      <input type="text" id="codeInput" placeholder="例如: SAVE2025">
+      <div class="input-with-button">
+        <input type="text" id="codeInput" [(ngModel)]="couponCodeInput" placeholder="例如: SAVE2025">
+        <button class="btn-apply-code" (click)="applyCouponCode()">套用</button>
+      </div>
     </div>
 
     <div class="coupon-selector">
