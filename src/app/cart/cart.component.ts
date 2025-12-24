@@ -248,23 +248,20 @@ export class CartComponent { // 2. 這裡不用寫 implements OnInit
 
   // ★ 呼叫後端驗證折扣碼 (手動輸入)
   applyCouponCode(): void {
-    if (!this.couponCodeInput.trim()) {
+    const couponsCode = this.couponCodeInput.trim();
+    if (!couponsCode) {
       alert('請輸入折扣碼');
       return;
     }
 
-    if (!this.userId) {
-      alert('請先登入以套用折扣碼');
-      return;
-    }
-
-    const payload = {
-      userId: this.userId,
-      couponCode: this.couponCodeInput
-    };
-
-    this.http.post<Coupon>('https://localhost:7001/api/ValidateCoupon/', payload).subscribe({
+    // 根據需求呼叫 GET 端點
+    this.http.get<Coupon>(`https://localhost:7001/api/Cart/Coupons/${couponsCode}`).subscribe({
       next: (coupon) => {
+        if (!coupon) {
+          alert('無效的折扣碼');
+          return;
+        }
+
         if (this.subTotal < coupon.minOrderAmount) {
           alert(`此折扣碼最低消費門檻為 NT$ ${coupon.minOrderAmount}，目前尚未達成。`);
           return;
@@ -272,7 +269,8 @@ export class CartComponent { // 2. 這裡不用寫 implements OnInit
 
         // 成功套用
         this.selectedCoupon = coupon;
-        // 如果這個手動輸入的券不在清單中，可以考慮加入或直接選中
+
+        // 如果這個手動輸入的券尚未在 rawCoupons 清單中，則加入
         const exists = this.rawCoupons.find(c => c.couponCode === coupon.couponCode);
         if (!exists) {
           this.rawCoupons = [...this.rawCoupons, coupon];
@@ -281,7 +279,7 @@ export class CartComponent { // 2. 這裡不用寫 implements OnInit
       },
       error: (err) => {
         console.error('驗證折扣碼失敗', err);
-        alert(err.error?.message || '無效的折扣碼或已被使用');
+        alert(err.error?.message || '無效的折扣碼或其門檻未達標');
       }
     });
   }
