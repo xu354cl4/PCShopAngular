@@ -1,3 +1,7 @@
+// blocks = 我們要存什麼資料
+// children = 我們要怎麼顯示資料
+
+
 export interface FaqCategory {
   id: number;
   categoryName: string;
@@ -25,4 +29,35 @@ export interface FaqDetail {
   question: string;
   answer: string;
   blocks: FaqBlock[];
+}
+
+export type FaqBlockType = 'TEXT' | 'IMAGE';
+
+//後台編輯中的 FAQ model
+
+export interface FaqBackBlock {
+  blockType: FaqBlockType;
+  content?: string;
+  imageUrl?: string;
+}
+
+export interface FaqAdminModel {
+  faqId?: number;
+  categoryId: number;
+  question: string;
+  blocks: FaqBackBlock[];
+}
+//送 API 用的 DTO
+export interface FaqBackBlockDto {
+  blockType: 'TEXT' | 'IMAGE';
+  content?: string;
+  imageUrl?: string;
+  sortOrder: number;
+}
+
+export interface FaqUpsertDto {
+  faqId?: number;
+  categoryId: number;
+  question: string;
+  blocks: FaqBackBlockDto[];
 }

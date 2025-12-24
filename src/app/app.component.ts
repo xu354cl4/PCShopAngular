@@ -5,6 +5,9 @@ import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { GamehomeComponent } from './gamehome/gamehome.component';
+import { AdsBackComponent } from "./ads-back/ads-back.component";
+import { FaqsBackComponent } from './faqs-back/faqs-back.component';
+
 @Component({
   selector: 'app-root',
 
@@ -14,7 +17,9 @@ import { GamehomeComponent } from './gamehome/gamehome.component';
     RouterModule,
     HeaderComponent,
     FooterComponent,
-    MatDialogModule],
+    MatDialogModule,
+    AdsBackComponent,
+    FaqsBackComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

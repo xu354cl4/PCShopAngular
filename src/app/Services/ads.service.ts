@@ -6,8 +6,8 @@ import { AdDto, AdUpsertDto, PositionDto } from '../models/ad.models';
 @Injectable({ providedIn: 'root' })
 export class AdsApiService {
   constructor(private http: HttpClient) { }
-  private api = 'https://localhost:7001/api/ads';
-  private apiUrl = 'https://localhost:7001/api/upload';
+  private api = '/api/ads';
+  private apiUrl = '/api/upload';
 
   getAds(positionCode: string) {
     return this.http.get<AdDto[]>(`${this.api}?positionCode=${positionCode}`);

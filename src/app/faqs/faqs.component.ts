@@ -28,7 +28,7 @@ export class FaqsComponent implements OnInit {
     });
   }
 
-  // Tree 組裝（你原本的是 OK 的）
+  // Tree 組裝
   buildTree(data: FaqCategory[]): FaqCategory[] {
     const map = new Map<number, FaqCategory>();
     const roots: FaqCategory[] = [];
@@ -45,8 +45,6 @@ export class FaqsComponent implements OnInit {
 
     return roots;
   }
-
-
 
   activeCategoryId?: number;
   activeFaqId?: number;
@@ -78,6 +76,4 @@ export class FaqsComponent implements OnInit {
       this.faqDetail = res;
     });
   }
-
 }
-

@@ -17,6 +17,9 @@ export const routes: Routes = [
     path: 'adsback', loadComponent: () => import('./ads-back/ads-back.component').then(m => m.AdsBackComponent)
   },
   {
+    path: 'faqsback', loadComponent: () => import('./faqs-back/faqs-back.component').then(m => m.FaqsBackComponent)
+  },
+  {
     path: 'loginpage', loadComponent: () => import('./loginpage/loginpage.component').then(m => m.LoginpageComponent)
   },
   {

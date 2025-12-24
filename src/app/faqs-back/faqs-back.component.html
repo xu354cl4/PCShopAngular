@@ -1,0 +1,85 @@
+<div class="container py-5 ">
+  <h2>FAQ 後台管理</h2>
+
+  <!-- ========== 分類選擇 ========== -->
+
+  <label>大分類</label>
+  <select class="form-select mb-3" [(ngModel)]="selectedParentCategoryId">
+    <option [ngValue]="undefined">請選擇</option>
+
+    @for (c of categories; track c.id) {
+    @if (!c.parentCategoryId) {
+    <option [ngValue]="c.id">
+      {{ c.categoryName }}
+    </option>
+    }
+    }
+  </select>
+
+  <label>小分類</label>
+  <select class="form-select mb-3" [(ngModel)]="model.categoryId">
+    <option [ngValue]="undefined">請選擇</option>
+
+    @for (c of categories; track c.id) {
+    @if (c.parentCategoryId === selectedParentCategoryId) {
+    <option [ngValue]="c.id">
+      {{ c.categoryName }}
+    </option>
+    }
+    }
+  </select>
+
+  <!-- ========== 問題標題 ========== -->
+
+  <label>問題標題</label>
+  <input class="form-control mb-3" [(ngModel)]="model.question" />
+
+  <hr />
+
+  <div class="row">
+
+    <!-- ========== 左：內容編輯 ========== -->
+    <div class="col-6">
+      <h4>內容編輯</h4>
+
+      @for (b of model.blocks; let i = $index;track i) {
+
+      @if (b.blockType === 'TEXT') {
+      <textarea class="form-control mb-2" rows="4" [(ngModel)]="b.content"></textarea>
+
+      <input type="file" class="mb-2" (change)="insertImage($event, i)" />
+      }
+
+      @if (b.blockType === 'IMAGE') {
+      <p>已插入圖片</p>
+      <!-- <img [src]="b.imageUrl" style="max-width:100%; margin:10px 0;" /> -->
+      }
+
+      <button class="btn btn-sm btn-outline-danger mb-3" (click)="removeBlock(i)">
+        刪除區塊
+      </button>
+
+      <hr />
+      }
+    </div>
+
+    <!-- ========== 右：即時預覽 ========== -->
+    <div class="col-6">
+      <h4>即時預覽</h4>
+
+      @for (b of model.blocks; track $index) {
+      @if (b.blockType === 'TEXT') {
+      <p>{{ b.content }}</p>
+      }
+
+      @if (b.blockType === 'IMAGE') {
+      <img [src]="b.imageUrl" style="max-width:100%; margin:10px 0;" />
+      }
+      }
+    </div>
+  </div>
+
+  <button class="btn btn-primary mt-3" (click)="save()">
+    儲存 FAQ
+  </button>
+</div>
