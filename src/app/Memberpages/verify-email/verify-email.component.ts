@@ -5,6 +5,7 @@ import { MemberApiService } from '../../Services/member-api.service';
 import { AuthStateService } from '../../Services/auth-state.service';
 import { Router } from '@angular/router';
 
+
 @Component({
   selector: 'app-verify-email',
   standalone: true,

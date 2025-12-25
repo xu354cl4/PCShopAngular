@@ -36,7 +36,7 @@ export class AuthStateService {
       ? (user.imageUrl.startsWith('http')
         ? user.imageUrl
         : `${this.api}${user.imageUrl}`)
-      : '/assets/images/no-image.png';
+      : '/images/no-image.png';
 
     // 3. 發送通知
     this.avatarUrlSubject.next(avatar);

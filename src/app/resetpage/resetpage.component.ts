@@ -11,6 +11,7 @@ import {
 import { AuthService } from '../Services/auth.service';
 import { AuthStateService } from '../Services/auth-state.service';
 
+//這邊的驗證功能被我分家了 ->memberpage -> verify
 @Component({
   selector: 'app-resetpage',
   standalone: true,
