@@ -5,120 +5,79 @@
     <div class="subtitle">管理你的檔案以保護你的帳戶安全</div>
   </div>
 
-  @if (loading) {
-  <div class="alert-box loading">讀取中...</div>
-  }
+  <div *ngIf="loading" class="alert-box loading">處理中...</div>
 
-  @if (!loading) {
-  @if (error) { <div class="alert-box error">{{ error }}</div> }
-  @if (success) { <div class="alert-box success">✓ {{ success }}</div> }
+  <div *ngIf="!loading">
 
-  <form [formGroup]="form" class="shop-form">
+    <div *ngIf="error" class="alert-box error">{{ error }}</div>
+    <div *ngIf="success" class="alert-box success">✓ {{ success }}</div>
 
-    <!-- ===== 大頭貼 ===== -->
-    <div style="display:flex; gap:12px; align-items:center; margin-bottom:12px;">
-      <input type="file" accept="image/*" (change)="onFileSelected($event)" />
-      <button type="button" class="btn btn-outline-primary" (click)="uploadAvatar()"
-        [disabled]="loading || !selectedFile">
-        上傳頭像
-      </button>
-    </div>
-    <!-- 預覽圖：只在「選檔後、上傳前」出現 -->
-    @if (previewUrl; as preview) {
-    <img class="avatar-preview" [src]="preview" style="width:80px;height:80px;border-radius:50%;object-fit:cover" />
-    }
-    @else {
-    <!-- 正式頭像：只吃 avatarUrl$ -->
-    @if (avatarUrl$ | async; as avatar) {
-    <img class="avatar" [src]="avatar || '/images/no-image.png'" alt="avatar"
-      style="width:80px;height:80px;border-radius:50%;object-fit:cover" />
-    }
-    }
+    <form [formGroup]="profileForm" class="shop-form">
 
-    <!-- ===== Email 驗證 ===== -->
-
-    @if (!isThirdParty) {
-    <div class="form-row">
-      <label class="row-label">Email 驗證</label>
-
-      <div class="row-content email-verify">
-
-        @if (isMailVerified) {
-        <span class="status-box success compact">✅ 已驗證</span>
-        } @else {
-        <span class="status-warn">⚠️ 尚未驗證</span>
-
-        <button type="button" class="btn-shop outline" (click)="sendVerifyEmail()" [disabled]="sendingVerifyEmail">
-          @if (sendingVerifyEmail) {
-          <span class="loading-dots">寄送中...</span>
-          } @else {
-          重新寄送驗證信
-          }
+      <div style="display:flex; gap:12px; align-items:center; margin-bottom:12px;">
+        <input type="file" accept="image/*" (change)="onFileSelected($event)" />
+        <button type="button" class="btn btn-outline-primary" (click)="uploadAvatar()" [disabled]="!selectedFile">
+          上傳頭像
         </button>
-        }
+        </div>
 
-    </div>
-    </div>
-    }
+      <div style="margin-bottom: 20px;">
+        <img *ngIf="previewUrl" [src]="previewUrl"
+          style="width:80px; height:80px; border-radius:50%; object-fit:cover; border: 2px solid #ddd;" />
+        <img *ngIf="!previewUrl" [src]="(avatarUrl$ | async) || '/assets/images/no-image.png'"
+          style="width:80px; height:80px; border-radius:50%; object-fit:cover; border: 2px solid #ddd;" />
+        </div>
 
-    <!-- ===== 姓名 ===== -->
-    <div class="form-row">
-      <label class="row-label">姓名</label>
-      <div class="row-content" style="width: 100%;">
-        <input type="text" class="shop-input" formControlName="fullName"
-          [class.invalid]="form.controls.fullName.touched && form.controls.fullName.invalid" />
-        @if (form.controls.fullName.touched && form.controls.fullName.invalid) {
-        <div class="error-msg">
-          @if (form.controls.fullName.hasError('required')) { 姓名欄位不可留空 }
-          @if (form.controls.fullName.hasError('minlength')) { 姓名過短 }
-        </div>
-        }
-        </div>
-        </div>
         <div class="form-row">
-          <label class="row-label">Email</label>
-          <div class="row-content">
-            <input type="email" class="shop-input" formControlName="email" [readonly]="isThirdParty" />
-            @if (isThirdParty) {
-            <div class="hint-text">
-              此帳號使用第三方登入，Email 無法修改
-            </div>
-            }
-            @if (!isMailVerified) {
-            <div class="status-warn">⚠️ 修改後需重新驗證</div>
-            <button type="button" class="btn-shop outline" (click)="sendVerifyEmail()"
-              [disabled]="sendingVerifyEmail || isMailVerified">
-              重新寄送驗證信
-            </button>
-            }
-        </div>
-        </div>
-        <!-- ===== 生日 ===== -->
-        <div class="form-row">
-          <label class="row-label">生日</label>
-          <div class="row-content" style="width: 100%;">
-            <input type="date" class="shop-input" formControlName="birthDate" />
+        <label class="row-label">Email</label>
+        <div class="row-content">
+          <input type="email" class="shop-input" [(ngModel)]="emailInput" [readonly]="isThirdParty"
+            [ngModelOptions]="{standalone: true}" />
+
+          <div *ngIf="isThirdParty" class="hint-text">
+            第三方登入帳號不可修改 Email
           </div>
+
+          <div *ngIf="!isThirdParty && emailInput !== (authState.getCurrentUser()?.mail ?? '')" class="status-warn"
+            style="color: #d97706; margin-top: 5px; font-size: 0.9em;">
+            ⚠️ 按下儲存後，系統將寄送驗證信至新信箱，驗證後才會生效。
+          </div>
+
+          <div *ngIf="!isThirdParty && !isMailVerified && emailInput === (authState.getCurrentUser()?.mail ?? '')"
+            class="status-warn" style="color: #dc2626; margin-top: 5px; font-size: 0.9em;">
+            ⚠️ 此 Email 尚未驗證
+            <button type="button" (click)="sendVerifyEmail()"
+              style="margin-left:8px; text-decoration: underline; background:none; border:none; color: blue; cursor: pointer;">
+              補寄驗證信
+            </button>
+          </div>
+          </div>
+      </div>
+
+      <div class="form-row">
+        <label class="row-label">姓名</label>
+        <input class="shop-input" formControlName="fullName" />
+        <div *ngIf="profileForm.get('fullName')?.invalid && profileForm.get('fullName')?.touched"
+          style="color:red; font-size:12px;">
+          請輸入姓名
+        </div>
+      </div>
+<div class="form-row">
+  <label class="row-label">生日</label>
+        <input type="date" class="shop-input" formControlName="birthDate" />
         </div>
 
-    <!-- ===== 手機 ===== -->
-    <div class="form-row">
-      <label class="row-label">手機號碼</label>
-      <div class="row-content" style="width: 100%;">
-        <input type="text" class="shop-input" formControlName="phone" />
-        <div class="hint-text">選填，方便物流聯繫</div>
-      </div>
-    </div>
+      <div class="form-row">
+        <label class="row-label">手機</label>
+        <input class="shop-input" formControlName="phone" />
+        </div>
 
-    <div class="form-footer">
-      <button type="button" class="btn-shop secondary" (click)="load()" [disabled]="loading">
-        重新載入
-      </button>
-      <button type="button" class="btn-shop primary" (click)="save()" [disabled]="loading">
-        儲存變更
-      </button>
+      <div class="form-footer" style="margin-top: 20px;">
+        <button type="button" class="btn-shop primary" (click)="save()">
+          儲存變更
+        </button>
       </div>
 
-  </form>
-  }
+    </form>
+  </div>
 </div>

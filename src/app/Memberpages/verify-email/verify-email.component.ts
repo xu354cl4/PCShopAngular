@@ -35,7 +35,7 @@ export class VerifyEmailComponent implements OnInit {
     private api: MemberApiService,
     private authState: AuthStateService,
     private router : Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const token = this.route.snapshot.queryParamMap.get('token');
@@ -53,7 +53,10 @@ export class VerifyEmailComponent implements OnInit {
 
         // ⭐ 這一行只負責「前端狀態同步」
         this.authState.markEmailVerified();
-        this.router.navigate(['/membercenter']);
+
+        setTimeout(() => {
+          this.router.navigate(['/membercenter']);
+        }, 3000);
       },
       error: err => {
         this.loading = false;

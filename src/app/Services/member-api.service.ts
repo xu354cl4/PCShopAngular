@@ -18,9 +18,14 @@ export class MemberApiService {
   return this.http.get<MemberProfileEdit>(`${this.apiUrl}/profile`);
 }
 
-  updateProfile(dto: MemberProfileEdit) {
+  updateProfile(dto: {
+    fullName: string;
+    phone: string;
+    birthDate: string | null;
+  }) {
   return this.http.put(`${this.apiUrl}/profile`, dto);
 }
+
 
 
 
@@ -62,11 +67,10 @@ export class MemberApiService {
     );
   }
 
-  updateEmail(dto: { newEmail: string; frontendUrl: string }) {
-    return this.http.put<void>(
-      `${this.apiUrl}/email`,
-      dto
-    );
+  updateEmail(newEmail: string) {
+    // 後端 MemberController 的 [HttpPut("email")] 只需  Body 帶入 newEmail
+    // 不需要再傳 frontendUrl，因為後端會自己讀 Config
+    return this.http.put(`${this.apiUrl}/email`, { newEmail });
   }
 
 }

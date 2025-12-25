@@ -21,4 +21,5 @@ export interface MemberProfileEdit {
   fullName: string;
   birthDate: string | null;
   phone: string;
+  mail?: string;
 }

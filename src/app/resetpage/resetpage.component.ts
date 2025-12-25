@@ -9,6 +9,7 @@ import {
   AbstractControl
 } from '@angular/forms';
 import { AuthService } from '../Services/auth.service';
+import { AuthStateService } from '../Services/auth-state.service';
 
 @Component({
   selector: 'app-resetpage',
@@ -33,14 +34,20 @@ export class ResetpageComponent implements OnInit {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private authState: AuthStateService,
   ) { }
 
   ngOnInit(): void {
+    this.authState.clear();
     this.initForms();
 
     const token = this.route.snapshot.queryParamMap.get('token');
-    const action = this.route.snapshot.routeConfig?.path;
+
+    // 取得路由路徑 (例如 'reset-password' 或 'verify-email')
+    // 注意：這裡有時候會因為路由設定抓不到，建議用這種寫法比較穩：
+    const urlSegments = this.route.snapshot.url.map(segment => segment.path);
+    const action = urlSegments.length > 0 ? urlSegments[0] : '';
 
     if (action === 'reset-password' && token) {
       this.mode = 'reset';
