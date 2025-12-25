@@ -1,6 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 import { Subject, takeUntil } from 'rxjs';
 
 // PrimeNG Imports
@@ -11,6 +13,7 @@ import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { CardModule } from 'primeng/card';
 import { MenuItem } from 'primeng/api';
+import { AccordionModule } from 'primeng/accordion';
 
 @Component({
   selector: 'app-checkout',
@@ -22,7 +25,8 @@ import { MenuItem } from 'primeng/api';
     CheckboxModule,
     ButtonModule,
     DropdownModule,
-    CardModule
+    CardModule,
+    AccordionModule
   ],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.css'
@@ -32,9 +36,11 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   activeIndex: number = 1; // Index 1 is the second step (0-based)
   checkoutForm: FormGroup;
 
-  // 模擬數據
-  totalAmount = 3580;
-  totalItems = 4;
+  // 從購物車傳來的數據
+  checkoutData: any;
+  totalAmount = 0;
+  totalItems = 0;
+  selectedItems: any[] = [];
 
   countryCodes = [
     { label: 'TW +886', value: '+886' },
@@ -44,7 +50,21 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
   private destroy$ = new Subject<void>();
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private http: HttpClient
+  ) {
+    // 獲取路由轉場時帶過來的 state 資料
+    const navigation = this.router.getCurrentNavigation();
+    this.checkoutData = navigation?.extras.state?.['data'];
+
+    if (this.checkoutData) {
+      this.totalAmount = this.checkoutData.totalAmount;
+      this.selectedItems = this.checkoutData.selectedItems;
+      this.totalItems = this.selectedItems.reduce((acc, item) => acc + item.quantity, 0);
+    }
+
     this.checkoutForm = this.fb.group({
       customer: this.fb.group({
         name: ['', Validators.required],
@@ -63,22 +83,26 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    // 如果沒有資料（可能是刷新的），導回購物車
+    if (!this.checkoutData) {
+      alert('無結帳資料，將導回購物車');
+      this.router.navigate(['/cart']);
+      return;
+    }
+
     this.steps = [
       { label: '購物車' },
       { label: '填寫資料' },
       { label: '訂單確認' }
     ];
 
+    this.fetchUserData();
+
     // 監聽 "同顧客資料" Checkbox 變化
     this.checkoutForm.get('delivery.sameAsCustomer')?.valueChanges
       .pipe(takeUntil(this.destroy$))
-      .subscribe((checked) => {
-        if (checked) {
-          this.syncCustomerToDelivery();
-        } else {
-          // 若取消勾選，可選擇清空或保留，這裡示範保留不做動作
-          // this.checkoutForm.get('delivery')?.patchValue({ recipientName: '', recipientPhone: '' });
-        }
+      .subscribe(() => {
+        this.syncCustomerToDelivery();
       });
 
     // 監聽顧客資料變化，若 Checkbox 勾選中，即時同步
@@ -93,11 +117,53 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
   // 同步邏輯 helper
   private syncCustomerToDelivery() {
-    const customer = this.checkoutForm.get('customer')?.value;
-    this.checkoutForm.get('delivery')?.patchValue({
-      recipientName: customer.name,
-      recipientPhone: customer.phone
-    }, { emitEvent: false }); // 避免無窮迴圈
+    const isSame = this.checkoutForm.get('delivery.sameAsCustomer')?.value;
+    const recipientName = this.checkoutForm.get('delivery.recipientName');
+    const recipientPhone = this.checkoutForm.get('delivery.recipientPhone');
+
+    if (isSame) {
+      const customer = this.checkoutForm.get('customer')?.value;
+      this.checkoutForm.get('delivery')?.patchValue({
+        recipientName: customer.name,
+        recipientPhone: customer.phone
+      }, { emitEvent: false });
+      
+      recipientName?.disable();
+      recipientPhone?.disable();
+    } else {
+      recipientName?.enable();
+      recipientPhone?.enable();
+      
+      // 當取消勾選時，清空收件人資訊
+      this.checkoutForm.get('delivery')?.patchValue({
+        recipientName: '',
+        recipientPhone: ''
+      }, { emitEvent: false });
+    }
+  }
+
+  private fetchUserData() {
+    this.http.get<any>('https://localhost:7001/api/Checkout/Users')
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (user) => {
+          if (user) {
+            this.checkoutForm.get('customer')?.patchValue({
+              name: user.name || user.fullName || '',
+              email: user.email || user.mail || '',
+              phone: user.phone || ''
+            });
+            
+            // 如果當前勾選了 "同顧客資料"，則也更新收件人資訊
+            if (this.checkoutForm.get('delivery.sameAsCustomer')?.value) {
+              this.syncCustomerToDelivery();
+            }
+          }
+        },
+        error: (err) => {
+          console.error('獲取使用者資料失敗', err);
+        }
+      });
   }
 
   ngOnDestroy() {
@@ -107,7 +173,9 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
   onSubmit() {
     if (this.checkoutForm.valid) {
-      console.log('Form Data:', this.checkoutForm.value);
+      // 使用 getRawValue() 包含被 disabled 的欄位內容
+      const formData = this.checkoutForm.getRawValue();
+      console.log('Form Data:', formData);
       // Proceed to next step
     } else {
       this.checkoutForm.markAllAsTouched();

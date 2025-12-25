@@ -5,6 +5,8 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { AuthStateService } from '../Services/auth-state.service';
 import { take } from 'rxjs';
+import { StepsModule } from 'primeng/steps';
+import { MenuItem } from 'primeng/api';
 
 
 // 1. 定義介面 (確保放在 @Component 之前) UserID(下拉選單)
@@ -33,7 +35,7 @@ export interface CartItem {
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, StepsModule],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.css'
 })
@@ -48,6 +50,10 @@ export class CartComponent { // 2. 這裡不用寫 implements OnInit
   // 改為空陣列，等待 API 回傳
   rawCoupons: Coupon[] = [];
   userId: number | null = null;
+
+  // 結帳流程進度條
+  steps: MenuItem[] = [];
+  activeIndex: number = 0; // 購物車是第 1 步 (Index 0)
 
 
   // 模擬假資料：電腦周邊
@@ -97,12 +103,27 @@ export class CartComponent { // 2. 這裡不用寫 implements OnInit
       return; // 中斷執行，不跳轉
     }
 
-    // 檢查通過，執行跳轉
-    this.router.navigate(['/checkout']);
+    // 準備要傳遞到結帳頁面的資料
+    const checkoutData = {
+      selectedItems: this.cartItems.filter(item => item.selected),
+      subTotal: this.subTotal,
+      discountAmount: this.discountAmount,
+      totalAmount: this.totalAmount,
+      selectedCoupon: this.selectedCoupon
+    };
+
+    // 檢查通過，執行跳轉並帶入資料
+    this.router.navigate(['/checkout'], { state: { data: checkoutData } });
   }
 
   //購物車清單//
   ngOnInit(): void {
+    this.steps = [
+      { label: '購物車' },
+      { label: '填寫資料' },
+      { label: '訂單確認' }
+    ];
+
     // 取得使用者 ID
     this.authStateService.user$.pipe(take(1)).subscribe(user => {
       if (user) {

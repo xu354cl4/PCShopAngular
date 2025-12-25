@@ -4,6 +4,74 @@
   padding: 0 20px;
 }
 
+/* --- 自定義步驟條 (Muji Style) --- */
+.muji-stepper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 3rem;
+  gap: 0;
+}
+
+.step-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  flex: 1;
+}
+
+.step-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid #E6E3DE;
+  background: #fff;
+  color: #999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  z-index: 2;
+  transition: all 0.3s;
+}
+
+.step-label {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #999;
+  transition: all 0.3s;
+}
+
+/* 連接線 */
+.step-line {
+  flex: 1;
+  height: 1px;
+  background: #E6E3DE;
+  margin: 0 -15px;
+  position: relative;
+  top: -14px; /* 對齊圓圈中央 */
+}
+
+/* Active 狀態 (當前進度) */
+.step-item.active .step-circle {
+  background: #333333;
+  border-color: #333333;
+  color: #fff;
+}
+
+.step-item.active .step-label {
+  color: #333;
+  font-weight: 500;
+}
+
+/* 已完成狀態 (打勾或特定色，這裡先跟 Active 統一) */
+.step-item.completed .step-circle {
+  background: #333333;
+  border-color: #333333;
+  color: #fff;
+}
+
 .page-title {
   font-weight: 500;
   color: var(--muji-text);

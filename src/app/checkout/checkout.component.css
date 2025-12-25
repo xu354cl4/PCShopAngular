@@ -10,8 +10,8 @@
   /* 次要文字 */
   --border-color: #E6E3DE;
   /* 淺杏灰 */
-  --accent-color: #9E8B78;
-  /* 霧面杏色 */
+  --accent-color: #333333;
+  /* 換成沉穩深色 */
   --accent-hover: #8C7B6A;
   /* 按鈕 Hover */
   --input-bg: #F7F7F5;
@@ -31,59 +31,195 @@
   padding: 2rem 1rem;
 }
 
-/* --- 1. Stepper Customization (覆寫 PrimeNG) --- */
-.stepper-container {
+/* --- 自定義步驟條 (Muji Style) --- */
+.muji-stepper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-bottom: 2rem;
 }
 
-/* 使用 ::ng-deep 穿透元件樣式來修改 PrimeNG 內部 */
-.stepper-container ::ng-deep .p-steps .p-steps-item .p-menuitem-link {
-  background: transparent;
+.step-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
 }
 
-.stepper-container ::ng-deep .p-steps .p-steps-item .p-menuitem-link .p-steps-number {
-  background-color: transparent;
+.step-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
   border: 1px solid var(--border-color);
+  background: #fff;
   color: var(--text-secondary);
-  font-family: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  z-index: 2;
 }
 
-.stepper-container ::ng-deep .p-steps .p-steps-item .p-menuitem-link .p-steps-title {
+.step-label {
+  margin-top: 8px;
+  font-size: 13px;
   color: var(--text-secondary);
 }
 
-/* Active/Highlight 狀態 */
-.stepper-container ::ng-deep .p-steps .p-steps-item.p-highlight .p-steps-number {
+.step-line {
+  flex: 1;
+  height: 1px;
+  background: var(--border-color);
+  position: relative;
+  top: -13px;
+}
+
+/* Active 狀態 */
+.step-item.active .step-circle {
   background: var(--accent-color);
   border-color: var(--accent-color);
   color: #fff;
 }
 
-.stepper-container ::ng-deep .p-steps .p-steps-item.p-highlight .p-steps-title {
+.step-item.active .step-label {
   color: var(--text-primary);
   font-weight: 500;
 }
 
-/* --- 2. Summary Bar --- */
-.summary-bar {
-  text-align: center;
-  margin-bottom: 2rem;
-  padding: 1rem;
-  border-top: 1px solid var(--border-color);
-  border-bottom: 1px solid var(--border-color);
+/* --- 2. Summary Accordion --- */
+.summary-accordion-container {
+  margin-bottom: 1rem;
 }
 
-.summary-bar .label {
+/* 徹底移除 PrimeNG Accordion 的所有線條與邊框 */
+.summary-accordion-container ::ng-deep .p-accordion,
+.summary-accordion-container ::ng-deep .p-accordion * {
+  border: none !important;
+  border-width: 0 !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.summary-accordion-container ::ng-deep .p-accordion .p-accordion-header .p-accordion-header-link {
+  background: transparent !important;
+  padding: 1rem 0 !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+}
+
+.summary-accordion-container ::ng-deep .p-accordion .p-accordion-content {
+  background: transparent !important;
+  padding: 0 !important;
+}
+
+.summary-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.summary-header .label {
   color: var(--text-secondary);
-  margin-right: 0.5rem;
   font-size: 0.95rem;
 }
 
-.summary-bar .price {
-  font-size: 1.5rem;
+.summary-header .price {
+  font-size: 1.4rem;
   font-weight: 500;
   color: var(--text-primary);
   letter-spacing: 0.5px;
+}
+
+.summary-header .detail-hint {
+  font-size: 0.85rem;
+  color: var(--accent-color);
+  margin-left: 0.5rem;
+}
+
+/* 商品預覽列表 */
+.checkout-items-preview {
+  padding: 0;
+}
+
+.preview-item {
+  display: flex;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid #F3F1ED;
+  gap: 1rem;
+}
+
+.preview-item:last-of-type {
+  border-bottom: none;
+}
+
+.preview-item .item-img img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid #eee;
+}
+
+.preview-item .item-info {
+  flex: 1;
+}
+
+.preview-item .item-info .name {
+  font-size: 0.95rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.preview-item .item-info .spec {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.25rem;
+}
+
+.preview-item .item-info .price-qty {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.preview-item .item-subtotal {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+/* 結帳明細總計 */
+.checkout-summary-details {
+  background-color: transparent; /* 移除背景色 */
+  padding: 1.25rem 0;
+  margin: 0; 
+}
+
+.sum-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.sum-row.discount {
+  color: #B28F75; /* 溫暖的折扣色 */
+}
+
+.sum-row.total {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px dashed var(--border-color);
+  color: var(--text-primary);
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+.sum-row .highlight {
+  font-size: 1.2rem;
+  color: var(--text-primary);
 }
 
 /* --- 3. Grid Layout --- */
@@ -265,8 +401,40 @@
   background-color: var(--accent-hover);
 }
 
-/* --- Checkbox Color Override --- */
-::ng-deep .p-checkbox .p-checkbox-box.p-highlight {
+/* --- Checkbox Styles --- */
+.checkbox-field {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.5rem 0 1.5rem 0;
+  padding: 0.75rem;
+  background-color: #F9F8F6; /* 微淺色背景區隔 */
+  border-radius: 4px;
+}
+
+.checkbox-field ::ng-deep .p-checkbox {
+  display: flex;
+  align-items: center;
+}
+
+.checkbox-field ::ng-deep .p-checkbox .p-checkbox-box {
+  border: 1px solid var(--border-color);
+  background: #fff;
+  width: 20px;
+  height: 20px;
+}
+
+.checkbox-field ::ng-deep .p-checkbox .p-checkbox-box.p-highlight {
   background-color: var(--accent-color);
   border-color: var(--accent-color);
+}
+
+.custom-checkbox-label {
+  font-size: 0.95rem;
+  color: var(--text-primary) !important;
+  margin-left: 0.5rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-block !important; /* 強制顯示 */
+  visibility: visible !important;   /* 強制可見 */
 }
