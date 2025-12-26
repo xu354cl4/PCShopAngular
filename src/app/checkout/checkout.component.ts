@@ -76,6 +76,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       delivery: this.fb.group({
         sameAsCustomer: [false],
         recipientName: ['', Validators.required],
+        recipientCountryCode: ['+886'],
         recipientPhone: ['', Validators.required],
         storeName: ['台北信義門市'] // 預設或選取後的門市
       })
@@ -125,18 +126,22 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       const customer = this.checkoutForm.get('customer')?.value;
       this.checkoutForm.get('delivery')?.patchValue({
         recipientName: customer.name,
+        recipientCountryCode: customer.countryCode,
         recipientPhone: customer.phone
       }, { emitEvent: false });
-      
+
       recipientName?.disable();
+      this.checkoutForm.get('delivery.recipientCountryCode')?.disable();
       recipientPhone?.disable();
     } else {
       recipientName?.enable();
+      this.checkoutForm.get('delivery.recipientCountryCode')?.enable();
       recipientPhone?.enable();
-      
+
       // 當取消勾選時，清空收件人資訊
       this.checkoutForm.get('delivery')?.patchValue({
         recipientName: '',
+        recipientCountryCode: '+886',
         recipientPhone: ''
       }, { emitEvent: false });
     }
@@ -153,7 +158,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
               email: user.email || user.mail || '',
               phone: user.phone || ''
             });
-            
+
             // 如果當前勾選了 "同顧客資料"，則也更新收件人資訊
             if (this.checkoutForm.get('delivery.sameAsCustomer')?.value) {
               this.syncCustomerToDelivery();

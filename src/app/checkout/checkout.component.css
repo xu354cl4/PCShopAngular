@@ -191,9 +191,10 @@
 
 /* 結帳明細總計 */
 .checkout-summary-details {
-  background-color: transparent; /* 移除背景色 */
+  background-color: transparent;
+  /* 移除背景色 */
   padding: 1.25rem 0;
-  margin: 0; 
+  margin: 0;
 }
 
 .sum-row {
@@ -205,7 +206,8 @@
 }
 
 .sum-row.discount {
-  color: #B28F75; /* 溫暖的折扣色 */
+  color: #B28F75;
+  /* 溫暖的折扣色 */
 }
 
 .sum-row.total {
@@ -299,33 +301,122 @@
   outline: none;
 }
 
-/* --- Special Inputs (電話含國碼) --- */
+.note-hint {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  font-style: italic;
+  opacity: 0.8;
+}
+
+/* --- Special Inputs (電話含國碼組合) --- */
 .phone-group {
-  display: flex;
-  gap: 0.5rem;
+  display: flex !important;
+  align-items: stretch !important;
+  gap: 0 !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 4px !important;
+  overflow: hidden !important;
+  background-color: var(--input-bg) !important;
+  height: 45px !important;
+  width: 100% !important;
 }
 
 .phone-group .code-select {
-  width: 130px;
+  flex: 0 0 130px !important;
+  /* 固定寬度，不讓它縮放 */
 }
 
-/* 針對 Dropdown 內部的 PrimeNG 樣式覆寫 */
 .phone-group ::ng-deep .p-dropdown {
-  width: 100%;
-  background-color: var(--input-bg);
-  border: 1px solid transparent;
-}
-
-.phone-group ::ng-deep .p-dropdown:not(.p-disabled).p-focus {
-  border-color: var(--accent-color);
-  box-shadow: none;
+  width: 100% !important;
+  background-color: transparent !important;
+  border: none !important;
+  height: 100% !important;
+  display: flex !important;
+  align-items: center !important;
 }
 
 .phone-group ::ng-deep .p-dropdown .p-dropdown-label {
-  text-align: center;
-  padding-left: 0.5rem;
-  /* 微調以確保視覺置中 */
-  padding-right: 0.5rem;
+  background: transparent !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  /* 改為靠左對齊，不再居中 */
+  text-align: left !important;
+  padding: 0 0 0 1.2rem !important;
+  /* 左側留白約 1-2 個字寬度 */
+  width: 100% !important;
+  height: 100% !important;
+  font-size: 0.95rem !important;
+  /* 稍微放大一點 */
+  font-weight: 600 !important;
+  /* 加粗文字 */
+  margin: 0 !important;
+  transform: none !important;
+  /* 移除之前的位移感 */
+}
+
+.phone-group ::ng-deep .p-dropdown .p-dropdown-trigger {
+  position: absolute !important;
+  right: 0 !important;
+  width: 2rem !important;
+  height: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-weight: 700 !important;
+  /* 加粗箭頭(針對字體圖標) */
+  font-size: 1.1rem !important;
+  /* 稍微放大讓箭頭更明顯 */
+}
+
+.phone-group input {
+  flex: 1 1 auto !important;
+  /* 佔據剩餘全部空間 */
+  width: 100% !important;
+  /* 結合 flex-grow 使用 */
+  border: none !important;
+  border-left: 1px solid var(--border-color) !important;
+  border-radius: 0 !important;
+  background-color: #ffffff !important;
+  padding: 0 0.75rem !important;
+  height: 100% !important;
+  font-size: 1rem !important;
+  color: var(--text-primary) !important;
+}
+
+.phone-group input:focus {
+  outline: none !important;
+  background-color: #ffffff !important;
+}
+
+/* 下拉面板樣式覆寫 (針對 appendTo="body" 的情況) */
+::ng-deep .phone-dropdown-panel {
+  background-color: var(--input-bg) !important;
+  /* 使用與輸入框一致的淺灰色底 */
+  border: 1px solid var(--border-color) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+  border-radius: 4px !important;
+}
+
+::ng-deep .phone-dropdown-panel .p-dropdown-items {
+  padding: 0.5rem 0 !important;
+}
+
+::ng-deep .phone-dropdown-panel .p-dropdown-item {
+  color: var(--text-primary) !important;
+  padding: 0.75rem 1rem !important;
+  font-size: 0.9rem !important;
+}
+
+::ng-deep .phone-dropdown-panel .p-dropdown-item.p-highlight {
+  background-color: #F0EFED !important;
+  color: var(--accent-color) !important;
+}
+
+::ng-deep .phone-dropdown-panel .p-dropdown-item:not(.p-highlight):not(.p-disabled):hover {
+  background-color: #F9F8F6 !important;
 }
 
 /* --- Store Selection --- */
@@ -408,7 +499,8 @@
   gap: 0.75rem;
   margin: 0.5rem 0 1.5rem 0;
   padding: 0.75rem;
-  background-color: #F9F8F6; /* 微淺色背景區隔 */
+  background-color: #F9F8F6;
+  /* 微淺色背景區隔 */
   border-radius: 4px;
 }
 
@@ -435,6 +527,8 @@
   margin-left: 0.5rem;
   font-weight: 500;
   cursor: pointer;
-  display: inline-block !important; /* 強制顯示 */
-  visibility: visible !important;   /* 強制可見 */
+  display: inline-block !important;
+  /* 強制顯示 */
+  visibility: visible !important;
+  /* 強制可見 */
 }

@@ -94,7 +94,15 @@
 
         <div class="muji-card">
           <div class="card-header">訂單備註</div>
-          <textarea rows="5" class="p-inputtext" formControlName="note" placeholder="有什麼想告訴我們的嗎？(選填)"></textarea>
+          <div class="form-field">
+            <label for="order-note">
+              <i class="pi pi-comment" style="margin-right: 4px;"></i>
+              給店家的留言
+            </label>
+            <textarea id="order-note" rows="5" class="p-inputtext" formControlName="note"
+              placeholder="有什麼想告訴賣家的嗎？例如：包裝需求、配送時間備註等 (選填)"></textarea>
+            <small class="note-hint">※ 我們會盡力協助，但特殊需求仍視實際情況而定。</small>
+          </div>
         </div>
 
       </div>
@@ -115,8 +123,13 @@
           </div>
 
           <div class="form-field">
-            <label for="d-phone">收件人電話</label>
-            <input id="d-phone" type="text" pInputText formControlName="recipientPhone" />
+            <label for="d-phone">收件人電話號碼</label>
+            <div class="phone-group">
+              <p-dropdown [options]="countryCodes" formControlName="recipientCountryCode" optionLabel="label"
+                optionValue="value" class="code-select" panelStyleClass="phone-dropdown-panel"
+                appendTo="body"></p-dropdown>
+              <input id="d-phone" type="text" pInputText formControlName="recipientPhone" placeholder="請輸入電話號碼" />
+            </div>
           </div>
 
           <div class="store-section">
