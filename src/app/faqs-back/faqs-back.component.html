@@ -1,48 +1,106 @@
-<div class="container py-5 ">
+<div class="container py-5">
   <h2>FAQ 後台管理</h2>
 
-  <!-- ========== 分類選擇 ========== -->
-
+  <!-- ================= 大分類 ================= -->
   <label>大分類</label>
-  <select class="form-select mb-3" [(ngModel)]="selectedParentCategoryId">
+  <select class="form-select mb-2" [(ngModel)]="selectedParentCategoryId" (ngModelChange)="onParentChange($event)">
     <option [ngValue]="undefined">請選擇</option>
 
-    @for (c of categories; track c.id) {
+    @for (c of categories; track c.id; let i = $index) {
     @if (!c.parentCategoryId) {
-    <option [ngValue]="c.id">
-      {{ c.categoryName }}
-    </option>
+    <option [ngValue]="c.id">{{ c.categoryName }}</option>
     }
     }
   </select>
 
+  <div class="mb-2">
+    <button class="btn btn-sm btn-outline-primary me-2" (click)="showAddParent = !showAddParent">
+      新增大分類
+    </button>
+
+    @if (selectedParentCategoryId) {
+    <button class="btn btn-sm btn-outline-danger" (click)="deleteCategory(selectedParentCategoryId)">
+      刪除
+    </button>
+    }
+  </div>
+
+  @if (showAddParent) {
+  <input class="form-control mb-2" placeholder="大分類名稱" [(ngModel)]="newParentName" />
+
+  <button class="btn btn-primary btn-sm" (click)="createParentCategory()">
+    確定
+  </button>
+  }
+
+  <!-- ================= 小分類 ================= -->
   <label>小分類</label>
-  <select class="form-select mb-3" [(ngModel)]="model.categoryId">
+  <select class="form-select mb-2" [(ngModel)]="selectedCategoryId" (ngModelChange)="onChildChange($event)">
     <option [ngValue]="undefined">請選擇</option>
 
     @for (c of categories; track c.id) {
     @if (c.parentCategoryId === selectedParentCategoryId) {
-    <option [ngValue]="c.id">
-      {{ c.categoryName }}
-    </option>
+    <option [ngValue]="c.id">{{ c.categoryName }}</option>
     }
     }
   </select>
 
-  <!-- ========== 問題標題 ========== -->
+  <div class="mb-2">
+    <button class="btn btn-sm btn-outline-primary me-2" [disabled]="!selectedParentCategoryId"
+      (click)="showAddChild = !showAddChild">
+      新增小分類
+    </button>
 
+    @if (selectedCategoryId) {
+    <button class="btn btn-sm btn-outline-danger" (click)="deleteCategory(selectedCategoryId)">
+      刪除
+    </button>
+    }
+  </div>
+
+  @if (showAddChild) {
+  <input class="form-control mb-2" placeholder="小分類名稱" [(ngModel)]="newChildName" />
+
+  <button class="btn btn-primary btn-sm" (click)="createChildCategory()">
+    確定
+  </button>
+  }
+
+  <!-- ================= 編輯模式操作 ================= -->
+  @if (isEditMode) {
+  <div class="mb-3">
+    <button class="btn btn-warning me-2" (click)="loadFaqForEdit(model.faqId!)">
+      重新載入
+    </button>
+
+    <button class="btn btn-danger" (click)="deleteFaq()">
+      刪除 FAQ
+    </button>
+  </div>
+  }
+  <!-- ================= FAQ 清單 ================= -->
+  @if (faqs.length > 0) {
+  <label>問題清單</label>
+  <ul class="list-group mb-3">
+    @for (f of faqs; track f.faQid) {
+    <li class="list-group-item list-group-item-action" (click)="loadFaqForEdit(f.faQid)">
+      {{ f.question }}
+    </li>
+    }
+  </ul>
+  }
+  <!-- ================= 問題標題 ================= -->
   <label>問題標題</label>
   <input class="form-control mb-3" [(ngModel)]="model.question" />
 
   <hr />
 
   <div class="row">
-
     <!-- ========== 左：內容編輯 ========== -->
     <div class="col-6">
       <h4>內容編輯</h4>
 
-      @for (b of model.blocks; let i = $index;track i) {
+      @for (b of model.blocks; let i = $index; track i) {
 
       @if (b.blockType === 'TEXT') {
       <textarea class="form-control mb-2" rows="4" [(ngModel)]="b.content"></textarea>
@@ -51,8 +109,7 @@
       }
 
       @if (b.blockType === 'IMAGE') {
-      <p>已插入圖片</p>
-      <!-- <img [src]="b.imageUrl" style="max-width:100%; margin:10px 0;" /> -->
+      <p class="text-muted">圖片區塊</p>
       }
 
       <button class="btn btn-sm btn-outline-danger mb-3" (click)="removeBlock(i)">

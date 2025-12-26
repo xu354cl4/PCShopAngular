@@ -1,5 +1,6 @@
 <div class="faq-wrapper">
   <div class="row">
+
     <!-- 左側分類 -->
     <div class="col-3 border-end faq-left">
       <ng-container *ngFor="let c of categories">
@@ -12,10 +13,11 @@
       </ng-container>
     </div>
 
-    <!-- 右側：清單 + 內容 -->
+    <!-- 右側 -->
     <div class="col-9">
       <div class="row g-0">
-        <!-- 清單（像 8591 list） -->
+
+        <!-- 問題清單 -->
         <div class="col-4 border-end faq-list">
           <div class="faq-list-title">問題清單</div>
 
@@ -25,29 +27,51 @@
           </div>
         </div>
 
-        <!-- 內容 -->
+        <!-- 問題內容 -->
         <div class="col-8 faq-content">
+
+          <!-- 尚未選擇 -->
           <div *ngIf="!faqDetail" class="faq-empty">
             請先從左側選擇分類，並點選問題查看內容
           </div>
 
+          <!-- 顯示 FAQ -->
           <div *ngIf="faqDetail">
             <h2 class="faq-title">{{ faqDetail.question }}</h2>
 
-            <ng-container *ngFor="let b of faqDetail.blocks">
-              <h5 *ngIf="b.blockType === 'STEP_TITLE'" class="faq-step">
-                {{ b.content }}
-              </h5>
+            <!-- Block Render -->
+            <ng-container *ngIf="faqDetail.blocks?.length; else emptyBlock">
 
-              <p *ngIf="b.blockType === 'TEXT'" class="faq-text">
-                {{ b.content }}
-              </p>
+              <ng-container *ngFor="let b of faqDetail.blocks">
 
-              <img *ngIf="b.blockType === 'IMAGE'" [src]="b.imageUrl" class="faq-image" />
+                <!-- 步驟標題 -->
+                <h5 *ngIf="b.blockType === 'STEP_TITLE'" class="faq-step">
+                  {{ b.content }}
+                </h5>
+
+                <!-- 文字 -->
+                <p *ngIf="b.blockType === 'TEXT'" class="faq-text">
+                  {{ b.content }}
+                </p>
+
+                <!-- 圖片 -->
+                <img *ngIf="b.blockType === 'IMAGE'" [src]="b.imageUrl" class="faq-image" />
+
+              </ng-container>
+
             </ng-container>
+
+            <!-- blocks 為空時 -->
+            <ng-template #emptyBlock>
+              <div class="faq-empty">
+                尚無內容
+              </div>
+            </ng-template>
+
           </div>
         </div>
       </div>
     </div>
+
   </div>
 </div>

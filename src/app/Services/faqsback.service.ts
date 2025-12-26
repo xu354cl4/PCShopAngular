@@ -4,6 +4,7 @@ import { FaqCategory, FaqList, FaqDetail, FaqUpsertDto, FaqAdminModel } from '..
 
 @Injectable({ providedIn: 'root' })
 export class FaqBackApiService {
+
   private base = '/api/faqs-admin';
 
   constructor(private http: HttpClient) { }
@@ -13,8 +14,14 @@ export class FaqBackApiService {
     return this.http.get<FaqCategory[]>(`${this.base}/categories`);
   }
 
-  createCategory(dto: { categoryName: string; parentCategoryId?: number }) {
-    return this.http.post(`${this.base}/categories`, dto);
+  createCategory(dto: {
+    categoryName: string;
+    parentCategoryId?: number;
+  }) {
+    return this.http.post<FaqCategory>(
+      `${this.base}/categories`,
+      dto
+    );
   }
 
   // 問題
@@ -37,5 +44,11 @@ export class FaqBackApiService {
       '/api/upload/faq-image',
       form
     );
+  }
+  deleteFaq(faqId: number) {
+    return this.http.delete<void>(`${this.base}/${faqId}`);
+  }
+  deleteCategory(categoryId: number) {
+    return this.http.delete<void>(`${this.base}/categories/${categoryId}`);
   }
 }
