@@ -92,19 +92,19 @@ export class MemberProfileComponent implements OnInit {
       error: () => { this.error = '載入基本資料失敗'; }
     });
 
-    // 2️⃣ AuthState 的訂閱 (作為備案)
-    this.authState.user$.subscribe(user => {
-      if (!user) return;
+    // // 2️⃣ AuthState 的訂閱 (作為備案)
+    // this.authState.user$.subscribe(user => {
+    //   if (!user) return;
 
-      // 只有在 API 還沒回來時，才用 AuthState 的舊資料
-      if (!this.currentDbEmail) {
-        this.emailInput = user.mail ?? '';
-        this.currentDbEmail = user.mail ?? '';
-        this.isMailVerified = (user.isMailVerified as unknown as number) === 1;
-      }
+    //   // 只有在 API 還沒回來時，才用 AuthState 的舊資料
+    //   if (!this.currentDbEmail) {
+    //     this.emailInput = user.mail ?? '';
+    //     this.currentDbEmail = user.mail ?? '';
+    //     this.isMailVerified = (user.isMailVerified as unknown as number) === 1;
+    //   }
 
-      this.isThirdParty = !!user.provider && user.provider.toLowerCase() !== 'local';
-    });
+    //   this.isThirdParty = !!user.provider && user.provider.toLowerCase() !== 'local';
+    // });
 
     // 2️⃣ AuthState 的訂閱保留，但主要用於判斷是否為第三方登入等狀態
     this.authState.user$.subscribe(user => {
