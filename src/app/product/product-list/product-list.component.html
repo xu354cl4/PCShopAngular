@@ -51,7 +51,8 @@
             *ngFor="let product of pagedProducts; trackBy: trackByProductId">
             <div class="card h-100">
               <a [routerLink]="['/products', product.id]">
-                <img [src]="product.imageUrl" class="card-img-top" [alt]="product.name" />
+                <img [src]="product.imageUrl || 'https://localhost:7001/images/products/noimage.jpg'"
+                  class="card-img-top" [alt]="product.name" />
               </a>
               <div class="card-body d-flex flex-column">
 

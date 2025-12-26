@@ -4,7 +4,9 @@
     <div class="row">
       <!-- 商品圖片 -->
       <div class="col-md-6 mb-4">
-        <img [src]="product.images[0] || 'assets/no-image.png'" class="img-fluid product-image" [alt]="product.name">
+        <img
+          [src]="(product.images && product.images.length > 0 ? product.images[0] : 'https://localhost:7001/images/products/noimage.jpg')"
+          class="img-fluid product-image" [alt]="product.name">
       </div>
 
       <!-- 商品資訊 -->
