@@ -84,7 +84,7 @@ export class ProductDetailComponent implements OnInit {
 
   getProduct(id: number): Observable<Product> {
     return this.http
-      .get<ApiResponse<Product>>(`http://localhost:5000/api/products/${id}`)
+      .get<ApiResponse<Product>>(`https://localhost:7001/api/products/${id}`)
       .pipe(map(res => res.data));
   }
 
@@ -107,7 +107,7 @@ export class ProductDetailComponent implements OnInit {
 
   getSkus(productId: number): Observable<ProductSku[]> {
     return this.http
-      .get<ApiResponse<ProductSku[]>>(`http://localhost:5000/api/products/${productId}/skus`)
+      .get<ApiResponse<ProductSku[]>>(`https://localhost:7001/api/products/${productId}/skus`)
       .pipe(map(res => res.data));
   }
 
@@ -158,7 +158,7 @@ export class ProductDetailComponent implements OnInit {
     };
 
     this.http.post<ApiResponse<string>>(
-      'http://localhost:5000/api/cart/add',
+      'https://localhost:7001/api/cart/add',
       dto
     ).subscribe({
       next: (res) => alert(res.message || '已成功加入購物車'),
