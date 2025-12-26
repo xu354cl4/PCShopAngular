@@ -2,16 +2,23 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common'; // <--- 1. 引入
 import { Router } from '@angular/router'; // 1. 引入 Router
 import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { AuthStateService } from '../Services/auth-state.service';
+import { take } from 'rxjs';
+import { StepsModule } from 'primeng/steps';
+import { MenuItem } from 'primeng/api';
 
 
-// 1. 定義介面 (確保放在 @Component 之前)
+// 1. 定義介面 (確保放在 @Component 之前) UserID(下拉選單)
 export interface Coupon {
-  code: string;
+  userCouponID: number; // 新增：後端對應的 UserCouponID
+  couponCode: string;
   name: string;
-  type: 'amount' | 'percent';
-  value: number;
-  minSpend: number;
-  disabled?: boolean;
+  discountType: string;
+  discountValue: number;
+  minOrderAmount: number;
+  isActive: boolean;
+  disabled?: boolean; // 新增：用於前端 UI 門檻判斷
 }
 
 export interface CartItem {
@@ -28,7 +35,7 @@ export interface CartItem {
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, StepsModule],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.css'
 })
@@ -38,16 +45,19 @@ export class CartComponent { // 2. 這裡不用寫 implements OnInit
 
   // 新增：目前選中的折價券
   selectedCoupon: Coupon | null = null;
+  couponCodeInput: string = ''; // 新增：折扣碼輸入框繫結
 
-  // 新增：折價券假資料
-  rawCoupons: Coupon[] = [
-    { code: 'SAVE100', name: '滿千折百', type: 'amount', value: 100, minSpend: 1000 },
-    { code: 'VIP90', name: 'VIP 九折優惠', type: 'percent', value: 0.9, minSpend: 0 },
-    { code: 'NEW50', name: '新戶折 $50', type: 'amount', value: 50, minSpend: 500 }
-  ];
+  // 改為空陣列，等待 API 回傳
+  rawCoupons: Coupon[] = [];
+  userId: number | null = null;
+
+  // 結帳流程進度條
+  steps: MenuItem[] = [];
+  activeIndex: number = 0; // 購物車是第 1 步 (Index 0)
 
 
   // 模擬假資料：電腦周邊
+  /*
   cartItems: CartItem[] = [
     {
       id: 1,
@@ -77,8 +87,14 @@ export class CartComponent { // 2. 這裡不用寫 implements OnInit
       selected: false
     }
   ];
+  */
+  cartItems: CartItem[] = [];
 
-  constructor(private router: Router) { }
+  constructor(
+    private router: Router,
+    private http: HttpClient,
+    private authStateService: AuthStateService
+  ) { }
 
   goToCheckout() {
     // 使用你剛剛寫好的 selectedCount 來檢查
@@ -87,12 +103,62 @@ export class CartComponent { // 2. 這裡不用寫 implements OnInit
       return; // 中斷執行，不跳轉
     }
 
-    // 檢查通過，執行跳轉
-    this.router.navigate(['/checkout']);
+    // 準備要傳遞到結帳頁面的資料
+    const checkoutData = {
+      selectedItems: this.cartItems.filter(item => item.selected),
+      subTotal: this.subTotal,
+      discountAmount: this.discountAmount,
+      totalAmount: this.totalAmount,
+      selectedCoupon: this.selectedCoupon
+    };
+
+    // 檢查通過，執行跳轉並帶入資料
+    this.router.navigate(['/checkout'], { state: { data: checkoutData } });
   }
 
   //購物車清單//
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.steps = [
+      { label: '購物車' },
+      { label: '填寫資料' },
+      { label: '訂單確認' }
+    ];
+
+    // 取得使用者 ID
+    this.authStateService.user$.pipe(take(1)).subscribe(user => {
+      if (user) {
+        this.userId = user.userId;
+        this.loadCoupons();
+        console.log(user);
+      }
+    });
+
+    this.http.get<CartItem[]>('https://localhost:7001/api/Cart').subscribe({
+      next: (data) => {
+        this.cartItems = data;
+        // 確保所有從 API 來的資料都有 selected 狀態 (如果 API 沒給的話)
+        this.cartItems.forEach(item => {
+          if (item.selected === undefined) item.selected = false;
+        });
+        this.checkAllStatus();
+      },
+      error: (err) => {
+        console.error('載入購物車失敗', err);
+      }
+    });
+  }
+
+  loadCoupons(): void {
+    this.http.get<Coupon[]>(`https://localhost:7001/api/Cart/Coupons`).subscribe({
+      next: (data) => {
+        console.log(data);
+        this.rawCoupons = data;
+      },
+      error: (err) => {
+        console.error('載入折價券失敗', err);
+      }
+    });
+  }
 
   // 2. 修改：取得"商品小計" (尚未扣除折扣的金額)
   // 原本您的 totalAmount 邏輯移到這裡
@@ -106,27 +172,29 @@ export class CartComponent { // 2. 這裡不用寫 implements OnInit
   get couponsList(): Coupon[] {
     return this.rawCoupons.map(coupon => ({
       ...coupon,
-      disabled: this.subTotal < coupon.minSpend
+      disabled: this.subTotal < coupon.minOrderAmount
     }));
   }
 
   // 折扣金額計算
   get discountAmount(): number {
     // 防呆：沒選券 或 未達低消 -> 折扣為 0
-    if (!this.selectedCoupon || this.subTotal < this.selectedCoupon.minSpend) {
+    if (!this.selectedCoupon || this.subTotal < this.selectedCoupon.minOrderAmount) {
       return 0;
     }
 
-    if (this.selectedCoupon.type === 'amount') {
-      return this.selectedCoupon.value;
+    if (this.selectedCoupon.discountType === 'Fixed') {
+      return this.selectedCoupon.discountValue;
     } else {
       // 百分比折扣 (例如 0.9 折) -> 總額 * (1 - 0.9)
-      return Math.round(this.subTotal * (1 - this.selectedCoupon.value));
+      console.log(this.selectedCoupon.discountValue);
+      return Math.round(this.subTotal * (this.selectedCoupon.discountValue));
     }
   }
 
   // 最終金額
   get totalAmount(): number {
+    console.log(this.subTotal,'減',this.discountAmount);
     const final = this.subTotal - this.discountAmount;
     return final > 0 ? final : 0;
   }
@@ -145,29 +213,96 @@ export class CartComponent { // 2. 這裡不用寫 implements OnInit
   // ★ 變更數量 (您原本報錯的地方)
   updateQty(item: CartItem, delta: number): void {
     const newQty = item.quantity + delta;
+    console.log(item);
     if (newQty >= 1) {
-      item.quantity = newQty;
-      // 數量變更可能導致金額不足低消，需重新驗證
-      this.validateCoupon();
+      // 呼叫 API 更新後端購物車數量
+      this.http.post('https://localhost:7001/api/Cart/Update', {
+        cartItemId: item.id,
+        quantity: newQty
+      }).subscribe({
+        next: () => {
+          // API 成功後再修改前端畫面
+          item.quantity = newQty;
+          // 數量變更可能導致金額不足低消，需重新驗證
+          this.validateCoupon();
+        },
+        error: (err) => {
+          console.error('更新數量失敗', err);
+          // 這裡可以視需求加入報錯提示，例如：
+          // alert('更新數量失敗，請稍重試');
+        }
+      });
     }
   }
 
-  // ★ 刪除商品 (您原本報錯的地方)
+  // ★ 刪除商品
   removeItem(id: number): void {
+    console.log(`現在的id是${id}`);
     if (confirm('確定要將此商品移出購物車嗎？')) {
-      this.cartItems = this.cartItems.filter(item => item.id !== id);
-      this.checkAllStatus();
-      // 刪除後可能導致金額不足低消，需重新驗證
-      this.validateCoupon();
+      this.http.delete(`https://localhost:7001/api/Cart/Delete/${id}`).subscribe({
+        next: (response) => {
+          console.log('商品已成功刪除', response);
+          // API 成功後才過濾掉該商品並重新賦值，觸發 Angular 變更偵測
+          this.cartItems = this.cartItems.filter(item => item.id !== id);
+
+          // 更新全選狀態
+          this.checkAllStatus();
+
+          // 刪除後可能導致金額低於折價券門檻，需重新驗證
+          this.validateCoupon();
+        },
+        error: (err) => {
+          console.error('刪除商品過程中發生錯誤:', err);
+          alert('刪除失敗，請檢查網路連線或稍後再試');
+        }
+      });
     }
   }
 
-  // ★ 輔助驗證方法
+  // ★ 輔助驗證方法 (前端基礎驗證)
   validateCoupon(): void {
-    // 必須使用 this.subTotal (這是一個 getter)，不能直接用變數
-    if (this.selectedCoupon && this.subTotal < this.selectedCoupon.minSpend) {
-      this.selectedCoupon = null; // 取消選取
+    if (this.selectedCoupon && this.subTotal < this.selectedCoupon.minOrderAmount) {
+      this.selectedCoupon = null;
+      alert('商品總額未達門檻，已取消折價券套用');
     }
+  }
+
+  // ★ 呼叫後端驗證折扣碼 (手動輸入)
+  applyCouponCode(): void {
+    const couponsCode = this.couponCodeInput.trim();
+    if (!couponsCode) {
+      alert('請輸入折扣碼');
+      return;
+    }
+
+    // 根據需求呼叫 GET 端點
+    this.http.get<Coupon>(`https://localhost:7001/api/Cart/Coupons/${couponsCode}`).subscribe({
+      next: (coupon) => {
+        if (!coupon) {
+          alert('無效的折扣碼');
+          return;
+        }
+
+        if (this.subTotal < coupon.minOrderAmount) {
+          alert(`此折扣碼最低消費門檻為 NT$ ${coupon.minOrderAmount}，目前尚未達成。`);
+          return;
+        }
+
+        // 成功套用
+        this.selectedCoupon = coupon;
+
+        // 如果這個手動輸入的券尚未在 rawCoupons 清單中，則加入
+        const exists = this.rawCoupons.find(c => c.couponCode === coupon.couponCode);
+        if (!exists) {
+          this.rawCoupons = [...this.rawCoupons, coupon];
+        }
+        alert('折扣碼套用成功！');
+      },
+      error: (err) => {
+        console.error('驗證折扣碼失敗', err);
+        alert(err.error?.message || '無效的折扣碼或其門檻未達標');
+      }
+    });
   }
 
   // ★ 新增這個方法：用來告訴 HTML 如何比較兩個折價券
@@ -180,7 +315,7 @@ export class CartComponent { // 2. 這裡不用寫 implements OnInit
     if (!c1 || !c2) return false;
 
     // 3. 如果兩個都有值，比較它們的 code (唯一代碼) 是否相同
-    return c1.code === c2.code;
+    return c1.couponCode === c2.couponCode;
   }
 
 }

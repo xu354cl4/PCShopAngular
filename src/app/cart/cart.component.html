@@ -1,4 +1,20 @@
 <div class="muji-container">
+  <div class="muji-stepper">
+    <div class="step-item" [class.active]="activeIndex >= 0">
+      <div class="step-circle">1</div>
+      <div class="step-label">購物車</div>
+    </div>
+    <div class="step-line"></div>
+    <div class="step-item" [class.active]="activeIndex >= 1">
+      <div class="step-circle">2</div>
+      <div class="step-label">填寫資料</div>
+    </div>
+    <div class="step-line"></div>
+    <div class="step-item" [class.active]="activeIndex >= 2">
+      <div class="step-circle">3</div>
+      <div class="step-label">訂單確認</div>
+    </div>
+  </div>
   <h2 class="page-title">購物車</h2>
 
   <div class="cart-header">
@@ -62,7 +78,10 @@
 
     <div class="code-input-group">
       <label for="codeInput"><i class="fas fa-keyboard"></i> 輸入折扣碼</label>
-      <input type="text" id="codeInput" placeholder="例如: SAVE2025">
+      <div class="input-with-button">
+        <input type="text" id="codeInput" [(ngModel)]="couponCodeInput" placeholder="例如: SAVE2025">
+        <button class="btn-apply-code" (click)="applyCouponCode()">套用</button>
+      </div>
     </div>
 
     <div class="coupon-selector">
