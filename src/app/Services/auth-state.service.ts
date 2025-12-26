@@ -5,31 +5,73 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthStateService {
+  private readonly api = 'https://localhost:7001';
   private userSubject = new BehaviorSubject<ExternalUser | null>(null);
   user$ = this.userSubject.asObservable();
+
+  //avatarUrlSubject 用 BehaviorSubject 是在還沒讀取好的預設圖片
+  private avatarUrlSubject = new BehaviorSubject<string | null>(null);
+  avatarUrl$ = this.avatarUrlSubject.asObservable();
 
 
   constructor() {
     const user = localStorage.getItem('user');
     const token = localStorage.getItem('token');
     if (user && token && !this.isTokenExpired(token)) {
-      this.userSubject.next(JSON.parse(user));
+      const userObj = JSON.parse(user) as ExternalUser;
+
+      // 更新使用者狀態
+      this.updateState(userObj, false);
     } else {
       this.clear();
     }
   }
 
+  private updateState(user: ExternalUser, saveToStorage: boolean = true) {
+    // 1. 決定是否寫入 LocalStorage (防呆機制，再也不會忘記存檔)
+    if (saveToStorage) {
+      localStorage.setItem('user', JSON.stringify(user));
+    }
+    const avatar = user.imageUrl
+      ? (user.imageUrl.startsWith('http')
+        ? user.imageUrl
+        : `${this.api}${user.imageUrl}`)
+      : '/images/no-image.png';
 
-  setUser(token: string, user: ExternalUser) {
-    localStorage.setItem('token', token);
-    localStorage.setItem('user', JSON.stringify(user));
+    // 3. 發送通知
+    this.avatarUrlSubject.next(avatar);
     this.userSubject.next(user);
   }
+  updateBasicProfile(newData: { fullName: string }) {
+    const currentUser = this.userSubject.value;
+    if (!currentUser) return;
 
+    const updatedUser = { ...currentUser, fullName: newData.fullName };
+    this.updateState(updatedUser); // ✅ 自動存檔 + 更新畫面
+  }
+
+  //上傳刷新Header上的圖片
+  setAvatarUrl(url: string) {
+    const currentUser = this.userSubject.value;
+    if (!currentUser) return;
+
+    // 我們把 User 物件裡的 imageUrl 也更新，這樣資料才不會打架
+    // 注意：這裡傳入的 url 可能是完整路徑，後端存的可能是相對路徑
+    // 為了簡單起見，這裡假設前端顯示用的就是最新的，暫時存入 user
+    const updatedUser = { ...currentUser, imageUrl: url };
+
+    this.updateState(updatedUser);
+  }
+
+  setUser(token: string, user: ExternalUser) {
+    localStorage.setItem('token', token); // Token 只有這裡會變，單獨處理
+    this.updateState(user); // 自動存 user + 更新畫面
+  }
   clear() {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     this.userSubject.next(null);
+    this.avatarUrlSubject.next(null);
   }
 
   get isLoggedIn() {
@@ -44,4 +86,26 @@ export class AuthStateService {
       return true;
     }
   }
+  markEmailVerified() {
+    const user = this.userSubject.value;
+    if (!user) return;
+    this.updateState({ ...user, isMailVerified: true });
+  }
+
+
+  markEmailUnverified() {
+    const user = this.userSubject.value;
+    if (!user) return;
+    this.updateState({ ...user, isMailVerified: false });
+  }
+
+  updateEmail(mail: string) {
+    const user = this.userSubject.value;
+    if (!user) return;
+    this.updateState({ ...user, mail });
+  }
+  getCurrentUser(): ExternalUser | null {
+    return this.userSubject.value;
+  }
+
 }

@@ -10,6 +10,7 @@ export interface ExternalUser {
   fullName: string;
   imageUrl: string | null;
   profileCompleted: boolean;
+  isMailVerified: boolean;
   provider?: string; // ⭐ 後端回傳的 Provider 來自 OAuth
 }
 

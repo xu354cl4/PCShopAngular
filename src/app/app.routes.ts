@@ -1,4 +1,5 @@
-import { ResetpageComponent } from './resetpage/resetpage.component';
+
+
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
@@ -29,6 +30,9 @@ export const routes: Routes = [
     path: 'membership', loadComponent: () => import('./membership/membership.component').then(m => m.MembershipComponent)
   },
   {
+    path: 'verify-email', loadComponent: () => import('./Memberpages/verify-email/verify-email.component').then(m => m.VerifyEmailComponent)
+  },
+  {
     path: 'order-list', loadComponent: () => import('./order-list/order-list.component').then(m => m.OrderListComponent)
   },
   {
@@ -52,11 +56,14 @@ export const routes: Routes = [
     path: 'reset-password', loadComponent: () => import('./resetpage/resetpage.component').then(m => m.ResetpageComponent),
     title: '忘記密碼Page'
   },
-  {
-    path: 'verify-email', loadComponent: () => import('./resetpage/resetpage.component').then(m => m.ResetpageComponent),
+  // {
+  //   path: 'verify-email', loadComponent: () => import('./resetpage/resetpage.component').then(m => m.ResetpageComponent),
+  //   title: '忘記密碼Page'
+  // },
+ {
+    path: 'membercenter', loadComponent: () => import('./membercenter/membercenter.component').then(m => m.MembercenterComponent),
     title: '忘記密碼Page'
   },
-
   {
     path: '**',
     redirectTo: ''

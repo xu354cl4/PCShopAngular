@@ -1,0 +1,158 @@
+<main class="member-center-5">
+
+  <!-- 側邊欄 -->
+  <aside class="sidebar-5">
+    <h3>會員中心</h3>
+
+    <ul>
+      <li (click)="mainView='overview'">帳戶總覽</li>
+
+      <li (click)="mainView='orders'">訂單管理
+        <ul>
+          <li (click)="$event.stopPropagation(); mainView='orders'; orderView='pending'">待付款</li>
+          <li (click)="$event.stopPropagation(); mainView='orders'; orderView='shipping'">配送中</li>
+          <li (click)="$event.stopPropagation(); mainView='orders'; orderView='completed'">已完成</li>
+        </ul>
+      </li>
+
+      <li (click)="mainView='settings'">個人設定
+        <ul>
+          <li (click)="$event.stopPropagation(); mainView='settings'; settingsView='profile'">基本資料 ⚙️</li>
+          <li (click)="$event.stopPropagation(); mainView='settings'; settingsView='address'">地址管理 🏠</li>
+          <li (click)="$event.stopPropagation(); mainView='settings'; settingsView='security'">帳號安全 🔒</li>
+        </ul>
+      </li>
+
+      <li (click)="mainView='benefits'">優惠管理
+        <ul>
+          <li (click)="$event.stopPropagation(); mainView='benefits'; benefitsView='coupon'">折價券 💰</li>
+          <li (click)="$event.stopPropagation(); mainView='benefits'; benefitsView='coin'">蝦幣紀錄 🪙</li>
+          <li (click)="$event.stopPropagation(); mainView='benefits'; benefitsView='activity'">回饋活動 🎁</li>
+        </ul>
+      </li>
+    </ul>
+  </aside>
+
+  <!-- 右側內容區 -->
+  <section class="content-5">
+    @if (!loading && !error && mainView === 'settings') {
+
+    @if (settingsView === 'profile') {
+    <app-member-profile (saved)="onProfileSaved()"></app-member-profile>
+    }
+
+    @if (settingsView === 'address') {
+        <app-member-address></app-member-address>
+    }
+
+    @if (settingsView === 'security') {
+      <app-member-security></app-member-security>
+    }
+    }
+    @if (loading) {
+    <div class="card-5">載入中...</div>
+    }
+
+    @if (!loading && error) {
+    <div class="card-5">{{ error }}</div>
+    }
+
+    <!-- ================= 帳戶總覽 ================= -->
+    @if (!loading && !error && mainView === 'overview' && overview) {
+
+    <div class="content-panel-5">
+      <h2 class="content-title-5">帳戶總覽</h2>
+
+      <div class="card-5">
+        <h3>個人資料</h3>
+        <button type="button" (click)="mainView='settings'; settingsView='profile'">
+          編輯
+        </button>
+        <div class="info-grid-5">
+          <div class="info-item-5">
+            <span class="info-label-5">姓名</span>
+            <span class="info-value-5">{{ overview.profile.fullName }}</span>
+          </div>
+
+          <div class="info-item-5">
+            <span class="info-label-5">生日</span>
+            <span class="info-value-5">
+              {{ overview.profile.birthDate
+              ? (overview.profile.birthDate | date:'yyyy/MM/dd')
+              : '-' }}
+            </span>
+          </div>
+
+          <div class="info-item-5">
+            <span class="info-label-5">手機</span>
+            <span class="info-value-5">{{ overview.profile.phone }}</span>
+          </div>
+
+          <div class="info-item-5">
+            <span class="info-label-5">Email</span>
+            <span class="info-value-5">{{ overview.profile.email }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-5">
+        <h3>最新訂單</h3>
+        <ul class="order-list-5">
+          @for (o of overview.latestOrders; track o.orderNo) {
+          <li>
+            <span class="order-id">#{{ o.orderNo }}</span>
+            <span class="order-status" [ngClass]="o.statusCode">
+              {{ o.statusText }}
+            </span>
+            <span class="order-amount">${{ o.totalAmount | number }}</span>
+          </li>
+          }
+        </ul>
+      </div>
+    </div>
+    }
+
+    <!-- ================= 訂單管理 ================= -->
+    @if (!loading && !error && mainView === 'orders') {
+    <div class="content-panel-5">
+      <h2 class="content-title-5">訂單管理</h2>
+      <div class="card-5">
+        訂單列表（{{ orderView }}）TODO：接 /api/member/orders
+      </div>
+    </div>
+    }
+
+    <!-- ================= 個人設定 ================= -->
+    @if (!loading && !error && mainView === 'settings') {
+
+    @if (settingsView === 'profile') {
+    <div class="card-5">基本資料（TODO）</div>
+    }
+
+    @if (settingsView === 'address') {
+    <div class="card-5">地址管理（TODO）</div>
+    }
+
+    @if (settingsView === 'security') {
+    <div class="card-5">帳號安全（TODO）</div>
+    }
+    }
+
+    <!-- ================= 優惠管理 ================= -->
+    @if (!loading && !error && mainView === 'benefits') {
+
+    @if (benefitsView === 'coupon') {
+    <div class="card-5">折價券（TODO）</div>
+    }
+
+    @if (benefitsView === 'coin') {
+    <div class="card-5">蝦幣紀錄（TODO）</div>
+    }
+
+    @if (benefitsView === 'activity') {
+    <div class="card-5">回饋活動（TODO）</div>
+    }
+    }
+
+  </section>
+</main>
