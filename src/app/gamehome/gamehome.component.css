@@ -1,0 +1,24 @@
+.card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* 滑鼠移入時的效果 */
+.card:hover {
+  transform: scale(1.05);
+  /* 放大 1.05 倍 */
+  z-index: 10;
+  /* 確保放大的卡片不會被旁邊擋住 */
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2) !important;
+  /* 加深陰影 */
+  cursor: pointer;
+  /* 讓滑鼠變成手指形狀 */
+}
+
+.btn {
+  display: flex;
+  flex-direction: column;
+  margin-top: auto;
+  /* 關鍵：推到底部 */
+  margin-left: auto;
+  /* 關鍵：推到右側 */
+}

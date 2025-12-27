@@ -1,10 +1,90 @@
-<h2>遊戲選單</h2>
+<div class="container py-5">
+  <h2 class="mb-4">遊戲選單</h2>
+  <div class="row g-4">
+    <div class="col-md-4 ">
+      <div class="card h-100 shadow-sm">
+        <img src="images/dino.png" class="card-img-top" alt="小恐龍" style="height: 200px; object-fit: cover;">
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title font-weight-bold">小恐龍</h5>
+          <p class="card-text text-secondary">點擊空白鍵開始，可使用上下按鈕來躲避障礙物。</p>
+          <button (click)="openGame('dino')" class="btn btn-primary mt-auto w-100">
+            開啟遊戲
+          </button>
+        </div>
+      </div>
+    </div>
 
-<div class="game-list">
-  <button (click)="openGame('dino')">小恐龍</button>
-  <button (click)="openGame('snake')">貪食蛇</button>
-  <button (click)="openGame('2048')">2048</button>
-</div>
-<div>
-  <button (click)="closeGame()">關閉視窗</button>
+    <div class="col-md-4 ">
+      <div class="card h-100 shadow-sm">
+        <img src="images/snack.png" class="card-img-top" alt="貪食蛇" style="height: 200px; object-fit: cover;">
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title font-weight-bold">貪食蛇</h5>
+          <p class="card-text text-secondary">點擊畫面後開始，初始方向為右。</p>
+          <button (click)="openGame('snake')" class="btn btn-primary mt-auto w-100">
+            開啟遊戲
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4 ">
+      <div class=" card h-100 shadow-sm">
+        <img src="images/2048.png" class="card-img-top" alt="2048" style="height: 200px; object-fit: cover;">
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title font-weight-bold">2048</h5>
+          <p class="card-text text-secondary">透過上下左右將相同數字相加，目標是合成2048。</p>
+          <button (click)="openGame('2048')" class="btn btn-primary mt-auto w-100">
+            開啟遊戲
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="my-5">
+
+  <div class="row g-4">
+    <div class="col-md-4 ">
+      <div class="card h-100 shadow-sm">
+        <img src="images/dino.png" class="card-img-top" alt="小恐龍" style="height: 200px; object-fit: cover;">
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title font-weight-bold">小恐龍</h5>
+          <p class="card-text text-secondary">點擊空白鍵開始，可使用上下按鈕來躲避障礙物。</p>
+          <button (click)="openGame('dino')" class="btn btn-primary mt-auto w-100">
+            開啟遊戲
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card h-100 shadow-sm">
+        <img src="images/snack.png" class="card-img-top" alt="貪食蛇" style="height: 200px; object-fit: cover;">
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title font-weight-bold">貪食蛇</h5>
+          <p class="card-text text-secondary">點擊畫面後開始，初始方向為右。</p>
+          <button (click)="openGame('snake')" class="btn btn-primary mt-auto w-100">
+            開啟遊戲
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4 ">
+      <div class="card h-100 shadow-sm">
+        <img src="images/2048.png" class="card-img-top" alt="2048" style="height: 200px; object-fit: cover;">
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title font-weight-bold">2048</h5>
+          <p class="card-text text-secondary">透過上下左右將相同數字相加，目標是合成2048。</p>
+          <button (click)="openGame('2048')" class="btn btn-primary mt-auto w-100">
+            開啟遊戲
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <button (click)="closeGame()" class="btn btn-danger my-5">關閉視窗</button>
+  </div>
 </div>
