@@ -1,13 +1,35 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="zh-TW">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Effective JavaScript: Frogger</title>
-    <link rel="stylesheet" href="css/style.css">
+  <meta charset="utf-8" />
+  <title>賽車躲避（橫向）</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body>
-    <script src="js/resources.js"></script>
-    <script src="js/app.js"></script>
-    <script src="js/engine.js"></script>
+
+<body tabindex="0">
+  <div class="topbar">
+    <div class="title">🏁 賽車躲避</div>
+    <div class="hud">
+      <span id="score">Score: 0</span>
+      <span id="best">Best: 0</span>
+      <span id="speed">Speed: 1.0x</span>
+    </div>
+  </div>
+
+  <!-- ⭐ 改成橫向比例 -->
+  <canvas id="c" width="900" height="420"></canvas>
+
+  <div class="controls">
+    <button id="upBtn" class="ctrl">▲</button>
+    <button id="restartBtn" class="ctrl primary">再玩一次</button>
+    <button id="downBtn" class="ctrl">▼</button>
+  </div>
+
+  <div id="tip" class="tip">▲ ▼ 切換賽道，躲避障礙物</div>
+
+  <script src="racer.js"></script>
 </body>
+
 </html>

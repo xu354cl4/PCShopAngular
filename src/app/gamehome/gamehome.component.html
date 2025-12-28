@@ -46,11 +46,11 @@
   <div class="row g-4">
     <div class="col-md-4 ">
       <div class="card h-100 shadow-sm">
-        <img src="images/dino.png" class="card-img-top" alt="小恐龍" style="height: 200px; object-fit: cover;">
+        <img src="images/Breakout.png" class="card-img-top" alt="打磚塊" style="height: 200px; object-fit: cover;">
         <div class="card-body d-flex flex-column">
-          <h5 class="card-title font-weight-bold">小恐龍</h5>
-          <p class="card-text text-secondary">點擊空白鍵開始，可使用上下按鈕來躲避障礙物。</p>
-          <button (click)="openGame('dino')" class="btn btn-primary mt-auto w-100">
+          <h5 class="card-title font-weight-bold">打磚塊</h5>
+          <p class="card-text text-secondary">左右移動接球並打擊方塊。</p>
+          <button (click)="openGame('breakout')" class="btn btn-primary mt-auto w-100">
             開啟遊戲
           </button>
         </div>
@@ -59,11 +59,11 @@
 
     <div class="col-md-4">
       <div class="card h-100 shadow-sm">
-        <img src="images/snack.png" class="card-img-top" alt="貪食蛇" style="height: 200px; object-fit: cover;">
+        <img src="images/card.png" class="card-img-top" alt="貪食蛇" style="height: 200px; object-fit: cover;">
         <div class="card-body d-flex flex-column">
-          <h5 class="card-title font-weight-bold">貪食蛇</h5>
-          <p class="card-text text-secondary">點擊畫面後開始，初始方向為右。</p>
-          <button (click)="openGame('snake')" class="btn btn-primary mt-auto w-100">
+          <h5 class="card-title font-weight-bold">翻牌</h5>
+          <p class="card-text text-secondary">點集擊兩張卡片，相同即配對成功。</p>
+          <button (click)="openGame('memory')" class="btn btn-primary mt-auto w-100">
             開啟遊戲
           </button>
         </div>
@@ -72,11 +72,11 @@
 
     <div class="col-md-4 ">
       <div class="card h-100 shadow-sm">
-        <img src="images/2048.png" class="card-img-top" alt="2048" style="height: 200px; object-fit: cover;">
+        <img src="images/racer.png" class="card-img-top" alt="賽車躲避障礙物" style="height: 200px; object-fit: cover;">
         <div class="card-body d-flex flex-column">
-          <h5 class="card-title font-weight-bold">2048</h5>
-          <p class="card-text text-secondary">透過上下左右將相同數字相加，目標是合成2048。</p>
-          <button (click)="openGame('2048')" class="btn btn-primary mt-auto w-100">
+          <h5 class="card-title font-weight-bold">賽車躲避障礙物</h5>
+          <p class="card-text text-secondary">上下切換賽道，躲避障礙物</p>
+          <button (click)="openGame('racer')" class="btn btn-primary mt-auto w-100">
             開啟遊戲
           </button>
         </div>
