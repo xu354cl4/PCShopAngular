@@ -183,18 +183,30 @@ export class CartComponent { // 2. 這裡不用寫 implements OnInit
       return 0;
     }
 
-    if (this.selectedCoupon.discountType === 'Fixed') {
-      return this.selectedCoupon.discountValue;
+    // 取得折價券類型與數值
+    const type = String(this.selectedCoupon.discountType || '').toLowerCase();
+    const val = this.selectedCoupon.discountValue || 0;
+
+    if (type === 'fixed' || type === '0' || type === 'amount') {
+      // 1. 固定金額折扣
+      return val;
     } else {
-      // 百分比折扣 (例如 0.9 折) -> 總額 * (1 - 0.9)
-      console.log(this.selectedCoupon.discountValue);
-      return Math.round(this.subTotal * (this.selectedCoupon.discountValue));
+      // 2. 百分比/倍率折扣 (例如: 0.1 代表折扣 10%)
+
+      // 如果數值大於 1 (例如 10 代表 10%)，則除以 100
+      if (val > 1) {
+        return Math.round(this.subTotal * (val / 100));
+      }
+
+      // 如果數值是 0.1 這種形式，直接作為折扣比例計算 (總額 * 0.1)
+      // 若後端 0.9 代表 "9折" (即扣 10%)，請再告知我調整為 (1 - val)
+      return Math.round(this.subTotal * val);
     }
   }
 
   // 最終金額
   get totalAmount(): number {
-    console.log(this.subTotal,'減',this.discountAmount);
+    console.log(this.subTotal, '減', this.discountAmount);
     const final = this.subTotal - this.discountAmount;
     return final > 0 ? final : 0;
   }
