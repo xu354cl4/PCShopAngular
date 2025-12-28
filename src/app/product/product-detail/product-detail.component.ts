@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+
 
 export interface ApiResponse<T> {
   data: T;
@@ -35,7 +36,6 @@ export interface ProductSku {
 export interface AddToCartDto {
   skuid: number;
   quantity: number;
-  userId: number;
 }
 
 @Component({
@@ -60,7 +60,8 @@ export class ProductDetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private http: HttpClient
+    private http: HttpClient,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -144,25 +145,46 @@ export class ProductDetailComponent implements OnInit {
   }
 
   addToCart() {
-    if (!this.selectedSku) return;
+    if (!this.selectedSku) {
+      alert('請先選擇商品規格');
+      return;
+    }
 
     if (this.isOutOfStock(this.selectedSku)) {
       alert('此商品已缺貨，請選擇其他規格');
       return;
     }
 
+    // 取得 JWT token
+    const token = localStorage.getItem('token'); // 依你實際存放 token 的方式
+    console.log('JWT token:', token);
+    if (!token) {
+      alert('請先登入');
+      this.router.navigate(['/loginpage']); // 導航到你的 loginpage
+      return;
+    }
+
     const dto: AddToCartDto = {
       skuid: this.selectedSku.skuid,
-      quantity: this.quantity,
-      userId: this.userId
+      quantity: this.quantity
     };
 
     this.http.post<ApiResponse<string>>(
       'https://localhost:7001/api/cart/add',
-      dto
+      dto,
+      {
+        headers: { 'Authorization': `Bearer ${token}` }
+      }
     ).subscribe({
       next: (res) => alert(res.message || '已成功加入購物車'),
-      error: (err) => alert(err.error?.message || '加入購物車失敗')
+      error: (err) => {
+        if (err.status === 401) {
+          alert('請先登入');
+          window.location.href = '/loginpage';
+        } else {
+          alert(err.error?.message || '加入購物車失敗');
+        }
+      }
     });
   }
 }
