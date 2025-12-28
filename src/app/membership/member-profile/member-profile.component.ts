@@ -228,7 +228,7 @@ export class MemberProfileComponent implements OnInit {
     }
 
     this.api.sendVerifyEmail({
-      frontendUrl: 'http://localhost:4200/verify-email'
+      frontendUrl: 'http://localhost:4200'
     }).subscribe({
       next: () => this.success = '驗證信已寄出，請至信箱完成驗證',
       error: (err) => this.error = err.error?.message ?? '寄送失敗'

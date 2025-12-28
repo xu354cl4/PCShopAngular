@@ -23,7 +23,7 @@ export class AuthInterceptor implements HttpInterceptor {
       return next.handle(req);
     }
 
-    // 複製 request 並加上 Authorization header
+    // 複製 request 並加上 Authorization header , 將JWT存在Header , 只要有Httpclient行為就一起傳出去
     const authReq = req.clone({
       setHeaders: {
         Authorization: `Bearer ${token}`
