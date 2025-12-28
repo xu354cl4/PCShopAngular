@@ -50,19 +50,19 @@ export const routes: Routes = [
   },
   {
     path: 'forgot-password', loadComponent: () => import('./resetpage/resetpage.component').then(m => m.ResetpageComponent),
-    title: '忘記密碼Page'
+    title: '忘記密碼'
   },
   {
     path: 'reset-password', loadComponent: () => import('./resetpage/resetpage.component').then(m => m.ResetpageComponent),
-    title: '忘記密碼Page'
+    title: '密碼重設'
   },
   // {
   //   path: 'verify-email', loadComponent: () => import('./resetpage/resetpage.component').then(m => m.ResetpageComponent),
   //   title: '忘記密碼Page'
   // },
- {
+  {
     path: 'membercenter', loadComponent: () => import('./membercenter/membercenter.component').then(m => m.MembercenterComponent),
-    title: '忘記密碼Page'
+    title: '會員中心'
   },
   {
     path: '**',
