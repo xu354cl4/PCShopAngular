@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ExternalUser } from '../models/external-login-response';
+import { ExternalUser, UserRole } from '../models/external-login-response';
 import { BehaviorSubject } from 'rxjs';
 @Injectable({
   providedIn: 'root'
@@ -106,6 +106,18 @@ export class AuthStateService {
   }
   getCurrentUser(): ExternalUser | null {
     return this.userSubject.value;
+  }
+
+
+  getCurrentUserRole(): UserRole {
+    const user = this.getCurrentUser();
+
+    // Demo 用規則（你之後可以拿掉）
+    if (user?.mail === 'admin@test.com') {
+      return 'Admin';
+    }
+
+    return 'User';
   }
 
 }
