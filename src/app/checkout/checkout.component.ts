@@ -17,6 +17,7 @@ import { AccordionModule } from 'primeng/accordion';
 
 @Component({
   selector: 'app-checkout',
+  standalone: true,
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -41,6 +42,9 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   totalAmount = 0;
   totalItems = 0;
   selectedItems: any[] = [];
+  subTotal = 0;
+  discountAmount = 0;
+  usePoints = 0; // 新增：使用的點數
 
   countryCodes = [
     { label: 'TW +886', value: '+886' },
@@ -57,11 +61,14 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   ) {
     // 獲取路由轉場時帶過來的 state 資料
     const navigation = this.router.getCurrentNavigation();
-    this.checkoutData = navigation?.extras.state?.['data'];
+    this.checkoutData = navigation?.extras.state?.['data'] || history.state?.['data'];
 
     if (this.checkoutData) {
-      this.totalAmount = this.checkoutData.totalAmount;
-      this.selectedItems = this.checkoutData.selectedItems;
+      this.selectedItems = this.checkoutData.selectedItems || [];
+      this.subTotal = this.checkoutData.subTotal || 0;
+      this.discountAmount = this.checkoutData.discountAmount || 0;
+      this.usePoints = this.checkoutData.usePoints || 0; // 新增
+      this.totalAmount = this.checkoutData.totalAmount || 0;
       this.totalItems = this.selectedItems.reduce((acc, item) => acc + item.quantity, 0);
     }
 

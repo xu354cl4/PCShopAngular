@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common'; // <--- 1. 引入
-import { Router } from '@angular/router'; // 1. 引入 Router
+import { Router, RouterModule } from '@angular/router'; // 1. 引入 Router
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { AuthStateService } from '../Services/auth-state.service';
@@ -35,12 +35,12 @@ export interface CartItem {
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [FormsModule, CommonModule, StepsModule],
+  imports: [FormsModule, CommonModule, StepsModule, RouterModule],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.css'
 })
 
-export class CartComponent { // 2. 這裡不用寫 implements OnInit
+export class CartComponent implements OnInit {
   isAllSelected = false;
 
   // 新增：目前選中的折價券
@@ -50,44 +50,13 @@ export class CartComponent { // 2. 這裡不用寫 implements OnInit
   // 改為空陣列，等待 API 回傳
   rawCoupons: Coupon[] = [];
   userId: number | null = null;
+  userPoints: number = 0; // 用戶目前的總點數
+  usePoints: number = 0; // 用戶輸入要使用的點數
 
   // 結帳流程進度條
   steps: MenuItem[] = [];
   activeIndex: number = 0; // 購物車是第 1 步 (Index 0)
-
-
-  // 模擬假資料：電腦周邊
-  /*
-  cartItems: CartItem[] = [
-    {
-      id: 1,
-      name: 'Keychron K2 Pro 無線機械鍵盤',
-      spec: '茶軸 / RGB / 鋁合金邊框',
-      price: 3890,
-      quantity: 1,
-      imageUrl: 'https://via.placeholder.com/100x100/eeeeee/999999?text=Keyboard',
-      selected: false
-    },
-    {
-      id: 2,
-      name: 'Logitech MX Master 3S 靜音滑鼠',
-      spec: '珍珠白',
-      price: 3290,
-      quantity: 1,
-      imageUrl: 'https://via.placeholder.com/100x100/eeeeee/999999?text=Mouse',
-      selected: false
-    },
-    {
-      id: 3,
-      name: 'Type-C 編織傳輸線 2M',
-      spec: '奶茶色',
-      price: 490,
-      quantity: 2,
-      imageUrl: 'https://via.placeholder.com/100x100/eeeeee/999999?text=Cable',
-      selected: false
-    }
-  ];
-  */
+  00000
   cartItems: CartItem[] = [];
 
   constructor(
@@ -97,6 +66,9 @@ export class CartComponent { // 2. 這裡不用寫 implements OnInit
   ) { }
 
   goToCheckout() {
+    console.log('準備結帳，當前商品數量:', this.cartItems.length);
+    console.log('選中商品數量:', this.selectedCount);
+
     // 使用你剛剛寫好的 selectedCount 來檢查
     if (this.selectedCount === 0) {
       alert('請至少勾選一項商品才能結帳！');
@@ -108,12 +80,25 @@ export class CartComponent { // 2. 這裡不用寫 implements OnInit
       selectedItems: this.cartItems.filter(item => item.selected),
       subTotal: this.subTotal,
       discountAmount: this.discountAmount,
+      usePoints: this.usePoints, // 新增：傳遞使用的點數
       totalAmount: this.totalAmount,
       selectedCoupon: this.selectedCoupon
     };
 
+    console.log('跳轉資料:', checkoutData);
+
     // 檢查通過，執行跳轉並帶入資料
-    this.router.navigate(['/checkout'], { state: { data: checkoutData } });
+    this.router.navigate(['/checkout'], { state: { data: checkoutData } })
+      .then(success => {
+        if (success) {
+          console.log('導覽至 checkout 成功');
+        } else {
+          console.warn('導覽至 checkout 失敗');
+        }
+      })
+      .catch(err => {
+        console.error('導覽過程中發生錯誤:', err);
+      });
   }
 
   //購物車清單//
@@ -129,17 +114,25 @@ export class CartComponent { // 2. 這裡不用寫 implements OnInit
       if (user) {
         this.userId = user.userId;
         this.loadCoupons();
+        this.loadUserPoints(); // 新增：載入點數
         console.log(user);
       }
     });
 
     this.http.get<CartItem[]>('https://localhost:7001/api/Cart').subscribe({
       next: (data) => {
-        this.cartItems = data;
-        // 確保所有從 API 來的資料都有 selected 狀態 (如果 API 沒給的話)
-        this.cartItems.forEach(item => {
-          if (item.selected === undefined) item.selected = false;
-        });
+        console.log('購物車 API 回傳:', data);
+        const rawItems = Array.isArray(data) ? data : [];
+
+        // 修正圖片路徑：若是相對路徑則補上 API 前綴
+        this.cartItems = rawItems.map(item => ({
+          ...item,
+          imageUrl: item.imageUrl
+            ? (item.imageUrl.startsWith('http') ? item.imageUrl : `https://localhost:7001${item.imageUrl}`)
+            : 'https://localhost:7001/images/products/noimage.jpg',
+          selected: item.selected ?? false
+        }));
+
         this.checkAllStatus();
       },
       error: (err) => {
@@ -158,6 +151,12 @@ export class CartComponent { // 2. 這裡不用寫 implements OnInit
         console.error('載入折價券失敗', err);
       }
     });
+  }
+
+  // 新增：載入點數 API (目前先模擬)
+  loadUserPoints(): void {
+    // 假設點數資料為 500
+    this.userPoints = 500;
   }
 
   // 2. 修改：取得"商品小計" (尚未扣除折扣的金額)
@@ -204,10 +203,10 @@ export class CartComponent { // 2. 這裡不用寫 implements OnInit
     }
   }
 
-  // 最終金額
+  // 最終金額 (小計 - 折扣碼 - 點數)
   get totalAmount(): number {
-    console.log(this.subTotal, '減', this.discountAmount);
-    const final = this.subTotal - this.discountAmount;
+    console.log(this.subTotal, '減', this.discountAmount, '再減', this.usePoints);
+    const final = this.subTotal - this.discountAmount - this.usePoints;
     return final > 0 ? final : 0;
   }
 
@@ -330,6 +329,27 @@ export class CartComponent { // 2. 這裡不用寫 implements OnInit
     return c1.couponCode === c2.couponCode;
   }
 
+  // ★ 新增：當下拉選單切換時
+  onCouponChange(): void {
+    // 如果選中「不使用優惠券」(null)，清空折扣碼輸入框
+    if (this.selectedCoupon === null) {
+      this.couponCodeInput = '';
+    }
+  }
+
+  // ★ 新增：驗證輸入點數
+  onPointsInput(): void {
+    if (this.usePoints < 0) this.usePoints = 0;
+    if (this.usePoints > this.userPoints) {
+      alert(`您最多只能使用 ${this.userPoints} 點`);
+      this.usePoints = this.userPoints;
+    }
+    // 也可以再加一個限制：點數不能超過扣完折扣碼後的金額
+    const afterDiscount = this.subTotal - this.discountAmount;
+    if (this.usePoints > afterDiscount) {
+      this.usePoints = afterDiscount;
+    }
+  }
 }
 
 
