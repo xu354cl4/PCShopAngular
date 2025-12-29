@@ -56,10 +56,17 @@
                 <span class="username">
                   {{ user.fullName }}
                 </span>
+                @if (user$ | async; as user) {
 
+                @if (user.role === 'Admin') {
+                <a routerLink="/admin" class="link">後台管理</a>
+                }
+
+                @else{
                 <a routerLink="/membercenter" class="link">
                   會員中心
-                </a>
+                </a>}
+                }
 
                 <button routerLink="/home" class="btn-logout" (click)="logout()">
                   登出

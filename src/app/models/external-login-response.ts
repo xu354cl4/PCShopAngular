@@ -15,6 +15,6 @@ export interface ExternalUser {
   isMailVerified: boolean;
   provider?: string; // ⭐ 後端回傳的 Provider 來自 OAuth
 
-  role?: UserRole;
+  role?: UserRole; //這邊假設後端會回傳 目前沒有
 }
 
