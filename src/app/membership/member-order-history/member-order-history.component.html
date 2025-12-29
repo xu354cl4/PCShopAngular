@@ -1,0 +1,25 @@
+<div class="order-list">
+  <div class="order-card"
+       *ngFor="let o of orders"
+       (click)="goDetail(o.orderId)">
+@if(orders == null){
+<div>
+  查無此資料
+</div>
+}
+@else {
+ <div class="row">
+      <div class="order-no">訂單編號：{{ o.orderNo }}</div>
+      <div class="status status-pending">
+        {{o.status === 3 ? '已完成' : ''  }}
+      </div>
+    </div>
+
+    <div class="row">
+      <div>下單時間：{{ o.createDate | date:'yyyy/MM/dd' }}</div>
+      <div class="price">NT$ {{ o.totalAmount | number }}</div>
+    </div>
+}
+ </div>
+</div>
+

@@ -17,7 +17,7 @@ export class MemberApiService {
   getProfile() {
   return this.http.get<MemberProfileEdit>(`${this.apiUrl}/profile`);
 }
-
+  //個人資料更新
   updateProfile(dto: {
     fullName: string;
     phone: string;
@@ -25,8 +25,6 @@ export class MemberApiService {
   }) {
   return this.http.put(`${this.apiUrl}/profile`, dto);
 }
-
-
 
 
 

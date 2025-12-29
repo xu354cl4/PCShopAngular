@@ -5,36 +5,72 @@
     <h3>會員中心</h3>
 
     <ul>
-      <li (click)="mainView='overview'">帳戶總覽</li>
+      <li (click)="mainView='overview'; this.selectedOrderId = null">帳戶總覽</li>
 
       <li (click)="mainView='orders'">訂單管理
         <ul>
-          <li (click)="$event.stopPropagation(); mainView='orders'; orderView='pending'">待付款</li>
-          <li (click)="$event.stopPropagation(); mainView='orders'; orderView='shipping'">配送中</li>
-          <li (click)="$event.stopPropagation(); mainView='orders'; orderView='completed'">已完成</li>
+          <li (click)="$event.stopPropagation(); mainView='orders'; orderView='pending'; this.selectedOrderId = null">待付款</li>
+          <li (click)="$event.stopPropagation(); mainView='orders'; orderView='shipping'; this.selectedOrderId = null">配送中</li>
+          <li (click)="$event.stopPropagation(); mainView='orders'; orderView='completed'; this.selectedOrderId = null">已完成</li>
         </ul>
       </li>
 
       <li (click)="mainView='settings'">個人設定
         <ul>
-          <li (click)="$event.stopPropagation(); mainView='settings'; settingsView='profile'">基本資料 ⚙️</li>
-          <li (click)="$event.stopPropagation(); mainView='settings'; settingsView='address'">地址管理 🏠</li>
-          <li (click)="$event.stopPropagation(); mainView='settings'; settingsView='security'">帳號安全 🔒</li>
+          <li (click)="$event.stopPropagation(); mainView='settings'; settingsView='profile'; this.selectedOrderId = null">基本資料 ⚙️
+          </li>
+          <li (click)="$event.stopPropagation(); mainView='settings'; settingsView='address'; this.selectedOrderId = null">地址管理
+            🏠</li>
+          <li (click)="$event.stopPropagation(); mainView='settings'; settingsView='security';this.selectedOrderId = null">帳號安全
+            🔒
+          </li>
         </ul>
       </li>
 
       <li (click)="mainView='benefits'">優惠管理
         <ul>
-          <li (click)="$event.stopPropagation(); mainView='benefits'; benefitsView='coupon'">折價券 💰</li>
-          <li (click)="$event.stopPropagation(); mainView='benefits'; benefitsView='coin'">蝦幣紀錄 🪙</li>
-          <li (click)="$event.stopPropagation(); mainView='benefits'; benefitsView='activity'">回饋活動 🎁</li>
+          <li (click)="$event.stopPropagation(); mainView='benefits'; benefitsView='coupon';this.selectedOrderId = null">折價券 💰
+          </li>
+          <li (click)="$event.stopPropagation(); mainView='benefits'; benefitsView='coin'; this.selectedOrderId = null">蝦幣紀錄 🪙
+          </li>
+          <li (click)="$event.stopPropagation(); mainView='benefits'; benefitsView='activity'; this.selectedOrderId = null">回饋活動
+            🎁</li>
         </ul>
       </li>
     </ul>
   </aside>
 
   <!-- 右側內容區 -->
+  <!-- 訂單區 -->
   <section class="content-5">
+    @if (selectedOrderId !== null) {
+    <app-member-order-detail [orderId]="selectedOrderId" (close)="closeOrderDetail()">
+    </app-member-order-detail>
+    }
+    @if (selectedOrderId === null && mainView === 'orders') {
+
+    @if (orderView === 'pending') {
+    <app-member-order-pending (openDetail)="openOrderDetail($event)"></app-member-order-pending>
+    }
+
+    @if (orderView === 'shipping') {
+    <app-member-order-shipping (openDetail)="openOrderDetail($event)"></app-member-order-shipping>
+    }
+
+    @if (orderView === 'completed') {
+    <app-member-order-history (openDetail)="openOrderDetail($event)"></app-member-order-history>
+    }
+    @if (loading) {
+    <div class="card-5">載入中...</div>
+    }
+
+    @if (!loading && error) {
+    <div class="card-5">{{ error }}</div>
+    }
+
+
+    <!-- 個人檔案區 -->
+    }
     @if (!loading && !error && mainView === 'settings') {
 
     @if (settingsView === 'profile') {
@@ -56,6 +92,22 @@
     @if (!loading && error) {
     <div class="card-5">{{ error }}</div>
     }
+
+  <!-- @if (mainView === 'benefits') {
+
+                                                      @if (benefitsView === 'coupon') {
+                                                      <app-member-coupon></app-member-coupon>
+                                                      }
+
+                                                      @if (benefitsView === 'coin') {
+                                                      <app-member-coin></app-member-coin>
+                                                      }
+
+                                                      @if (benefitsView === 'activity') {
+                                                      <app-member-activity></app-member-activity>
+                                                      }
+
+                                                    }-->
 
     <!-- ================= 帳戶總覽 ================= -->
     @if (!loading && !error && mainView === 'overview' && overview) {
@@ -111,48 +163,5 @@
       </div>
     </div>
     }
-
-    <!-- ================= 訂單管理 ================= -->
-    @if (!loading && !error && mainView === 'orders') {
-    <div class="content-panel-5">
-      <h2 class="content-title-5">訂單管理</h2>
-      <div class="card-5">
-        訂單列表（{{ orderView }}）TODO：接 /api/member/orders
-      </div>
-    </div>
-    }
-
-    <!-- ================= 個人設定 ================= -->
-    @if (!loading && !error && mainView === 'settings') {
-
-    @if (settingsView === 'profile') {
-    <div class="card-5">基本資料（TODO111）</div>
-    }
-
-    @if (settingsView === 'address') {
-    <div class="card-5">地址管理（TODO）</div>
-    }
-
-    @if (settingsView === 'security') {
-    <div class="card-5">帳號安全（TODO）</div>
-    }
-    }
-
-    <!-- ================= 優惠管理 ================= -->
-    @if (!loading && !error && mainView === 'benefits') {
-
-    @if (benefitsView === 'coupon') {
-    <div class="card-5">折價券（TODO）</div>
-    }
-
-    @if (benefitsView === 'coin') {
-    <div class="card-5">蝦幣紀錄（TODO）</div>
-    }
-
-    @if (benefitsView === 'activity') {
-    <div class="card-5">回饋活動（TODO）</div>
-    }
-    }
-
   </section>
 </main>
