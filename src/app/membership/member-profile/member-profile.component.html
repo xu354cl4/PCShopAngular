@@ -43,7 +43,8 @@
             ⚠️ 按下儲存後，系統將寄送驗證信至新信箱，驗證後才會生效。
           </div>
 
-          <div *ngIf="!isThirdParty && !isMailVerified && emailInput === (authState.getCurrentUser()?.mail ?? '')"
+          <div
+            *ngIf="!isThirdParty && !isMailVerified &&  !emailUpdateFailed && emailInput === (authState.getCurrentUser()?.mail ?? '')"
             class="status-warn" style="color: #dc2626; margin-top: 5px; font-size: 0.9em;">
             ⚠️ 此 Email 尚未驗證
             <button type="button" (click)="sendVerifyEmail()"

@@ -28,7 +28,7 @@ export class MemberProfileComponent implements OnInit {
   /* ===== 使用者狀態 ===== */
   isThirdParty = false;
   isMailVerified = false;
-
+  emailUpdateFailed = false;
   /* ===== Email（獨立綁定，不放進 FormGroup 以避免驗證打架）===== */
   emailInput = '';
 
@@ -185,6 +185,8 @@ export class MemberProfileComponent implements OnInit {
         this.loading = false;
         // 如果只是 Email 失敗，但基本資料其實已經存了，這裡顯示錯誤給使用者看
         this.error = `基本資料已存，但 Email 更新失敗：${err.error?.message ?? '未知錯誤'}`;
+        this.emailInput = oldEmail
+        this.emailUpdateFailed = true;
       }
     });
   }
