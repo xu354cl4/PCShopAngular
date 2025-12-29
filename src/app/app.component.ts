@@ -18,7 +18,6 @@ import { FaqsBackComponent } from './faqs-back/faqs-back.component';
     HeaderComponent,
     FooterComponent,
     MatDialogModule,
-    AdsBackComponent,
     FaqsBackComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
@@ -26,15 +25,19 @@ import { FaqsBackComponent } from './faqs-back/faqs-back.component';
 export class AppComponent {
   title = 'PcShop';
   isGameHomeOpened = false;
-  showFloating = true;
+  showFloating = false;
 
   constructor(private dialog: MatDialog) { }
 
   ngOnInit(): void {
-    this.showFloating = !sessionStorage.getItem('gameFloatingClosed');
+    // this.showFloating = !sessionStorage.getItem('gameFloatingClosed');
     //讀取到gameFloatingClosed有值後，就不顯示浮動按鈕
   }
-
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      this.showFloating = true;
+    }, 500); // 0.5 秒後出現
+  }
   closeFloating() {
     this.showFloating = false;
     sessionStorage.setItem('gameFloatingClosed', '1');
@@ -56,7 +59,7 @@ export class AppComponent {
     //  Gamehome 關閉 → 按鈕回來
     dialogRef.afterClosed().subscribe(() => {
       this.isGameHomeOpened = false;
-      this.showFloating = true;
+      this.showFloating = false;
     });
   }
 

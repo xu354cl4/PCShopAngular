@@ -33,10 +33,11 @@
           <div class="top-middle">
             <ul class="useful-links">
               <li><a routerLink="/home">首頁</a></li>
-              <li><a routerLink="/products">商城</a></li>
-              <li><a routerLink="/faqs">問題專區</a></li>
+              <li><a routerLink="/products">全品項</a></li>
+              <li><a routerLink="/faqs">有疑問請點我</a></li>
               <li><a routerLink="/order-list">訂單</a></li>
-              <li><a routerLink="/cart">購物車</a></li>
+              <!-- <li><a routerLink="/cart">購物車</a></li> -->
+              <li><a routerLink="/adsfront">Test</a></li>
               <li><a routerLink="/adsback">廣告管理(之後塞後台)</a></li>
               <li><a routerLink="/faqsback">問題管理(之後塞後台)</a></li>
             </ul>
@@ -49,7 +50,7 @@
 
               <!-- 已登入 -->
               <div class="user-box">
-          <img class="avatar" [src]="(avatarUrl$ | async) || '/images/no-image.png'" alt="avatar" />
+                <img class="avatar" [src]="(avatarUrl$ | async) || '/images/no-image.png'" alt="avatar" />
 
 
                 <span class="username">
@@ -94,7 +95,7 @@
         <div class="col-lg-3 col-md-3 col-7">
           <!-- Start Header Logo -->
           <a class="navbar-brand" routerLink="home">
-            <img src="assets/images/logo/logo.svg" alt="Logo">
+            <img src="images/GPShop.png" alt="Logo">
           </a>
           <!-- End Header Logo -->
         </div>
@@ -142,7 +143,7 @@
                 </a>
               </div>
               <div class="cart-items">
-                <a href="javascript:void(0)" class="main-btn">
+                <a href="javascript:void(0)" class="main-btn" routerLink="/cart">
                   <i class="lni lni-cart"></i>
                   <span class="total-items">2</span>
                 </a>
