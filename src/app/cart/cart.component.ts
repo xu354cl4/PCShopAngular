@@ -31,6 +31,13 @@ export interface CartItem {
   selected: boolean;
 }
 
+export interface UserPoints {
+  totalAvailablePoints: number;
+  soonExpiringPoints: number;
+}
+
+
+
 
 @Component({
   selector: 'app-cart',
@@ -50,13 +57,13 @@ export class CartComponent implements OnInit {
   // 改為空陣列，等待 API 回傳
   rawCoupons: Coupon[] = [];
   userId: number | null = null;
-  userPoints: number = 0; // 用戶目前的總點數
+  userPoints: UserPoints = { totalAvailablePoints: 0, soonExpiringPoints: 0 }; // 修改：使用介面
   usePoints: number = 0; // 用戶輸入要使用的點數
 
   // 結帳流程進度條
   steps: MenuItem[] = [];
   activeIndex: number = 0; // 購物車是第 1 步 (Index 0)
-  00000
+
   cartItems: CartItem[] = [];
 
   constructor(
@@ -153,10 +160,19 @@ export class CartComponent implements OnInit {
     });
   }
 
-  // 新增：載入點數 API (目前先模擬)
+  // 新增：載入點數 API
   loadUserPoints(): void {
-    // 假設點數資料為 500
-    this.userPoints = 500;
+    if (this.userId) {
+      this.http.get<UserPoints>(`https://localhost:7001/api/Cart/Points?userId=${this.userId}`).subscribe({
+        next: (points) => {
+          this.userPoints = points;
+          console.log('載入點數成功:', points);
+        },
+        error: (err) => {
+          console.error('載入點數失敗', err);
+        }
+      });
+    }
   }
 
   // 2. 修改：取得"商品小計" (尚未扣除折扣的金額)
@@ -337,18 +353,33 @@ export class CartComponent implements OnInit {
     }
   }
 
-  // ★ 新增：驗證輸入點數
+  // ★ 新增/修正：驗證點數 API
   onPointsInput(): void {
-    if (this.usePoints < 0) this.usePoints = 0;
-    if (this.usePoints > this.userPoints) {
-      alert(`您最多只能使用 ${this.userPoints} 點`);
-      this.usePoints = this.userPoints;
+    if (this.usePoints === null || this.usePoints < 0) {
+      this.usePoints = 0;
     }
-    // 也可以再加一個限制：點數不能超過扣完折扣碼後的金額
-    const afterDiscount = this.subTotal - this.discountAmount;
-    if (this.usePoints > afterDiscount) {
-      this.usePoints = afterDiscount;
-    }
+
+    if (!this.userId) return;
+
+    // POST 給後端驗證點數
+    this.http.post<any>('https://localhost:7001/api/Cart/ValidatePoints', {
+      userId: this.userId,
+      usePoints: this.usePoints,
+      subTotal: this.subTotal - this.discountAmount // 傳送扣除折扣後的金額供後端參考
+    }).subscribe({
+      next: (res) => {
+        // 假設後端回傳格式為 { success: boolean, validPoints: number, message?: string }
+        if (res && typeof res.validPoints === 'number') {
+          this.usePoints = res.validPoints;
+          if (res.message && res.validPoints < this.usePoints) {
+            console.warn('點數調整：', res.message);
+          }
+        }
+      },
+      error: (err) => {
+        console.error('點數驗證 API 錯誤:', err);
+      }
+    });
   }
 }
 
