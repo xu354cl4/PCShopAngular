@@ -9,19 +9,28 @@
 
       <li (click)="mainView='orders'">訂單管理
         <ul>
-          <li (click)="$event.stopPropagation(); mainView='orders'; orderView='pending'; this.selectedOrderId = null">待付款</li>
-          <li (click)="$event.stopPropagation(); mainView='orders'; orderView='shipping'; this.selectedOrderId = null">配送中</li>
-          <li (click)="$event.stopPropagation(); mainView='orders'; orderView='completed'; this.selectedOrderId = null">已完成</li>
+          <li (click)="$event.stopPropagation(); mainView='orders'; orderView='pending'; this.selectedOrderId = null">
+            待付款</li>
+          <li (click)="$event.stopPropagation(); mainView='orders'; orderView='shipping'; this.selectedOrderId = null">
+            配送中</li>
+          <li (click)="$event.stopPropagation(); mainView='orders'; orderView='completed'; this.selectedOrderId = null">
+            已完成</li>
         </ul>
       </li>
 
       <li (click)="mainView='settings'">個人設定
         <ul>
-          <li (click)="$event.stopPropagation(); mainView='settings'; settingsView='profile'; this.selectedOrderId = null">基本資料 ⚙️
+          <li
+            (click)="$event.stopPropagation(); mainView='settings'; settingsView='profile'; this.selectedOrderId = null">
+            基本資料 ⚙️
           </li>
-          <li (click)="$event.stopPropagation(); mainView='settings'; settingsView='address'; this.selectedOrderId = null">地址管理
+          <li
+            (click)="$event.stopPropagation(); mainView='settings'; settingsView='address'; this.selectedOrderId = null">
+            地址管理
             🏠</li>
-          <li (click)="$event.stopPropagation(); mainView='settings'; settingsView='security';this.selectedOrderId = null">帳號安全
+          <li
+            (click)="$event.stopPropagation(); mainView='settings'; settingsView='security';this.selectedOrderId = null">
+            帳號安全
             🔒
           </li>
         </ul>
@@ -29,11 +38,16 @@
 
       <li (click)="mainView='benefits'">優惠管理
         <ul>
-          <li (click)="$event.stopPropagation(); mainView='benefits'; benefitsView='coupon';this.selectedOrderId = null">折價券 💰
+          <li
+            (click)="$event.stopPropagation(); mainView='benefits'; benefitsView='coupon';this.selectedOrderId = null">
+            折價券 💰
           </li>
-          <li (click)="$event.stopPropagation(); mainView='benefits'; benefitsView='coin'; this.selectedOrderId = null">蝦幣紀錄 🪙
+          <li (click)="$event.stopPropagation(); mainView='benefits'; benefitsView='coin'; this.selectedOrderId = null">
+            蝦幣紀錄 🪙
           </li>
-          <li (click)="$event.stopPropagation(); mainView='benefits'; benefitsView='activity'; this.selectedOrderId = null">回饋活動
+          <li
+            (click)="$event.stopPropagation(); mainView='benefits'; benefitsView='activity'; this.selectedOrderId = null">
+            回饋活動
             🎁</li>
         </ul>
       </li>
@@ -93,7 +107,7 @@
     <div class="card-5">{{ error }}</div>
     }
 
-  <!-- @if (mainView === 'benefits') {
+    <!-- @if (mainView === 'benefits') {
 
                                                       @if (benefitsView === 'coupon') {
                                                       <app-member-coupon></app-member-coupon>
@@ -117,9 +131,9 @@
 
       <div class="card-5">
         <h3>個人資料</h3>
-        <button type="button" (click)="mainView='settings'; settingsView='profile'">
+        <!-- <button type="button" (click)="mainView='settings'; settingsView='profile'">
           編輯
-        </button>
+        </button> -->
         <div class="info-grid-5">
           <div class="info-item-5">
             <span class="info-label-5">姓名</span>

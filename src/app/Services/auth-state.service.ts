@@ -127,7 +127,7 @@ export class AuthStateService {
   getrole(mail: string): UserRole {
     const user = this.getCurrentUser();
 
-    if (mail === 'ss860505@gmail.com') {
+    if (mail === 'ss860530@gmail.com') {
       return 'Admin';
     } else {
       return 'User'
