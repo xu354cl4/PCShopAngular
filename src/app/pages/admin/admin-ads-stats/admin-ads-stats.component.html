@@ -1,0 +1,47 @@
+<!-- src/app/pages/admin/admin-ads-stats/admin-ads-stats.component.html -->
+<div class="card">
+  <h4>點擊統計（Clicks）</h4>
+
+  <div class="row">
+    <div>
+      <label>From</label>
+      <input [(ngModel)]="from" />
+    </div>
+    <div>
+      <label>To</label>
+      <input [(ngModel)]="to" />
+    </div>
+    <div class="btnWrap">
+      <button (click)="load()">查詢</button>
+    </div>
+  </div>
+
+  <div *ngIf="msg" class="msg">{{ msg }}</div>
+
+  <div class="tableWrap" *ngIf="rows.length">
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Position</th>
+          <th>AdId</th>
+          <th>Title</th>
+          <th>Clicks</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let r of rows">
+          <td>{{ r.date | date:'yyyy-MM-dd' }}</td>
+          <td>{{ r.positionCode }}</td>
+          <td>{{ r.adId }}</td>
+          <td>{{ r.title }}</td>
+          <td>{{ r.clicks }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="muted" *ngIf="!rows.length">
+    沒資料就先去前台 Playground 點幾下廣告，再回來查。
+  </div>
+</div>

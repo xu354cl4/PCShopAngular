@@ -5,11 +5,12 @@ import { Observable } from 'rxjs';
 import { ExternalUser } from '../models/external-login-response';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { AdSlotComponent } from "../ad-slot/ad-slot.component";
 
 
 @Component({
   selector: 'app-header',
-  imports: [RouterLink, RouterModule, CommonModule],
+  imports: [RouterLink, RouterModule, CommonModule, AdSlotComponent],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })

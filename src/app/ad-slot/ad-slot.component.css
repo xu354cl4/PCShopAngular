@@ -1,0 +1,99 @@
+/* src/app/components/ad-slot/ad-slot.component.css */
+
+.wrap {
+  width: 100%;
+}
+
+.card {
+  cursor: pointer;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, .08);
+}
+
+.media {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.title {
+  padding: 10px 12px;
+  font-size: 14px;
+  color: #111827;
+}
+
+.wrap.float {
+  position: fixed;
+  right: 16px;
+  top: 30%;
+  width: 260px;
+  z-index: 9999;
+  animation: slideIn .35s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(16px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.empty {
+  border: 1px dashed #d1d5db;
+  border-radius: 12px;
+  background: #fafafa;
+  padding: 10px 12px;
+}
+
+.empty.floatEmpty {
+  position: fixed;
+  right: 16px;
+  top: 30%;
+  width: 260px;
+  z-index: 9999;
+}
+
+.muted {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.wrap.float {
+  position: fixed;
+  right: 16px;
+  top: 30%;
+  width: 260px;
+  z-index: 9999;
+  animation: slideIn .35s ease-out;
+}
+
+.closeBtn {
+  position: absolute;
+  right: 6px;
+  top: -10px;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  cursor: pointer;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, .08);
+  z-index: 10000;
+}
+
+.closeBtn:hover {
+  transform: scale(1.05);
+}

@@ -1,0 +1,84 @@
+/* src/app/pages/admin/admin-ads-stats/admin-ads-stats.component.css */
+.card {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #fff;
+  padding: 12px;
+  margin-top: 14px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 140px;
+  gap: 10px;
+  align-items: end;
+}
+
+@media (max-width: 720px) {
+  .row {
+    grid-template-columns: 1fr;
+  }
+}
+
+label {
+  display: block;
+  font-size: 12px;
+  color: #6b7280;
+  margin-bottom: 6px;
+}
+
+input {
+  width: 100%;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 8px 10px;
+}
+
+button {
+  width: 100%;
+  border: 1px solid #111827;
+  background: #111827;
+  color: #fff;
+  border-radius: 10px;
+  padding: 8px 10px;
+  cursor: pointer;
+}
+
+.tableWrap {
+  margin-top: 12px;
+  overflow: auto;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+}
+
+th,
+td {
+  padding: 10px;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 13px;
+  text-align: left;
+}
+
+th {
+  background: #fafafa;
+}
+
+.muted {
+  color: #6b7280;
+  font-size: 12px;
+  margin-top: 10px;
+}
+
+.msg {
+  margin-top: 10px;
+  padding: 8px 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #fafafa;
+}

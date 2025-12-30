@@ -1,5 +1,4 @@
 
-
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
@@ -15,10 +14,10 @@ export const routes: Routes = [
     path: 'faqs', loadComponent: () => import('./faqs/faqs.component').then(m => m.FaqsComponent)
   },
   {
-    path: 'adsback', loadComponent: () => import('./ads-back/ads-back.component').then(m => m.AdsBackComponent)
+    path: 'admin', loadComponent: () => import('./pages/admin/admin-ads/admin-ads.component').then(m => m.AdminAdsComponent)
   },
   {
-    path: 'adsfront', loadComponent: () => import('./ads-front/ads-front.component').then(m => m.AdsFrontComponent)
+    path: 'adplay', loadComponent: () => import('./pages/ads-playground/ads-playground.component').then(m => m.AdsPlaygroundComponent)
   },
   {
     path: 'faqsback', loadComponent: () => import('./faqs-back/faqs-back.component').then(m => m.FaqsBackComponent)

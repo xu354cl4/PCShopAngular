@@ -1,0 +1,22 @@
+<!-- src/app/components/ad-slot/ad-slot.component.html -->
+<ng-container *ngIf="active as ad; else empty">
+  <div class="wrap" [class.float]="variant==='float'">
+    <button *ngIf="variant==='float' && closable" class="closeBtn" type="button" (click)="close($event)">
+      ✕
+    </button>
+    <div class="card" (click)="onClick(ad)" role="button" tabindex="0">
+      <ng-container [ngSwitch]="ad.type">
+        <img *ngSwitchCase="'image'" class="media" [src]="ad.mediaUrl" [alt]="ad.title" />
+        <video *ngSwitchCase="'video'" class="media" [src]="ad.mediaUrl" muted autoplay loop playsinline></video>
+        <img *ngSwitchDefault class="media" [src]="ad.mediaUrl" [alt]="ad.title" />
+      </ng-container>
+      <div class="title">{{ ad.title }}</div>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #empty>
+  <div class="empty" [class.floatEmpty]="variant==='float'">
+    <span class="muted">No ad for slot: {{ positionCode }}</span>
+  </div>
+</ng-template>
