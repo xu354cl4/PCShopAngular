@@ -3,10 +3,11 @@ import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AdsBackComponent } from "../ads-back/ads-back.component";
 import { FaqsBackComponent } from "../faqs-back/faqs-back.component";
+import { OrderlistsComponent } from "./orderlists/orderlists.component";
 
 @Component({
   selector: 'app-adminpage',
-  imports: [CommonModule, AdsBackComponent, FaqsBackComponent],
+  imports: [CommonModule, AdsBackComponent, FaqsBackComponent, OrderlistsComponent],
   templateUrl: './adminpage.component.html',
   styleUrl: './adminpage.component.css'
 })

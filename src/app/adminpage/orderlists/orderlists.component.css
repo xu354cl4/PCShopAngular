@@ -1,0 +1,55 @@
+.order-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.order-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 16px 20px;
+  background: #fff;
+  cursor: pointer;
+  transition: all .2s ease;
+}
+
+.order-card:hover {
+  border-color: #2a7bff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, .08);
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.price {
+  font-weight: 600;
+}
+
+.status-pending {
+  color: #f59e0b;
+}
+
+.status-shipping {
+  color: #3b82f6;
+}
+
+.status-completed {
+  color: #16a34a;
+}
+
+.order-toolbar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.status-filter,
+.order-search {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+}

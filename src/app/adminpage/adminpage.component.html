@@ -23,6 +23,9 @@
       <li (click)="mainView='Faq'" [class.active]="mainView === 'Faq'">
         🎁 問題管理
       </li>
+      <li (click)="mainView='Orders'" [class.active]="mainView === 'Orders'">
+        📄 訂單紀錄
+      </li>
       <li (click)="mainView='settings'" [class.active]="mainView === 'settings'">
         ⚙️ 個人設定
         <ul>
@@ -67,7 +70,12 @@
       <app-faqs-back></app-faqs-back>
     </div>
     }
-
+    @if(selectedOrderId === null && mainView === 'Orders'){
+    <div class="card-5">
+      <h2 class="content-title-5">訂單紀錄</h2>
+      <app-orderlists></app-orderlists>
+    </div>
+    }
     @if (!loading && !error && mainView === 'settings') {
     <div class="card-5">
       <h2 class="content-title-5">個人設定</h2>
