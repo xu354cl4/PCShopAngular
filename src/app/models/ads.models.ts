@@ -49,3 +49,11 @@ export interface ReportRowDto {
   title: string;
   clicks: number;
 }
+
+export interface AdsClickStatDto {
+  date: string;         // e.g. "2025-12-31"
+  adId: number;
+  title: string;
+  positionCode: string; // e.g. "right_float"
+  clicks: number;
+}

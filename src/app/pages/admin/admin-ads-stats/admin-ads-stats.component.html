@@ -1,47 +1,53 @@
-<!-- src/app/pages/admin/admin-ads-stats/admin-ads-stats.component.html -->
-<div class="card">
-  <h4>點擊統計（Clicks）</h4>
+<div class="container py-5">
+  <div class="page">
+    <div class="toolbar">
+      <div class="field">
+        <label>From</label>
+        <input type="date" [formControl]="form.controls.from" />
+      </div>
 
-  <div class="row">
-    <div>
-      <label>From</label>
-      <input [(ngModel)]="from" />
+      <div class="field">
+        <label>To</label>
+        <input type="date" [formControl]="form.controls.to" />
+      </div>
+
+      <div class="field">
+        <label>位置</label>
+        <select [formControl]="form.controls.position" (change)="onFilterChange()">
+          @for (o of positionOptions; track o.value) {
+          <option [value]="o.value">{{ o.label }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="field">
+        <label>廣告</label>
+        <select [formControl]="form.controls.ad" (change)="onFilterChange()">
+          @for (o of adOptions; track o.value) {
+          <option [value]="o.value">{{ o.label }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="field">
+        <label>圖表</label>
+        <select [formControl]="form.controls.mode" (change)="onFilterChange()">
+          <option value="line">折線</option>
+          <option value="bar">長條</option>
+        </select>
+      </div>
+
+      <button class="btn" type="button" (click)="load()" [disabled]="loading">
+        {{ loading ? '載入中...' : '查詢' }}
+      </button>
     </div>
-    <div>
-      <label>To</label>
-      <input [(ngModel)]="to" />
+
+    @if (msg) {
+    <div class="msg">{{ msg }}</div>
+    }
+
+    <div class="chartBox">
+      <canvas #canvas></canvas>
     </div>
-    <div class="btnWrap">
-      <button (click)="load()">查詢</button>
-    </div>
-  </div>
-
-  <div *ngIf="msg" class="msg">{{ msg }}</div>
-
-  <div class="tableWrap" *ngIf="rows.length">
-    <table>
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Position</th>
-          <th>AdId</th>
-          <th>Title</th>
-          <th>Clicks</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let r of rows">
-          <td>{{ r.date | date:'yyyy-MM-dd' }}</td>
-          <td>{{ r.positionCode }}</td>
-          <td>{{ r.adId }}</td>
-          <td>{{ r.title }}</td>
-          <td>{{ r.clicks }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="muted" *ngIf="!rows.length">
-    沒資料就先去前台 Playground 點幾下廣告，再回來查。
   </div>
 </div>

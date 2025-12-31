@@ -65,4 +65,13 @@ export class AdSlotComponent implements OnInit {
     e.stopPropagation();
     this.closed.emit();
   }
+  trackOnly(ad: AdDto, e: MouseEvent) {
+    if (!ad?.linkUrl) {
+      e.preventDefault();
+      return;
+    }
+
+    // 不要 await，不要 subscribe 才導向
+    this.api.trackClick({ adId: ad.adId, positionCode: this.positionCode }).subscribe();
+  }
 }

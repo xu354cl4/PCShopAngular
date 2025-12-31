@@ -14,10 +14,16 @@ export const routes: Routes = [
     path: 'faqs', loadComponent: () => import('./faqs/faqs.component').then(m => m.FaqsComponent)
   },
   {
-    path: 'admin', loadComponent: () => import('./pages/admin/admin-ads/admin-ads.component').then(m => m.AdminAdsComponent)
+    path: 'ad', loadComponent: () => import('./pages/admin/admin-ads/admin-ads.component').then(m => m.AdminAdsComponent)
   },
   {
     path: 'adplay', loadComponent: () => import('./pages/ads-playground/ads-playground.component').then(m => m.AdsPlaygroundComponent)
+  },
+  {
+    path: 'adstat', loadComponent: () => import('./pages/admin/admin-ads-stats/admin-ads-stats.component').then(m => m.AdminAdsStatsComponent)
+  },
+  {
+    path: 'adlayout', loadComponent: () => import('./pages/admin/admin-layout/admin-layout.component').then(m => m.AdminLayoutComponent)
   },
   {
     path: 'faqsback', loadComponent: () => import('./faqs-back/faqs-back.component').then(m => m.FaqsBackComponent)

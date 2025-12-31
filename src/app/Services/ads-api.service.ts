@@ -2,7 +2,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AdDto, AdUpsertDto, PositionDto, ReportRowDto, TrackClickDto } from '../models/ads.models';
+import { AdDto, AdUpsertDto, PositionDto, ReportRowDto, TrackClickDto, AdsClickStatDto } from '../models/ads.models';
 
 @Injectable({ providedIn: 'root' })
 export class AdsApiService {
@@ -63,4 +63,11 @@ export class AdsApiService {
       fd
     );
   }
+  getClickStats(from: string, to: string) {
+    return this.http.get<AdsClickStatDto[]>(
+      `/api/admin/ads/report`,
+      { params: { from, to } }
+    );
+  }
+
 }

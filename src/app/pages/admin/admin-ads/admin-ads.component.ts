@@ -7,11 +7,12 @@ import {
 } from '@angular/forms';
 import { AdsApiService } from '../../../Services/ads-api.service';
 import { AdDto, AdUpsertDto, PositionDto } from '../../../models/ads.models';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-admin-ads',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './admin-ads.component.html',
   styleUrls: ['./admin-ads.component.css']
 })
@@ -123,7 +124,6 @@ export class AdminAdsComponent implements OnInit {
       this.msg = '請填完必填欄位（標題/顯示影像/擺放位置/類別）';
       return;
     }
-
     const v = this.form.getRawValue();
     const dto: AdUpsertDto = {
       title: v.title!,
@@ -135,10 +135,14 @@ export class AdminAdsComponent implements OnInit {
       startTime: v.startTime ? v.startTime : null,
       endTime: v.endTime ? v.endTime : null
     };
+    const editingId = this.selected?.adId;
 
     if (!this.selected) {
       this.api.adminCreateAd(dto).subscribe({
-        next: () => { this.msg = '新增成功'; this.reload(); },
+        next: () => {
+          this.msg = '更新成功';
+          this.reloadAndKeep(editingId);
+        },
         error: () => { this.msg = '新增失敗'; }
       });
     } else {
@@ -148,7 +152,13 @@ export class AdminAdsComponent implements OnInit {
       });
     }
   }
+  private reloadAndKeep(adId?: number) {
+    this.reload();
 
+    if (!adId) return;
+
+    // 等 list 回來後再 pick（簡化做法：在 adminListAds 的 next 裡處理）
+  }
   delete(ad: AdDto) {
     if (!confirm(`確定刪除 AdId=${ad.adId} ?`)) return;
     this.api.adminDeleteAd(ad.adId).subscribe({
