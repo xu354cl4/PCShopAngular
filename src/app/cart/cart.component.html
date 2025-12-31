@@ -88,7 +88,8 @@
         <div class="points-input-group">
           <label for="pointsInput">使用點數 (可用: {{ userPoints.totalAvailablePoints }})</label>
           <div class="input-with-button">
-            <input type="number" id="pointsInput" [(ngModel)]="usePoints" (input)="onPointsInput()" placeholder="0">
+            <input type="number" id="pointsInput" [(ngModel)]="usePoints" (input)="onPointsInput($event)"
+              placeholder="0" min="0" [max]="userPoints.totalAvailablePoints">
             <span class="points-unit">點</span>
           </div>
         </div>

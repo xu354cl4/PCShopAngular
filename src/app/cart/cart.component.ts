@@ -353,26 +353,54 @@ export class CartComponent implements OnInit {
     }
   }
 
-  // ★ 新增/修正：驗證點數 API
-  onPointsInput(): void {
-    if (this.usePoints === null || this.usePoints < 0) {
+  // ★ 新增/修正：驗證點數
+  onPointsInput(event?: any): void {
+    // 1. 基本數值處理 (防止 null, undefined 或非數字)
+    if (this.usePoints === null || this.usePoints === undefined) {
       this.usePoints = 0;
+    }
+
+    // 2. 限制：不能為負數
+    if (this.usePoints < 0) {
+      this.usePoints = 0;
+    }
+
+    // 3. 限制：不能超過使用者持有的點數上限
+    const maxAvailable = this.userPoints.totalAvailablePoints || 0;
+
+    // 計算剩餘應付金額上限 (不能扣到負數)
+    const remainingAmount = this.subTotal - this.discountAmount;
+    const maxAllowedByTotal = remainingAmount > 0 ? remainingAmount : 0;
+
+    // 最終限制：點數上限 與 剩餘金額 的較小值
+    const ultimateMax = Math.min(maxAvailable, maxAllowedByTotal);
+
+    if (this.usePoints > ultimateMax) {
+      this.usePoints = ultimateMax;
+    }
+
+    // 確保輸入的是整數
+    this.usePoints = Math.floor(this.usePoints);
+
+    // 強制更新 DOM 元素的值 (關鍵：解決 Angular 模型沒變時 DOM 不更新的問題)
+    if (event && event.target) {
+      event.target.value = this.usePoints;
     }
 
     if (!this.userId) return;
 
-    // POST 給後端驗證點數
+    // 4. 呼叫後端驗證
     this.http.post<any>('https://localhost:7001/api/Cart/ValidatePoints', {
       userId: this.userId,
       usePoints: this.usePoints,
-      subTotal: this.subTotal - this.discountAmount // 傳送扣除折扣後的金額供後端參考
+      subTotal: remainingAmount
     }).subscribe({
       next: (res) => {
-        // 假設後端回傳格式為 { success: boolean, validPoints: number, message?: string }
         if (res && typeof res.validPoints === 'number') {
           this.usePoints = res.validPoints;
-          if (res.message && res.validPoints < this.usePoints) {
-            console.warn('點數調整：', res.message);
+          // 若後端回傳的跟目前不同，再次同步 DOM
+          if (event && event.target && event.target.value != this.usePoints) {
+            event.target.value = this.usePoints;
           }
         }
       },
