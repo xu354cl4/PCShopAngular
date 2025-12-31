@@ -10,9 +10,15 @@
   </select>
 
   <!-- 訂單編號搜尋 -->
-  <input class="order-search" type="text" placeholder="搜尋訂單編號" [(ngModel)]="keyword" (input)="applyFilter()" />
-
+  <input class="order-search" type="text" [(ngModel)]="keyword" (ngModelChange)="search$.next($event)"
+    placeholder="搜尋訂單編號" />
 </div>
+@if (noData && !loading) {
+<div class="empty-order">
+  查無訂單
+</div>
+}
+@else {
 <div class="order-list">
   <div class="order-card" *ngFor="let o of orders" (click)="goDetail(o.orderId)">
 
@@ -27,6 +33,19 @@
       <div>下單時間：{{ o.createDate | date:'yyyy-MM-dd HH:mm'}}</div>
       <div class="price">NT$ {{ o.totalAmount | number }}</div>
     </div>
-
   </div>
+  <div class="pager" *ngIf="totalPages > 1">
+    <button class="page-button" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">
+      上一頁
+    </button>
+  
+    <span>
+      第 {{ currentPage }} / {{ totalPages }} 頁（共 {{ total }} 筆）
+    </span>
+
+    <button class="page-button" (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">
+      下一頁
+    </button>
+    </div>
 </div>
+}

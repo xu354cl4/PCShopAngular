@@ -4,10 +4,11 @@ import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } fr
 import { AdsBackComponent } from "../ads-back/ads-back.component";
 import { FaqsBackComponent } from "../faqs-back/faqs-back.component";
 import { OrderlistsComponent } from "./orderlists/orderlists.component";
+import { OrderdetailsComponent } from "./orderdetails/orderdetails.component";
 
 @Component({
   selector: 'app-adminpage',
-  imports: [CommonModule, AdsBackComponent, FaqsBackComponent, OrderlistsComponent],
+  imports: [CommonModule, AdsBackComponent, FaqsBackComponent, OrderlistsComponent, OrderdetailsComponent],
   templateUrl: './adminpage.component.html',
   styleUrl: './adminpage.component.css'
 })
@@ -125,9 +126,21 @@ export class AdminpageComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  // 以下為你的子組件互動邏輯 (保持原樣或根據需求修改)
-  closeOrderDetail() { this.selectedOrderId = null; }
-  openOrderDetail(id: any) { this.selectedOrderId = id; }
+  // 以下為子組件互動邏輯 (保持原樣或根據需求修改)
+  orderListState = {
+    page: 1,
+    pageSize: 4,
+    filterStatus: undefined as string | undefined,
+    keyword: undefined as string | undefined
+  };
+
+  closeOrderDetail() {
+    this.selectedOrderId = null;
+  }
+
+  openOrderDetail(orderId: number) {
+    this.selectedOrderId = orderId;
+  }
   onProfileSaved() { alert('資料已儲存！'); }
 
   ngOnDestroy() {

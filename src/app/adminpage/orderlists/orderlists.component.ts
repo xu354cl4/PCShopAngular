@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AdminApiService } from '../../Services/admin-api.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
+
 @Component({
   selector: 'app-orderlists',
   imports: [CommonModule, FormsModule],
@@ -9,66 +11,74 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './orderlists.component.css'
 })
 export class OrderlistsComponent implements OnInit {
+  @Output() openDetail = new EventEmitter<number>();
 
+  // 🔹 現在 orders 就是「當頁資料」
   orders: any[] = [];
-  filteredOrders: any[] = []; // 篩選後
-  pagedOrders: any[] = [];    // 當前頁要顯示的
-  filterStatus: '' | 'Pending' | 'Shipping' | 'Completed' = '';
+  search$ = new Subject<string>();
+  filterStatus: '' | 'pending' | 'shipping' | 'completed' = '';
   keyword = '';
-  pageSize = 5;
+
+  pageSize = 4;
   currentPage = 1;
-  totalPages = 0;
 
-  constructor(private adminService: AdminApiService) {
+  // 🔹 從後端來
+  totalPages = 1;
+  total = 0;
 
-  }
+  loading = false;
+  noData = false;
+  constructor(private adminService: AdminApiService) { }
 
   ngOnInit(): void {
+    this.search$
+      .pipe(
+        debounceTime(300),
+        distinctUntilChanged()
+      )
+      .subscribe(() => {
+        this.loadOrders(1);
+      });
+    this.loadOrders(1);
+  }
+
+  // ⭐ 核心：統一用這支
+  loadOrders(page: number) {
+    this.loading = true;
+    this.noData = false;
+
     this.adminService
-      .getOrders()
-      .subscribe(res => this.orders = res);
+      .getOrders(
+        page,
+        this.pageSize,
+        this.filterStatus || undefined,
+        this.keyword || undefined
+      )
+      .subscribe(res => {
+        this.orders = res.items;
+        this.currentPage = res.page;
+        this.pageSize = res.pageSize;
+        this.totalPages = res.totalPages;
+        this.total = res.total;
+
+        this.noData = res.total === 0;
+        this.loading = false;
+      });
+  }
+
+
+  // 🔍 篩選 / 搜尋 → 回第一頁
+  applyFilter() {
+    this.loadOrders(1);
+  }
+
+  // ▶ 換頁
+  goToPage(page: number) {
+    if (page < 1 || page > this.totalPages) return;
+    this.loadOrders(page);
   }
 
   goDetail(orderid: number) {
-
+    this.openDetail.emit(orderid);
   }
-
-  applyFilter() {
-    this.adminService
-      .getOrders(this.filterStatus, this.keyword)
-      .subscribe(res => this.orders = res);
-    // // 狀態篩選
-    // if (this.filterStatus !== 'All') {
-    //   result = result.filter(o => o.status === this.filterStatus);
-    // }
-
-    // // 關鍵字（訂單編號）
-    // if (this.keyword.trim()) {
-    //   result = result.filter(o =>
-    //     o.orderNo.includes(this.keyword.trim())
-    //   );
-    // }
-
-    // this.filteredOrders = result;
-
-    // // ⭐ 套用完 filter 要回到第一頁
-    // this.currentPage = 1;
-    // this.applyPagination();
-  }
-
-  applyPagination() {
-    const start = (this.currentPage - 1) * this.pageSize;
-    const end = start + this.pageSize;
-
-    this.pagedOrders = this.filteredOrders.slice(start, end);
-    this.totalPages = Math.ceil(this.filteredOrders.length / this.pageSize);
-  }
-
-
-  goToPage(page: number) {
-    if (page < 1 || page > this.totalPages) return;
-    this.currentPage = page;
-    this.applyPagination();
-  }
-
 }
