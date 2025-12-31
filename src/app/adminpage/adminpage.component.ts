@@ -6,6 +6,7 @@ import { FaqsBackComponent } from "../faqs-back/faqs-back.component";
 import { OrderlistsComponent } from "./orderlists/orderlists.component";
 import { OrderdetailsComponent } from "./orderdetails/orderdetails.component";
 
+
 @Component({
   selector: 'app-adminpage',
   imports: [CommonModule, AdsBackComponent, FaqsBackComponent, OrderlistsComponent, OrderdetailsComponent],
@@ -133,7 +134,6 @@ export class AdminpageComponent implements OnInit, AfterViewInit, OnDestroy {
     filterStatus: undefined as string | undefined,
     keyword: undefined as string | undefined
   };
-
   closeOrderDetail() {
     this.selectedOrderId = null;
   }

@@ -73,7 +73,8 @@
     @if(selectedOrderId === null && mainView === 'Orders'){
     <div class="card-5">
       <h2 class="content-title-5">訂單紀錄</h2>
-      <app-orderlists (openDetail)="openOrderDetail($event)"></app-orderlists>
+      <app-orderlists [state]="orderListState" (stateChange)="orderListState = $event"
+        (openDetail)="openOrderDetail($event)"></app-orderlists>
     </div>
     }
     @if (!loading && !error && mainView === 'settings') {
