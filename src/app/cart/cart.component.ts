@@ -163,7 +163,7 @@ export class CartComponent implements OnInit {
   // 新增：載入點數 API
   loadUserPoints(): void {
     if (this.userId) {
-      this.http.get<UserPoints>(`https://localhost:7001/api/Cart/Points?userId=${this.userId}`).subscribe({
+      this.http.get<UserPoints>(`https://localhost:7001/api/Cart/Points`).subscribe({
         next: (points) => {
           this.userPoints = points;
           console.log('載入點數成功:', points);
