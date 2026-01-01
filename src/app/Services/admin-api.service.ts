@@ -32,4 +32,24 @@ export class AdminApiService {
       `${this.apiUrl}/orders/${orderId}`
     );
   }
+
+  //Dashboard
+  getOverview() {
+    return this.http.get<{
+      dashboard: {
+        totalMembers: number;
+        yearlyRevenue: number;
+        monthOrders: number;
+        avgOrderAmount: number;
+      };
+      yearlyRevenue: {
+        month: number;
+        amount: number;
+      }[];
+      spendingAnalysis: {
+        labels: string[];
+        data: number[];
+      };
+    }>(`${this.apiUrl}/overview`);
+  }
 }
