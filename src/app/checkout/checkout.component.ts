@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Subject, takeUntil } from 'rxjs';
+import { EcpayService } from '../Services/ecpay.service';
+
 
 // PrimeNG Imports
 import { StepsModule } from 'primeng/steps';
@@ -57,7 +59,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private ecpayService: EcpayService
   ) {
     // 獲取路由轉場時帶過來的 state 資料
     const navigation = this.router.getCurrentNavigation();
@@ -194,4 +197,30 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     }
   }
 
+  //Angular 不能直接用 HttpClient POST 到綠界（因為綠界需要的是頁面跳轉），所以我們需要動態建立一個隱藏表單：
+  checkout() {
+    const orderData = { TotalAmount: 100, ItemName: '測試商品', TradeDesc: '訂單描述' };
+
+    this.ecpayService.getPaymentParams(orderData).subscribe(params => {
+      // 建立一個隱藏的 Form 並 POST 到綠界測試環境
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = 'https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5';
+
+      for (const key in params) {
+        if (params.hasOwnProperty(key)) {
+          const hiddenField = document.createElement('input');
+          hiddenField.type = 'hidden';
+          hiddenField.name = key;
+          hiddenField.value = params[key];
+          form.appendChild(hiddenField);
+        }
+      }
+
+      document.body.appendChild(form);
+      form.submit(); // 自動送出表單，頁面會跳轉到綠界付款頁
+    });
+  }
+
 }
+
