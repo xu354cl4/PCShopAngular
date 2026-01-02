@@ -113,17 +113,6 @@ export class AuthStateService {
   }
 
   //前端模擬user / admin身分 這邊直接綁死信箱
-  getCurrentUserRole(): UserRole {
-    const user = this.getCurrentUser();
-
-    // Demo 用規則（你之後可以拿掉）
-    if (user?.mail === 'ss860505@gmail.com') {
-      return 'Admin';
-    }
-
-    return 'User';
-  }
-
   getrole(mail: string): UserRole {
     const user = this.getCurrentUser();
 
