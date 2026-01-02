@@ -7,6 +7,10 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { MemberProfileComponent } from '../membership/member-profile/member-profile.component';
 import { MemberSecurityComponent } from '../membership/member-security/member-security.component';
 import { MemberAddressComponent } from '../membership/member-address/member-address.component';
+import { MemberOrderPendingComponent } from "../membership/member-order-pending/member-order-pending.component";
+import { MemberOrderShippingComponent } from "../membership/member-order-shipping/member-order-shipping.component";
+import { MemberOrderHistoryComponent } from "../membership/member-order-history/member-order-history.component";
+import { MemberOrderDetailComponent } from '../membership/member-order-detail/member-order-detail.component';
 
 
 type MainView = 'overview' | 'orders' | 'settings' | 'benefits';
@@ -17,7 +21,7 @@ type BenefitsView = 'coupon' | 'coin' | 'activity';
 @Component({
   selector: 'app-membercenter',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MemberProfileComponent, MemberSecurityComponent, MemberAddressComponent],
+  imports: [CommonModule, ReactiveFormsModule, MemberProfileComponent, MemberSecurityComponent, MemberAddressComponent, MemberOrderPendingComponent, MemberOrderShippingComponent, MemberOrderHistoryComponent, MemberOrderDetailComponent],
   templateUrl: './membercenter.component.html',
   styleUrl: './membercenter.component.css'
 })
@@ -34,6 +38,8 @@ export class MembercenterComponent implements OnInit {
   loading = false;
   error = '';
 
+
+  selectedOrderId: number | null = null;
   constructor(private api: MemberApiService) { }
 
   ngOnInit(): void {
@@ -69,6 +75,14 @@ export class MembercenterComponent implements OnInit {
       user.imageUrl = url;
       localStorage.setItem('user', JSON.stringify(user));
     }
+  }
 
+
+  openOrderDetail(orderId: number) {
+    this.selectedOrderId = orderId;
+  }
+
+  closeOrderDetail() {
+    this.selectedOrderId = null;
   }
 }

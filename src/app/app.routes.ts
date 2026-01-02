@@ -35,9 +35,6 @@ export const routes: Routes = [
     path: 'register', loadComponent: () => import('./register/register.component').then(m => m.RegisterComponent)
   },
   {
-    path: 'membership', loadComponent: () => import('./membership/membership.component').then(m => m.MembershipComponent)
-  },
-  {
     path: 'verify-email', loadComponent: () => import('./Memberpages/verify-email/verify-email.component').then(m => m.VerifyEmailComponent)
   },
   {
@@ -64,10 +61,6 @@ export const routes: Routes = [
     path: 'reset-password', loadComponent: () => import('./resetpage/resetpage.component').then(m => m.ResetpageComponent),
     title: '密碼重設'
   },
-  // {
-  //   path: 'verify-email', loadComponent: () => import('./resetpage/resetpage.component').then(m => m.ResetpageComponent),
-  //   title: '忘記密碼Page'
-  // },
   {
     path: 'membercenter', loadComponent: () => import('./membercenter/membercenter.component').then(m => m.MembercenterComponent),
     title: '會員中心'
@@ -76,5 +69,4 @@ export const routes: Routes = [
     path: '**',
     redirectTo: ''
   }
-
 ];
