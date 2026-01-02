@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Subject, takeUntil } from 'rxjs';
+import { EcpayService } from '../Services/ecpay.service';
+
 
 // PrimeNG Imports
 import { StepsModule } from 'primeng/steps';
@@ -17,6 +19,7 @@ import { AccordionModule } from 'primeng/accordion';
 
 @Component({
   selector: 'app-checkout',
+  standalone: true,
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -41,6 +44,9 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   totalAmount = 0;
   totalItems = 0;
   selectedItems: any[] = [];
+  subTotal = 0;
+  discountAmount = 0;
+  usePoints = 0; // 新增：使用的點數
 
   countryCodes = [
     { label: 'TW +886', value: '+886' },
@@ -53,15 +59,19 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private ecpayService: EcpayService
   ) {
     // 獲取路由轉場時帶過來的 state 資料
     const navigation = this.router.getCurrentNavigation();
-    this.checkoutData = navigation?.extras.state?.['data'];
+    this.checkoutData = navigation?.extras.state?.['data'] || history.state?.['data'];
 
     if (this.checkoutData) {
-      this.totalAmount = this.checkoutData.totalAmount;
-      this.selectedItems = this.checkoutData.selectedItems;
+      this.selectedItems = this.checkoutData.selectedItems || [];
+      this.subTotal = this.checkoutData.subTotal || 0;
+      this.discountAmount = this.checkoutData.discountAmount || 0;
+      this.usePoints = this.checkoutData.usePoints || 0; // 新增
+      this.totalAmount = this.checkoutData.totalAmount || 0;
       this.totalItems = this.selectedItems.reduce((acc, item) => acc + item.quantity, 0);
     }
 
@@ -187,4 +197,30 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     }
   }
 
+  //Angular 不能直接用 HttpClient POST 到綠界（因為綠界需要的是頁面跳轉），所以我們需要動態建立一個隱藏表單：
+  checkout() {
+    const orderData = { TotalAmount: 100, ItemName: '測試商品', TradeDesc: '訂單描述' };
+
+    this.ecpayService.getPaymentParams(orderData).subscribe(params => {
+      // 建立一個隱藏的 Form 並 POST 到綠界測試環境
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = 'https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5';
+
+      for (const key in params) {
+        if (params.hasOwnProperty(key)) {
+          const hiddenField = document.createElement('input');
+          hiddenField.type = 'hidden';
+          hiddenField.name = key;
+          hiddenField.value = params[key];
+          form.appendChild(hiddenField);
+        }
+      }
+
+      document.body.appendChild(form);
+      form.submit(); // 自動送出表單，頁面會跳轉到綠界付款頁
+    });
+  }
+
 }
+
