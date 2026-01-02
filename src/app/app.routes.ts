@@ -48,8 +48,6 @@ export const routes: Routes = [
     path: 'checkout', loadComponent: () => import('./checkout/checkout.component').then(m => m.CheckoutComponent),
     title: '結帳作業'
   },
-
-  // 未來其他頁面也放這裡
   {
     path: 'products', loadChildren: () => import('./product/product.module').then(m => m.ProductModule)
   },
@@ -69,6 +67,11 @@ export const routes: Routes = [
     path: 'adminpage', loadComponent: () => import('./adminpage/adminpage.component').then(m => m.AdminpageComponent),
     title: '會員中心'
   },
+  {
+    path: 'adminpage/:view', loadComponent: () => import('./adminpage/adminpage.component').then(m => m.AdminpageComponent),
+    title: '會員中心'
+  },
+  //要加click
   {
     path: '**',
     redirectTo: ''

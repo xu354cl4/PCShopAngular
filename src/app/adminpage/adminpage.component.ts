@@ -13,9 +13,10 @@ import { FaqsBackComponent } from "../faqs-back/faqs-back.component";
 import { OrderlistsComponent } from "./orderlists/orderlists.component";
 import { OrderdetailsComponent } from "./orderdetails/orderdetails.component";
 import { AdminLayoutComponent } from "../pages/admin/admin-layout/admin-layout.component";
+import { ActivatedRoute } from '@angular/router';
 
 type OrderStatus = 'pending' | 'shipping' | 'completed';
-
+type AdminView = 'overview' | 'Ad' | 'Faq' | 'Orders' | 'settings';
 @Component({
   selector: 'app-adminpage',
   standalone: true,
@@ -29,12 +30,14 @@ type OrderStatus = 'pending' | 'shipping' | 'completed';
   templateUrl: './adminpage.component.html',
   styleUrl: './adminpage.component.css'
 })
+
 export class AdminpageComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
-  constructor(private adminService: AdminApiService) { }
+  constructor(private adminService: AdminApiService, private route: ActivatedRoute) { }
   // ===== 畫面狀態 =====
-  mainView: 'overview' | 'Ad' | 'Faq' | 'Orders' | 'settings' = 'overview';
+  mainView: AdminView = 'overview';
+  // mainView: 'overview' | 'Ad' | 'Faq' | 'Orders' | 'settings' = 'overview';
   selectedOrderId: number | null = null;
 
   loading = false;
@@ -74,6 +77,23 @@ export class AdminpageComponent implements OnInit, AfterViewInit, OnDestroy {
   // =============================
 
   ngOnInit(): void {
+    //新增：由 route 觸發 switchView
+    this.route.paramMap.subscribe(params => {
+      const view = params.get('view');
+
+      if (
+        view === 'overview' ||
+        view === 'Ad' ||
+        view === 'Faq' ||
+        view === 'Orders' ||
+        view === 'settings'
+      ) {
+        // ⬆️ 到這裡，TS 已經「確定」
+        // view 的型別是 AdminView
+        this.switchView(view);
+      }
+    });
+
     this.loadDashboardFromApi();
   }
 
