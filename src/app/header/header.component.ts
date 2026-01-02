@@ -16,7 +16,7 @@ import { Router } from '@angular/router';
 export class HeaderComponent implements OnInit {
   avatarUrl$!: Observable<string | null>;
   user$!: Observable<ExternalUser | null>;  // ⭐ 先宣告，不初始化
-  role = '';
+
   constructor(private authState: AuthStateService, private router: Router,) {
     this.user$ = this.authState.user$;      // ⭐ 這裡再接
     this.avatarUrl$ = this.authState.avatarUrl$;
