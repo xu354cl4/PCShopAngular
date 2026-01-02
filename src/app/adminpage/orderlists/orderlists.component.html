@@ -1,0 +1,51 @@
+<!-- Filter + Search -->
+<div class="order-toolbar">
+
+  <!-- 狀態篩選 -->
+  <select class="status-filter" [(ngModel)]="filterStatus" (change)="applyFilter()">
+    <option value="">全部狀態</option>
+    <option value="1">待付款</option>
+    <option value="2">配送中</option>
+    <option value="3">已完成</option>
+  </select>
+
+  <!-- 訂單編號搜尋 -->
+  <input class="order-search" type="text" [(ngModel)]="keyword" (ngModelChange)="search$.next($event)"
+    placeholder="搜尋訂單編號" />
+</div>
+@if (noData && !loading) {
+<div class="empty-order">
+  查無訂單
+</div>
+}
+@else {
+<div class="order-list">
+  <div class="order-card" *ngFor="let o of orders" (click)="goDetail(o.orderId)">
+
+    <div class="row">
+      <div class="order-no">訂單編號：{{ o.orderNo }}</div>
+      <div class="status status-pending">
+        {{o.status === 1 ? '待付款' : o.status === 2 ? "配送中" : o.status === 3 ?"已完成" : '狀態異常' }}
+      </div>
+    </div>
+
+    <div class="row">
+      <div>下單時間：{{ o.createDate | date:'yyyy-MM-dd HH:mm'}}</div>
+      <div class="price">NT$ {{ o.totalAmount | number }}</div>
+    </div>
+  </div>
+  <div class="pager" *ngIf="totalPages > 1">
+    <button class="page-button" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">
+      上一頁
+    </button>
+  
+    <span>
+      第 {{ currentPage }} / {{ totalPages }} 頁（共 {{ total }} 筆）
+    </span>
+
+    <button class="page-button" (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">
+      下一頁
+    </button>
+    </div>
+</div>
+}

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ExternalUser } from '../models/external-login-response';
+import { ExternalUser, UserRole } from '../models/external-login-response';
 import { BehaviorSubject } from 'rxjs';
 @Injectable({
   providedIn: 'root'
@@ -64,8 +64,12 @@ export class AuthStateService {
   }
 
   setUser(token: string, user: ExternalUser) {
-    localStorage.setItem('token', token); // Token 只有這裡會變，單獨處理
-    this.updateState(user); // 自動存 user + 更新畫面
+    const userWithRole = {
+      ...user, role: this.getrole(user.mail)
+    }; //原本只有下面setitem跟updateState(user) , 這一串是為了把role塞進去寫的 還沒理解透
+    localStorage.setItem('token', token);// Token 只有這裡會變，單獨處理
+    this.updateState(userWithRole); // 自動存 user + 更新畫面
+
   }
   clear() {
     localStorage.removeItem('token');
@@ -108,4 +112,25 @@ export class AuthStateService {
     return this.userSubject.value;
   }
 
+  //前端模擬user / admin身分 這邊直接綁死信箱
+  getCurrentUserRole(): UserRole {
+    const user = this.getCurrentUser();
+
+    // Demo 用規則（你之後可以拿掉）
+    if (user?.mail === 'ss860505@gmail.com') {
+      return 'Admin';
+    }
+
+    return 'User';
+  }
+
+  getrole(mail: string): UserRole {
+    const user = this.getCurrentUser();
+
+    if (mail === 'ss860530@gmail.com') {
+      return 'Admin';
+    } else {
+      return 'User'
+    }
+  }
 }

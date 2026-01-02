@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterLink, RouterModule } from '@angular/router';
 import { AuthStateService } from '../Services/auth-state.service';
 import { Observable } from 'rxjs';
@@ -14,13 +14,17 @@ import { AdSlotComponent } from "../ad-slot/ad-slot.component";
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
   avatarUrl$!: Observable<string | null>;
   user$!: Observable<ExternalUser | null>;  // ⭐ 先宣告，不初始化
-
+  role = '';
   constructor(private authState: AuthStateService, private router: Router,) {
     this.user$ = this.authState.user$;      // ⭐ 這裡再接
     this.avatarUrl$ = this.authState.avatarUrl$;
+
+  }
+  ngOnInit(): void {
+
   }
 
   goRegister() {

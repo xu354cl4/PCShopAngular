@@ -1,0 +1,60 @@
+<div class="order-detail-card">
+
+  <!-- Header -->
+  <div class="order-header">
+    <button class="back-btn" (click)="close.emit()">← 返回訂單列表</button>
+
+    <div class="order-info">
+      <div>
+        <h3>訂單明細</h3>
+        <p class="order-no">訂單編號：{{ order?.orderNo }}</p>
+      </div>
+
+      <span class="status-badge" [ngClass]="{
+          pending: order?.status === 'Pending',
+          shipping: order?.status === 'Shipping',
+          completed: order?.status === 'Completed'
+        }">
+        {{
+        order?.status === 'Pending' ? '待付款'
+        : order?.status === 'Shipping' ? '配送中'
+        : order?.status === 'Completed' ? '已完成'
+        : '異常'
+        }}
+      </span>
+    </div>
+  </div>
+
+  <!-- Summary -->
+  <div class="order-summary">
+    <div>總金額</div>
+    <div class="total">NT$ {{ order?.totalAmount | number }}</div>
+  </div>
+
+  <hr />
+
+  <!-- Items -->
+  @if (order) {
+  <div class="order-items">
+    <div class="order-item" *ngFor="let item of order.items">
+
+      <img class="product-img" [src]="item.productImage || '/assets/no-image.png'" alt="商品圖片" />
+
+      <div class="item-info">
+        <div class="name">{{ item.productName }}</div>
+        <div class="price">
+          單價 NT$ {{ item.unitPriceAtPurchase | number }}
+        </div>
+      </div>
+
+      <div class="qty">× {{ item.quantity }}</div>
+
+      <div class="subtotal">
+        NT$ {{ item.unitPriceAtPurchase * item.quantity | number }}
+      </div>
+
+    </div>
+  </div>
+  }
+
+</div>

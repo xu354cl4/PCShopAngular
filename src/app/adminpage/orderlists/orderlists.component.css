@@ -1,0 +1,84 @@
+.order-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.order-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 16px 20px;
+  background: #fff;
+  cursor: pointer;
+  transition: all .2s ease;
+}
+
+.order-card:hover {
+  border-color: #2a7bff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, .08);
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.price {
+  font-weight: 600;
+}
+
+.status-pending {
+  color: #f59e0b;
+}
+
+.status-shipping {
+  color: #3b82f6;
+}
+
+.status-completed {
+  color: #16a34a;
+}
+
+.order-toolbar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.status-filter,
+.order-search {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+}
+.page-button {
+  background-color: #007bff;
+  /* 按鈕背景色 */
+  color: white;
+  /* 按鈕文字顏色 */
+  border: none;
+  padding: 10px 20px;
+  font-size: 12px;
+  cursor: pointer;
+  /* 讓按鈕顯示為可點擊 */
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+/* 當按鈕啟用時，滑鼠懸停效果 */
+.page-button:hover:not([disabled]) {
+  background-color: #0056b3;
+  /* 鼠標懸停變色 */
+}
+
+/* 當按鈕被禁用時 */
+.page-button:disabled {
+  background-color: #d6d6d6;
+  /* 禁用時的背景顏色 */
+  color: #a1a1a1;
+  /* 禁用時文字顏色 */
+  cursor: not-allowed;
+  /* 讓禁用按鈕顯示為不可點擊 */
+}

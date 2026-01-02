@@ -66,6 +66,10 @@ export const routes: Routes = [
     title: '會員中心'
   },
   {
+    path: 'adminpage', loadComponent: () => import('./adminpage/adminpage.component').then(m => m.AdminpageComponent),
+    title: '會員中心'
+  },
+  {
     path: '**',
     redirectTo: ''
   }

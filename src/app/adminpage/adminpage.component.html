@@ -1,0 +1,118 @@
+<main class="member-center-5">
+
+  <aside class="sidebar-5">
+
+    <div class="user-summary-card">
+      <div class="avatar-circle">👤</div>
+      <div class="user-info-text">
+        <div class="welcome-text">Hi, 管理員</div>
+      </div>
+    </div>
+
+    <h3>後台管理</h3>
+
+    <ul>
+      <li (click)="switchView('overview')" [class.active]="mainView === 'overview'">
+        📊 營運總覽
+      </li>
+
+      <li (click)="switchView('Ad')" [class.active]="mainView === 'Ad'">
+        📦 廣告管理
+      </li>
+<li (click)="switchView('Faq')" [class.active]="mainView === 'Faq'">
+        🎁 問題管理
+      </li>
+<li (click)="switchView('Orders')" [class.active]="mainView === 'Orders'">
+        📄 訂單紀錄
+      </li>
+
+      <li (click)="switchView('settings')" [class.active]="mainView === 'settings'">
+        ⚙️ 系統設定
+      </li>
+    </ul>
+  </aside>
+
+  <section class="content-5">
+
+    @if (selectedOrderId !== null) {
+      <app-orderdetails [orderId]="selectedOrderId" (close)="closeOrderDetail()">
+      </app-orderdetails>
+      }
+      
+      @if (selectedOrderId === null && mainView === 'Orders') {
+      <div class="card-5">
+        <h2 class="content-title-5">訂單紀錄</h2>
+        <app-orderlists [state]="orderListState" (stateChange)="orderListState = $event"
+          (openDetail)="openOrderDetail($event)">
+        </app-orderlists>
+      </div>
+    }
+
+    @if (selectedOrderId === null && mainView === 'Ad') {
+      <div class="card-5">
+        <h2 class="content-title-5">廣告管理</h2>
+        <app-ads-back></app-ads-back>
+      </div>
+    }
+
+    @if (selectedOrderId === null && mainView === 'Faq') {
+      <div class="card-5">
+        <h2 class="content-title-5">問題管理</h2>
+        <app-faqs-back></app-faqs-back>
+      </div>
+    }
+
+    @if (!loading && !error && mainView === 'overview') {
+
+      <div class="content-panel-5">
+        <h2 class="content-title-5">平台營運總覽</h2>
+
+        <div class="dashboard-grid">
+
+          <div class="card-5 stats-card">
+            <div class="stat-label">會員總數</div>
+            <div class="stat-value">
+              {{ dashboard.totalMembers | number }}
+            </div>
+          </div>
+
+          <div class="card-5 stats-card">
+            <div class="stat-label">年度營收</div>
+            <div class="stat-value highlight">
+              NT$ {{ dashboard.yearlyRevenue | number }}
+            </div>
+          </div>
+<div class="card-5 stats-card">
+  <div class="stat-label">本月訂單數</div>
+  <div class="stat-value">
+    {{ dashboard.monthOrders | number }}
+            </div>
+          </div>
+<div class="card-5 stats-card">
+  <div class="stat-label">平均客單價</div>
+  <div class="stat-value">
+    NT$ {{ dashboard.avgOrderAmount | number }}
+            </div>
+          </div>
+
+        </div>
+
+        <div class="card-5 chart-card mt-4">
+          <h3>年度營收趨勢</h3>
+          <div class="chart-container">
+            <canvas #pieChartCanvas></canvas>
+          </div>
+        </div>
+
+      </div>
+    }
+@if (loading) {
+<div class="card-5">載入中...</div>
+}
+
+    @if (!loading && error) {
+    <div class="card-5">{{ error }}</div>
+    }
+
+  </section>
+</main>
