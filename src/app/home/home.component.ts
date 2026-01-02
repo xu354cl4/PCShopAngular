@@ -1,23 +1,15 @@
 import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-<<<<<<< HEAD
-import { AdSlotComponent } from "../ad-slot/ad-slot.component";
-=======
 import { RouterModule, Router } from '@angular/router';
 import { ProductService, ApiResponse } from '../product/services/product.service';
 import { Product } from '../product/models/product.model';
->>>>>>> origin/Product
 
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-home',
   standalone: true,
-<<<<<<< HEAD
-  imports: [CommonModule, AdSlotComponent],
-=======
   imports: [CommonModule, RouterModule],
->>>>>>> origin/Product
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
