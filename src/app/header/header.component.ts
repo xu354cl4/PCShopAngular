@@ -24,6 +24,7 @@ export class HeaderComponent implements OnInit {
   loadingCategories = false;
 
   constructor(private authState: AuthStateService, private router: Router, private productService: ProductService) {
+
     this.user$ = this.authState.user$;      // ⭐ 這裡再接
     this.avatarUrl$ = this.authState.avatarUrl$;
 

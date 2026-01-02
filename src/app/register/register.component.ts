@@ -36,7 +36,7 @@ export class RegisterComponent implements OnInit {
 
       // ⭐ [加入這裡] 密碼欄位
       // 邏輯：如果是外部登入(Google)，密碼不用填(Validators為空)；如果是本地註冊，密碼必填
-      password: ['', this.isExternalLogin ? [] : [Validators.required, Validators.minLength(6), Validators.maxLength(20)]],
+      password: ['', this.isExternalLogin ? [] : [Validators.required, Validators.minLength(8), Validators.maxLength(20)]],
 
       phone: ['', Validators.required, Validators.pattern(/^09\d{8}$/)],
       address: ['', Validators.required, Validators.maxLength(200)],
