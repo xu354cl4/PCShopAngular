@@ -1,20 +1,21 @@
-<div class="filter-container p-3 border rounded">
+<div class="filter-section mb-4">
+  <h5>分類</h5>
+  <ul class="list-group">
+    <li *ngFor="let cat of availableCategories" class="list-group-item d-flex align-items-center">
+      <input type="checkbox" class="form-check-input me-2" [checked]="isSelected(cat.name)"
+        (change)="toggleCategory(cat.name)" />
+      {{ cat.name }}
+    </li>
+  </ul>
+  <button class="btn btn-sm btn-secondary mt-2" (click)="clear()">清除</button>
+</div>
 
-  <!-- 價格篩選 -->
-  <h6>價格篩選</h6>
-  <div class="mb-3 d-flex flex-column gap-2">
-    <input type="number" class="form-control" placeholder="最低價" [(ngModel)]="localMinPrice">
-    <input type="number" class="form-control" placeholder="最高價" [(ngModel)]="localMaxPrice">
-    <button class="btn btn-primary" (click)="applyPriceFilter()">套用</button>
+<div class="filter-section">
+  <h5>價格篩選</h5>
+  <div class="d-flex gap-2 align-items-center mb-2">
+    <input type="number" class="form-control" placeholder="最低價" [(ngModel)]="minPrice" />
+    <span>~</span>
+    <input type="number" class="form-control" placeholder="最高價" [(ngModel)]="maxPrice" />
   </div>
-
-  <!-- 商品分類篩選 -->
-  <h6>商品分類</h6>
-  <div *ngFor="let c of categories" class="form-check">
-    <input type="checkbox" class="form-check-input" [(ngModel)]="c.checked" (change)="onCategoryChange()" [id]="c.name">
-    <label class="form-check-label" [for]="c.name">{{ c.name }}</label>
-  </div>
-
-  <!-- 清除篩選按鈕 -->
-  <button class="btn btn-sm btn-secondary w-100 mt-3" (click)="resetFilter()">清除篩選</button>
+  <button class="btn btn-sm btn-primary" (click)="applyPrice()">套用</button>
 </div>

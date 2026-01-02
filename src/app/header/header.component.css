@@ -1,101 +1,202 @@
-/* 設定圖片本體 */
-.avatar {
-  width: 40px;
-  /* 設定寬度，依照你的導覽列高度調整，通常 32px ~ 45px */
-  height: 40px;
-  /* 設定高度，跟寬度一樣 */
-  border-radius: 50%;
-  /* 讓圖片變成圓形 (如果不想要圓形就拿掉這行) */
-  object-fit: cover;
-  /* ⭐關鍵：確保圖片縮放時不會變形/被壓扁 */
-  margin-right: 10px;
-  /* 讓圖片跟旁邊的名字保持一點距離 */
-
+/* ==================== 通用容器邊距 ==================== */
+.container {
+  padding-left: 30px;
+  padding-right: 30px;
 }
 
-
-/* 讓使用者資訊、連結跟按鈕橫向排列並垂直置中 */
-.user-box {
+/* ==================== TOPBAR ==================== */
+.topbar {
+  background-color: #333;
+  height: 50px;
   display: flex;
   align-items: center;
 }
 
-/* 針對「會員中心」連結和「登出」按鈕的共同設定 */
+.top-end {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+/* 使用者列表 */
+.user-login {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* 已登入 / 未登入 */
+.user-box,
+.guest-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Avatar */
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* 文字 */
+.username {
+  color: #fff;
+  font-weight: 500;
+}
+
 .link,
 .btn-logout {
   background: transparent;
-  /* 移除底色 */
   border: none;
-  /* 移除按鈕邊框 */
-  color: white;
-  /* 文字改成白色 */
-  font-size: 16px;
-  /* 設定字體大小 (可依需求調整) */
-  margin-left: 20px;
-  /* 加上左邊的間隔 */
-  text-decoration: none;
-  /* 移除連結預設的底線 */
+  color: #fff;
+  font-size: 15px;
+  cursor: pointer;
   padding: 0;
-  /* 移除按鈕預設的內距 */
-  font-family: inherit;
-  /* 繼承原本的字體設定 */
 }
 
-/* 滑鼠放上去時的效果 */
 .link:hover,
 .btn-logout:hover {
   text-decoration: underline;
-  /* 加上底線 */
-  cursor: pointer;
-  /* 變更游標為小手 */
 }
 
-/* 確保使用者名稱也是白色的 */
-.username {
-  color: white;
-  font-weight: 500;
-  /* 稍微加粗一點 */
+/* ==================== HEADER MIDDLE ==================== */
+.header-middle .row.align-items-center {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-
-/* 1. 設定最外層的父容器：強制左右兩邊垂直置中 */
-.top-end {
+.header-middle .col-lg-3 {
   display: flex;
   align-items: center;
-  /* ⭐ 關鍵：讓左邊的「訪客」跟右邊的「會員」在同一條水平線上 */
+}
+
+.header-middle .col-lg-4 {
+  display: flex;
   justify-content: flex-end;
-  /* 靠右對齊 */
-  height: 100%;
-  /* 確保高度撐滿 */
 }
 
-/* 2. 設定左邊的訪客區塊 */
-.user {
+.middle-right-area {
   display: flex;
   align-items: center;
-  /* 讓圖示跟文字垂直置中 */
-  margin-right: 20px;
-  /* 跟右邊保持距離 */
-  color: white;
+  gap: 20px;
 }
 
-.lni-user {
-  margin-right: 5px;
-  /* 圖示跟文字的間距 */
-  font-size: 18px;
-  /* 微調圖示大小 */
-  color: white;
+.navbar-cart .wishlist,
+.navbar-cart .cart-items {
+  position: relative;
 }
 
-/* 3. 設定右邊的容器 (修正 ul 標籤的預設邊距) */
-.user-login {
-  display: flex;
-  /* 讓內容橫向排列 */
-  align-items: center;
-  /* 垂直置中 */
+.total-items {
+  position: absolute;
+  top: -5px;
+  right: -10px;
+  background: red;
+  color: white;
+  border-radius: 50%;
+  font-size: 12px;
+  padding: 2px 5px;
+}
 
-  /* ⭐ 超級關鍵：歸零 ul 的預設邊距，不然會對不齊 */
-  margin: 0;
+/* ==================== HEADER BOTTOM ==================== */
+
+.mega-category-menu {
+  position: relative; /* 關鍵 */
+}
+
+/* 分類按鈕 */
+.mega-category-menu .cat-button {
+  border: none;
+  background: transparent;
+  box-shadow: none;
   padding: 0;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.mega-category-menu .cat-button i {
+  margin-right: 5px;
+}
+
+/* ===== 子分類選單 ===== */
+.sub-category {
   list-style: none;
+  padding: 6px 0;              /* ⭐ 讓 hover 有實體高度 */
+  margin: 0;
+  position: absolute;
+  top: calc(100% - 2px);       /* ⭐ 消除 hover 縫隙 */
+  left: 0;
+
+  background-color: #fff;
+  min-width: 160px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  z-index: 999;
+
+  /* ⭐ 正確顯示控制（不要用 display） */
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+
+  transition: opacity 0.2s ease;
+}
+
+/* hover 緩衝區（防止滑鼠掉下去） */
+.sub-category::before {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: 0;
+  width: 100%;
+  height: 8px;
+}
+
+/* list item */
+.sub-category li {
+  margin: 0;
+}
+
+/* 按鈕 */
+.sub-category .dropdown-item {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px 14px;
+  width: 100%;
+  text-align: left;
+  color: #333;
+}
+
+.sub-category .dropdown-item:hover {
+  background-color: #f1f1f1;
+}
+
+/* ⭐ 真正不會消失的 hover 寫法 */
+.mega-category-menu:hover .sub-category,
+.mega-category-menu:focus-within .sub-category {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+/* 防止被 header 裁切 */
+.header-bottom,
+.nav-inner {
+  overflow: visible;
+}
+
+/* ==================== Navbar 主選單 ==================== */
+.nav-inner .navbar-nav .nav-item .nav-link {
+  padding: 10px 15px;
+  color: #333;
+  font-weight: 500;
+}
+
+.nav-inner .navbar-nav .nav-item .nav-link:hover {
+  color: #007bff;
 }
