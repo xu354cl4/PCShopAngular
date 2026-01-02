@@ -9,10 +9,10 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import { AdsBackComponent } from "../ads-back/ads-back.component";
 import { FaqsBackComponent } from "../faqs-back/faqs-back.component";
 import { OrderlistsComponent } from "./orderlists/orderlists.component";
 import { OrderdetailsComponent } from "./orderdetails/orderdetails.component";
+import { AdminLayoutComponent } from "../pages/admin/admin-layout/admin-layout.component";
 
 type OrderStatus = 'pending' | 'shipping' | 'completed';
 
@@ -21,10 +21,10 @@ type OrderStatus = 'pending' | 'shipping' | 'completed';
   standalone: true,
   imports: [
     CommonModule,
-    AdsBackComponent,
     FaqsBackComponent,
     OrderlistsComponent,
-    OrderdetailsComponent
+    OrderdetailsComponent,
+    AdminLayoutComponent
   ],
   templateUrl: './adminpage.component.html',
   styleUrl: './adminpage.component.css'
@@ -108,7 +108,7 @@ export class AdminpageComponent implements OnInit, AfterViewInit, OnDestroy {
         // 如果你之後要畫折線圖
         // this.yearlyRevenue = res.yearlyRevenue;
 
-      this.loading = false;
+        this.loading = false;
 
         // 資料進來後再畫圖
         this.tryRenderChart();
