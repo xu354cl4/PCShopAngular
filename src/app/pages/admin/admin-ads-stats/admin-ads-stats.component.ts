@@ -4,13 +4,14 @@ import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import Chart from 'chart.js/auto';
 import { AdsApiService } from '../../../Services/ads-api.service';
 import { AdsClickStatDto } from '../../../models/ads.models';
+import { RouterLink } from '@angular/router';
 
 type Option = { value: string; label: string };
 
 @Component({
   selector: 'app-admin-ads-stats',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './admin-ads-stats.component.html',
   styleUrls: ['./admin-ads-stats.component.css']
 })

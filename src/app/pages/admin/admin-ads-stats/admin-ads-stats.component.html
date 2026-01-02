@@ -1,6 +1,7 @@
 <div class="container py-5">
   <div class="page">
     <div class="toolbar">
+
       <div class="field">
         <label>From</label>
         <input type="date" [formControl]="form.controls.from" />
@@ -40,6 +41,7 @@
       <button class="btn" type="button" (click)="load()" [disabled]="loading">
         {{ loading ? '載入中...' : '查詢' }}
       </button>
+      <a routerLink="/adlayout" class="btn py-2">回選單</a>
     </div>
 
     @if (msg) {

@@ -12,27 +12,49 @@
         <!-- 右側（會員登入 / 訪客） -->
         <div class="col-lg-6 col-md-6 col-6">
           <div class="top-end d-flex justify-content-end">
-            <ul class="user-login d-flex align-items-center">
+            <ul class="user-login">
+              @if (user$ | async; as user) {
 
               <!-- 已登入 -->
-              <li class="user-box d-flex align-items-center" *ngIf="user$ | async as user">
+              <div class="user-box">
                 <img class="avatar" [src]="(avatarUrl$ | async) || '/images/no-image.png'" alt="avatar" />
 
-                <span class="username">{{ user.fullName }}</span>
 
-                <a routerLink="/membercenter" class="link">會員中心</a>
+                <span class="username">
+                  {{ user.fullName }}
+                </span>
+                @if (user$ | async; as user) {
 
-                <button class="btn-logout" (click)="logout()">登出</button>
-              </li>
+                @if (user.role === 'Admin') {
+                <a routerLink="/adminpage" class="link">後台管理</a>
+                }
+
+                @else{
+                <a routerLink="/membercenter" class="link">
+                  會員中心
+                </a>}
+                }
+
+                <button routerLink="/home" class="btn-logout" (click)="logout()">
+                  登出
+                </button>
+              </div>
+
+              } @else {
 
               <!-- 未登入 -->
-              <li class="guest-box d-flex align-items-center" *ngIf="!(user$ | async)">
+              <div class="guest-box">
                 <i class="lni lni-user"></i>
                 訪客
-                <a routerLink="/loginpage" class="link">登入</a>
-                <a routerLink="/register" class="link" (click)="goRegister()">註冊</a>
-              </li>
+                <a routerLink="/loginpage" class="link">
+                  登入
+                </a>
+                <a routerLink="/register" class="link" (click)="goRegister()">
+                  註冊
+                </a>
+              </div>
 
+              }
             </ul>
           </div>
         </div>
@@ -161,12 +183,6 @@
                   </li>
                   <li class="nav-item">
                     <a routerLink="/cart" class="nav-link">購物車</a>
-                  </li>
-                  <li class="nav-item">
-                    <a routerLink="/adsback" class="nav-link">廣告管理(之後塞後台)</a>
-                  </li>
-                  <li class="nav-item">
-                    <a routerLink="/faqsback" class="nav-link">問題管理(之後塞後台)</a>
                   </li>
                 </ul>
               </div>
