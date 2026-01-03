@@ -20,3 +20,14 @@
   padding: 0 20px;
   /* 控制左右內距 */
 }
+
+/* 商品卡片 hover 效果 */
+.card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px) scale(1.03);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+}

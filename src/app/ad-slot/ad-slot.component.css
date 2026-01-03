@@ -1,0 +1,112 @@
+/* 容器 */
+.wrap {
+  width: 100%;
+}
+
+/* 右側浮動 */
+.wrap.float {
+  position: fixed;
+  right: 16px;
+  top: 30%;
+  width: 260px;
+  z-index: 9999;
+  animation: adSlideIn .35s ease-out;
+}
+
+/* 進場動畫 */
+@keyframes adSlideIn {
+  from {
+    transform: translateX(12px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* 叉叉 */
+.closeBtn {
+  position: absolute;
+  right: 6px;
+  top: -10px;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  cursor: pointer;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, .08);
+  z-index: 2;
+}
+
+.closeBtn:hover {
+  transform: scale(1.05);
+}
+
+/* 點擊區 */
+.cardLink {
+  display: block;
+  position: relative;
+  text-decoration: none;
+  color: inherit;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, .10);
+}
+
+/* 媒體 */
+.media {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* hover 顯示 title overlay */
+.overlay {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .15s ease;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 12px;
+  background: linear-gradient(to top, rgba(0, 0, 0, .55), rgba(0, 0, 0, 0));
+}
+
+.cardLink:hover .overlay {
+  opacity: 1;
+}
+
+.overlayText {
+  width: 100%;
+  color: #fff;
+  font-size: 14px;
+  line-height: 1.25;
+  font-weight: 600;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, .35);
+}
+
+/* empty */
+.empty {
+  padding: 10px 12px;
+  border: 1px dashed #d1d5db;
+  border-radius: 10px;
+  background: #fafafa;
+}
+
+.empty.floatEmpty {
+  position: fixed;
+  right: 16px;
+  top: 30%;
+  width: 260px;
+  z-index: 9999;
+}
+
+.muted {
+  color: #6b7280;
+  font-size: 12px;
+}

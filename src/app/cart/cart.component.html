@@ -25,7 +25,7 @@
     <div class="col-price">單價</div>
     <div class="col-qty">數量</div>
     <div class="col-total">總計</div>
-    <div class="col-action">操作</div>
+    <div class="col-action">編輯</div>
   </div>
 
   <div class="cart-list">
@@ -68,62 +68,71 @@
     </div>
   </div>
 
-<div class="checkout-bar">
-  <div class="bar-left">
-    <input type="checkbox" id="selectAllBottom" [(ngModel)]="isAllSelected" (change)="toggleAll()">
-    <label for="selectAllBottom"> 全選 ({{ cartItems.length }})</label>
-  </div>
+  <div class="checkout-bar">
+    <div class="bar-left">
+      <input type="checkbox" id="selectAllBottom" [(ngModel)]="isAllSelected" (change)="toggleAll()">
+      <label for="selectAllBottom"> 全選 ({{ cartItems.length }})</label>
+    </div>
 
-  <div class="bar-right">
+    <div class="bar-right">
+      <!-- 第一排：功能輸入區 -->
+      <div class="action-row">
+        <div class="code-input-group">
+          <label for="codeInput">輸入折扣碼</label>
+          <div class="input-with-button">
+            <input type="text" id="codeInput" [(ngModel)]="couponCodeInput" placeholder="例如: SAVE2025">
+            <button class="btn-apply-code" (click)="applyCouponCode()">套用</button>
+          </div>
+        </div>
 
-    <div class="code-input-group">
-      <label for="codeInput"><i class="fas fa-keyboard"></i> 輸入折扣碼</label>
-      <div class="input-with-button">
-        <input type="text" id="codeInput" [(ngModel)]="couponCodeInput" placeholder="例如: SAVE2025">
-        <button class="btn-apply-code" (click)="applyCouponCode()">套用</button>
+        <div class="points-input-group">
+          <label for="pointsInput">使用點數 (可用: {{ userPoints.totalAvailablePoints }})</label>
+          <div class="input-with-button">
+            <input type="number" id="pointsInput" [(ngModel)]="usePoints" (input)="onPointsInput($event)"
+              placeholder="0" min="0" [max]="userPoints.totalAvailablePoints">
+            <span class="points-unit">點</span>
+          </div>
+        </div>
+
+        <div class="coupon-selector">
+          <label for="couponSelect">優惠券</label>
+          <select id="couponSelect" [(ngModel)]="selectedCoupon" [compareWith]="compareCoupons"
+            (ngModelChange)="onCouponChange()">
+            <option [ngValue]="null">不使用優惠券</option>
+            <option *ngFor="let coupon of couponsList" [ngValue]="coupon" [disabled]="coupon.disabled">
+              {{ coupon.name }} ({{ coupon.disabled ? '未達門檻' : '適用' }})
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <!-- 第二排：金額顯示與按鈕 -->
+      <div class="summary-row">
+        <div class="total-info">
+          <div class="price-line">
+            <span class="label">總金額 ({{ selectedCount }}):</span>
+            <span class="original-price" [style.visibility]="(selectedCoupon || usePoints > 0) ? 'visible' : 'hidden'">
+              NT$ {{ subTotal | number }}
+            </span>
+            <span class="final-price">NT$ {{ totalAmount | number }}</span>
+          </div>
+          <div class="discount-line">
+            <small class="discount-text" [style.visibility]="(selectedCoupon || usePoints > 0) ? 'visible' : 'hidden'">
+              已折抵 NT$ {{ (subTotal - totalAmount) | number }}
+            </small>
+          </div>
+        </div>
+        <button class="btn-checkout" (click)="goToCheckout()">去買單</button>
       </div>
     </div>
-
-    <div class="coupon-selector">
-      <label for="couponSelect"><i class="fas fa-ticket-alt"></i> 優惠券</label>
-      <select id="couponSelect"
-              [(ngModel)]="selectedCoupon"
-              [compareWith]="compareCoupons">
-        <option [ngValue]="null">不使用優惠券</option>
-        <option *ngFor="let coupon of couponsList"
-                [ngValue]="coupon"
-                [disabled]="coupon.disabled">
-          {{ coupon.name }} ({{ coupon.disabled ? '未達門檻' : '適用' }})
-        </option>
-      </select>
-    </div>
-
-    <div class="total-info">
-      <div class="price-row"> <span>總金額 ({{ selectedCount }}):</span> <span *ngIf="selectedCoupon" class="original-price">
-          NT$ {{ subTotal | number }}
-        </span>
-
-        <span class="final-price">NT$ {{ totalAmount | number }}</span>
-      </div>
-
-      <small *ngIf="selectedCoupon" class="discount-text">
-        已折抵 NT$ {{ subTotal - totalAmount | number }}
-      </small>
-    </div>
-
-    <button class="btn-checkout" (click)="goToCheckout()">去買單</button>
   </div>
-</div>
 
-   <!-- 當沒有選擇商品時，按鈕會變成灰色且無法點擊 -->
-<!-- <button
+  <!-- 當沒有選擇商品時，按鈕會變成灰色且無法點擊 -->
+  <!-- <button
   class="btn-checkout"
   [disabled]="selectedCount === 0"
   (click)="goToCheckout()">
   去買單
 </button> -->
   <!-- 防呆處理,沒選擇商品就會跳彈窗至少選擇一項商品 -->
-<!-- <button class="btn-checkout" (click)="goToCheckout()">去買單</button> -->
-
-
-
+  <!-- <button class="btn-checkout" (click)="goToCheckout()">去買單</button> -->

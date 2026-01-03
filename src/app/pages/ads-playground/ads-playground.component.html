@@ -1,0 +1,32 @@
+<!-- src/app/pages/ads-playground/ads-playground.component.html -->
+<div class="container">
+  <div class="head">
+    <h3>Ads Playground</h3>
+    <a class="link" href="/admin/ads">去後台管理</a>
+  </div>
+
+  <div class="panel">
+    <label><input type="checkbox" [(ngModel)]="showTop" /> Top</label>
+    <label><input type="checkbox" [(ngModel)]="showBottom" /> Bottom</label>
+    <label><input type="checkbox" [(ngModel)]="showRight" /> Right Float</label>
+    <div class="hint">這頁是 demo：可勾選顯示 1/2/3 個版位。</div>
+  </div>
+
+  <div *ngIf="showTop" class="slot">
+    <div class="slotLabel">Top Banner</div>
+    <app-ad-slot [positionCode]="slots.TOP"></app-ad-slot>
+  </div>
+
+  <div class="demo">
+    <div class="box">（內容區示意，右側浮動會跟著畫面）</div>
+    <div class="box">往下滑看看 Bottom</div>
+    <div class="box tall">長內容（模擬商品/列表）</div>
+  </div>
+
+  <div *ngIf="showBottom" class="slot">
+    <div class="slotLabel">Bottom Banner</div>
+    <app-ad-slot [positionCode]="slots.BOTTOM"></app-ad-slot>
+  </div>
+</div>
+
+<app-ad-slot *ngIf="showRight" [positionCode]="slots.RIGHT_FLOAT" variant="float"></app-ad-slot>

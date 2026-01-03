@@ -1,0 +1,145 @@
+<div class="container py-5">
+  <!-- src/app/pages/admin/admin-ads/admin-ads.component.html -->
+  <div class="grid">
+    <div class="left">
+      <div class="rowHead py-1">
+        <h4>廣告清單</h4>
+        <button class="btn" (click)="newAd()">新增</button>
+      </div>
+
+      <div *ngIf="loading" class="muted">載入中...</div>
+
+      <div class="list">
+        <div class="item" *ngFor="let ad of ads" (click)="pick(ad)" [class.active]="selected?.adId === ad.adId">
+
+          <div class="itemTop">
+            <div class="title">#{{ad.adId}} {{ad.title}}</div>
+            <button class="danger" (click)="$event.stopPropagation(); delete(ad)">刪</button>
+          </div>
+
+          <div class="meta">
+            <span class="pill">{{ ad.positionCode }}</span>
+            <span class="pill">{{ ad.type }}</span>
+            <span class="pill" [class.on]="ad.status" [class.off]="!ad.status">{{ ad.status ? 'ON' : 'OFF' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="right">
+      <div class="rowHead py-1">
+        <h4>編輯廣告</h4>
+        <a routerLink="/adminpage/Ad" class="btn py-2">回選單</a>
+      </div>
+      <div *ngIf="msg" class="msg">{{ msg }}</div>
+
+      <form class="card" [formGroup]="form">
+        <label>標題 *</label>
+        <input formControlName="title" [class.invalid]="form.get('title')?.touched && form.get('title')?.invalid" />
+        <small class="err" *ngIf="form.get('title')?.touched && form.get('title')?.hasError('required')">
+          標題 必填
+        </small>
+
+
+        <label>拖拉上傳（圖片/影片）</label>
+
+        <div class="dropzone" [class.dragging]="isDragging" (dragover)="onDragOver($event)"
+          (dragleave)="onDragLeave($event)" (drop)="onDrop($event)">
+
+          <div class="dz-text">
+            <div>把圖片/影片拖到這裡</div>
+            <div class="muted">或</div>
+
+            <input #fileInput type="file" accept="image/*,video/*" (change)="onPickFile(fileInput)" hidden />
+
+            <button type="button" class="btn" (click)="fileInput.click()">
+              選擇檔案
+            </button>
+
+            <div class="muted" *ngIf="uploading">上傳中...</div>
+          </div>
+        </div>
+
+        <label>顯示影像 *</label>
+        <input formControlName="mediaUrl"
+          [class.invalid]="form.get('mediaUrl')?.touched && form.get('mediaUrl')?.invalid" />
+        <small class="err" *ngIf="form.get('mediaUrl')?.touched && form.get('mediaUrl')?.hasError('required')">
+          顯示（可拖拉上傳後自動填入）
+        </small>
+
+
+        <label>導向連結</label>
+        <input formControlName="linkUrl" placeholder="/products 或 https://..." />
+
+        <div class="row2">
+          <div>
+            <label>位置選擇 *</label>
+            <select formControlName="positionId"
+              [class.invalid]="form.get('positionId')?.touched && form.get('positionId')?.invalid">
+              <option [ngValue]="0" disabled>請選擇位置</option>
+
+              <option *ngFor="let p of positions" [ngValue]="p.positionId">
+                {{p.code}} - {{p.name}}
+              </option>
+            </select>
+            <small class="err"
+              *ngIf="form.get('positionId')?.touched && (form.get('positionId')?.hasError('required') || form.get('positionId')?.hasError('min'))">
+              位置 必選
+            </small>
+          </div>
+
+          <div>
+            <label>類型 *</label>
+            <select formControlName="type" [class.invalid]="form.get('type')?.touched && form.get('type')?.invalid">
+              <option value="image">image</option>
+              <option value="video">video</option>
+            </select>
+            <small class="err" *ngIf="form.get('type')?.touched && form.get('type')?.hasError('required')">
+              類型 必選
+            </small>
+
+          </div>
+        </div>
+
+        <div class="row2">
+          <div>
+            <label>開始時間</label>
+            <input type="datetime-local" formControlName="startTime"
+              [class.invalid]="form.get('startTime')?.touched && form.hasError('endBeforeStart')" />
+          </div>
+
+          <div>
+            <label>結束時間</label>
+            <input type="datetime-local" formControlName="endTime"
+              [class.invalid]="form.get('endTime')?.touched && form.hasError('endBeforeStart')" />
+
+            <small class="err"
+              *ngIf="(form.get('startTime')?.touched || form.get('endTime')?.touched) && form.hasError('endBeforeStart')">
+              <p>結束日期及時間不可小於開始日期及時間</p>
+            </small>
+          </div>
+        </div>
+
+        <label class="chk">
+          <input type="checkbox" formControlName="status" />
+          是否啟用
+        </label>
+
+        <div class="actions">
+          <button type="button" class="btn primary" (click)="save()">儲存</button>
+          <button type="button" class="btn" (click)="reload()">重新載入</button>
+        </div>
+      </form>
+
+      <div class="card preview" *ngIf="form.value.mediaUrl">
+        <div class="muted">預覽</div>
+
+        <ng-container [ngSwitch]="form.value.type">
+          <img *ngSwitchCase="'image'" [src]="form.value.mediaUrl!" />
+          <video *ngSwitchCase="'video'" [src]="form.value.mediaUrl!" controls></video>
+          <img *ngSwitchDefault [src]="form.value.mediaUrl!" />
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>

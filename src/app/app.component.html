@@ -15,7 +15,9 @@
 <main>
   <router-outlet></router-outlet>
 </main>
-
+<app-ad-slot *ngIf="(adsVis.floatVisible$ | async)" positionCode="right_float" variant="float" [closable]="true"
+  (closed)="adsVis.dismissFloat()">
+</app-ad-slot>
 <!-- Footer -->
 <app-footer></app-footer>
 

@@ -1,5 +1,4 @@
 
-
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
@@ -15,10 +14,16 @@ export const routes: Routes = [
     path: 'faqs', loadComponent: () => import('./faqs/faqs.component').then(m => m.FaqsComponent)
   },
   {
-    path: 'adsback', loadComponent: () => import('./ads-back/ads-back.component').then(m => m.AdsBackComponent)
+    path: 'ad', loadComponent: () => import('./pages/admin/admin-ads/admin-ads.component').then(m => m.AdminAdsComponent)
   },
   {
-    path: 'adsfront', loadComponent: () => import('./ads-front/ads-front.component').then(m => m.AdsFrontComponent)
+    path: 'adplay', loadComponent: () => import('./pages/ads-playground/ads-playground.component').then(m => m.AdsPlaygroundComponent)
+  },
+  {
+    path: 'adstat', loadComponent: () => import('./pages/admin/admin-ads-stats/admin-ads-stats.component').then(m => m.AdminAdsStatsComponent)
+  },
+  {
+    path: 'adlayout', loadComponent: () => import('./pages/admin/admin-layout/admin-layout.component').then(m => m.AdminLayoutComponent)
   },
   {
     path: 'faqsback', loadComponent: () => import('./faqs-back/faqs-back.component').then(m => m.FaqsBackComponent)
@@ -43,8 +48,6 @@ export const routes: Routes = [
     path: 'checkout', loadComponent: () => import('./checkout/checkout.component').then(m => m.CheckoutComponent),
     title: '結帳作業'
   },
-
-  // 未來其他頁面也放這裡
   {
     path: 'products', loadChildren: () => import('./product/product.module').then(m => m.ProductModule)
   },
@@ -64,6 +67,11 @@ export const routes: Routes = [
     path: 'adminpage', loadComponent: () => import('./adminpage/adminpage.component').then(m => m.AdminpageComponent),
     title: '會員中心'
   },
+  {
+    path: 'adminpage/:view', loadComponent: () => import('./adminpage/adminpage.component').then(m => m.AdminpageComponent),
+    title: '會員中心'
+  },
+  //要加click
   {
     path: '**',
     redirectTo: ''

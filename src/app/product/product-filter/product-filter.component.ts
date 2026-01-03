@@ -1,8 +1,14 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ProductFilter } from '../models/product-filter.model';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService, ApiResponse } from '../services/product.service';
+
+export interface ProductFilter {
+  categories: string[];
+  minPrice?: number | null;
+  maxPrice?: number | null;
+}
 
 @Component({
   selector: 'app-product-filter',
@@ -15,59 +21,89 @@ export class ProductFilterComponent implements OnInit {
 
   @Output() filterChange = new EventEmitter<ProductFilter>();
 
-  // 內部暫存價格，只有按套用時才 emit
-  localMinPrice: number | null = null;
-  localMaxPrice: number | null = null;
+  availableCategories: { id: number; name: string }[] = [];
+  selectedCategories: string[] = [];
 
-  // 從後端抓取的分類列表
-  categories: { name: string, checked: boolean }[] = [];
+  minPrice?: number | null;
+  maxPrice?: number | null;
 
-  constructor(private productService: ProductService) { }
+  constructor(
+    private productService: ProductService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
-    // 從後端 API 取得分類列表
+    this.loadCategories();
+
+    // 從 URL 同步勾選
+    this.route.queryParamMap.subscribe(params => {
+      const catParam = params.get('categories');
+      this.selectedCategories = catParam ? catParam.split(',') : [];
+      const min = params.get('minPrice');
+      const max = params.get('maxPrice');
+      this.minPrice = min ? +min : null;
+      this.maxPrice = max ? +max : null;
+
+      this.emitFilter();
+    });
+  }
+
+  loadCategories(): void {
     this.productService.getCategories().subscribe({
-      next: (res: ApiResponse<{ id: number, name: string }[]>) => {
-        this.categories = (res.data || []).map(c => ({
-          name: c.name,
-          checked: false
-        }));
+      next: (res: ApiResponse<{ id: number; name: string }[]>) => {
+        this.availableCategories = res.data || [];
       },
-      error: (err) => console.error('取得分類失敗', err)
+      error: err => console.error('取得分類失敗', err)
     });
   }
 
-  /** 分類變動即時觸發 */
-  onCategoryChange(): void {
-    const selectedCategories = this.categories
-      .filter(c => c.checked)
-      .map(c => c.name);
+  toggleCategory(catName: string): void {
+    const idx = this.selectedCategories.indexOf(catName);
+    if (idx > -1) {
+      this.selectedCategories.splice(idx, 1);
+    } else {
+      this.selectedCategories.push(catName);
+    }
+    this.updateUrl();
+    this.emitFilter();
+  }
 
+  clear(): void {
+    this.selectedCategories = [];
+    this.minPrice = null;
+    this.maxPrice = null;
+    this.updateUrl();
+    this.emitFilter();
+  }
+
+  applyPrice(): void {
+    this.updateUrl();
+    this.emitFilter();
+  }
+
+  private emitFilter(): void {
     this.filterChange.emit({
-      minPrice: this.localMinPrice,
-      maxPrice: this.localMaxPrice,
-      categories: selectedCategories
+      categories: this.selectedCategories,
+      minPrice: this.minPrice,
+      maxPrice: this.maxPrice
     });
   }
 
-  /** 套用價格篩選 */
-  applyPriceFilter(): void {
-    const selectedCategories = this.categories
-      .filter(c => c.checked)
-      .map(c => c.name);
+  private updateUrl(): void {
+    const query: any = {};
+    if (this.selectedCategories.length) query.categories = this.selectedCategories.join(',');
+    if (this.minPrice != null) query.minPrice = this.minPrice;
+    if (this.maxPrice != null) query.maxPrice = this.maxPrice;
 
-    this.filterChange.emit({
-      minPrice: this.localMinPrice,
-      maxPrice: this.localMaxPrice,
-      categories: selectedCategories
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: query,
+      queryParamsHandling: 'merge'
     });
   }
 
-  /** 重置篩選 */
-  resetFilter(): void {
-    this.localMinPrice = null;
-    this.localMaxPrice = null;
-    this.categories.forEach(c => c.checked = false);
-    this.applyPriceFilter();
+  isSelected(catName: string): boolean {
+    return this.selectedCategories.includes(catName);
   }
 }
