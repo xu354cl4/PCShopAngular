@@ -19,10 +19,10 @@
       <li (click)="switchView('Ad')" [class.active]="mainView === 'Ad'">
         📦 廣告管理
       </li>
-<li (click)="switchView('Faq')" [class.active]="mainView === 'Faq'">
+      <li (click)="switchView('Faq')" [class.active]="mainView === 'Faq'">
         🎁 問題管理
       </li>
-<li (click)="switchView('Orders')" [class.active]="mainView === 'Orders'">
+      <li (click)="switchView('Orders')" [class.active]="mainView === 'Orders'">
         📄 訂單紀錄
       </li>
 
@@ -35,80 +35,80 @@
   <section class="content-5">
 
     @if (selectedOrderId !== null) {
-      <app-orderdetails [orderId]="selectedOrderId" (close)="closeOrderDetail()">
-      </app-orderdetails>
-      }
-      
-      @if (selectedOrderId === null && mainView === 'Orders') {
-      <div class="card-5">
-        <h2 class="content-title-5">訂單紀錄</h2>
-        <app-orderlists [state]="orderListState" (stateChange)="orderListState = $event"
-          (openDetail)="openOrderDetail($event)">
-        </app-orderlists>
-      </div>
+    <app-orderdetails [orderId]="selectedOrderId" (close)="closeOrderDetail()">
+    </app-orderdetails>
+    }
+
+    @if (selectedOrderId === null && mainView === 'Orders') {
+    <div class="card-5">
+      <h2 class="content-title-5">訂單紀錄</h2>
+      <app-orderlists [state]="orderListState" (stateChange)="orderListState = $event"
+        (openDetail)="openOrderDetail($event)">
+      </app-orderlists>
+    </div>
     }
 
     @if (selectedOrderId === null && mainView === 'Ad') {
-      <div class="card-5">
-        <h2 class="content-title-5">廣告管理</h2>
-        <app-ads-back></app-ads-back>
-      </div>
+    <div class="card-5">
+      <h2 class="content-title-5">廣告管理</h2>
+      <app-admin-layout></app-admin-layout>
+    </div>
     }
 
     @if (selectedOrderId === null && mainView === 'Faq') {
-      <div class="card-5">
-        <h2 class="content-title-5">問題管理</h2>
-        <app-faqs-back></app-faqs-back>
-      </div>
+    <div class="card-5">
+      <h2 class="content-title-5">問題管理</h2>
+      <app-faqs-back></app-faqs-back>
+    </div>
     }
 
     @if (!loading && !error && mainView === 'overview') {
 
-      <div class="content-panel-5">
-        <h2 class="content-title-5">平台營運總覽</h2>
+    <div class="content-panel-5">
+      <h2 class="content-title-5">平台營運總覽</h2>
 
-        <div class="dashboard-grid">
+      <div class="dashboard-grid">
 
-          <div class="card-5 stats-card">
-            <div class="stat-label">會員總數</div>
-            <div class="stat-value">
-              {{ dashboard.totalMembers | number }}
-            </div>
+        <div class="card-5 stats-card">
+          <div class="stat-label">會員總數</div>
+          <div class="stat-value">
+            {{ dashboard.totalMembers | number }}
           </div>
-
-          <div class="card-5 stats-card">
-            <div class="stat-label">年度營收</div>
-            <div class="stat-value highlight">
-              NT$ {{ dashboard.yearlyRevenue | number }}
-            </div>
-          </div>
-<div class="card-5 stats-card">
-  <div class="stat-label">本月訂單數</div>
-  <div class="stat-value">
-    {{ dashboard.monthOrders | number }}
-            </div>
-          </div>
-<div class="card-5 stats-card">
-  <div class="stat-label">平均客單價</div>
-  <div class="stat-value">
-    NT$ {{ dashboard.avgOrderAmount | number }}
-            </div>
-          </div>
-
         </div>
 
-        <div class="card-5 chart-card mt-4">
-          <h3>年度營收趨勢</h3>
-          <div class="chart-container">
-            <canvas #pieChartCanvas></canvas>
+        <div class="card-5 stats-card">
+          <div class="stat-label">年度營收</div>
+          <div class="stat-value highlight">
+            NT$ {{ dashboard.yearlyRevenue | number }}
+          </div>
+        </div>
+        <div class="card-5 stats-card">
+          <div class="stat-label">本月訂單數</div>
+          <div class="stat-value">
+            {{ dashboard.monthOrders | number }}
+          </div>
+        </div>
+        <div class="card-5 stats-card">
+          <div class="stat-label">平均客單價</div>
+          <div class="stat-value">
+            NT$ {{ dashboard.avgOrderAmount | number }}
           </div>
         </div>
 
       </div>
+
+      <div class="card-5 chart-card mt-4">
+        <h3>年度營收趨勢</h3>
+        <div class="chart-container">
+          <canvas #pieChartCanvas></canvas>
+        </div>
+      </div>
+
+    </div>
     }
-@if (loading) {
-<div class="card-5">載入中...</div>
-}
+    @if (loading) {
+    <div class="card-5">載入中...</div>
+    }
 
     @if (!loading && error) {
     <div class="card-5">{{ error }}</div>

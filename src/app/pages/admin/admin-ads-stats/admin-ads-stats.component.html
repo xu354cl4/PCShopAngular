@@ -1,0 +1,55 @@
+<div class="container py-5">
+  <div class="page">
+    <div class="toolbar">
+
+      <div class="field">
+        <label>From</label>
+        <input type="date" [formControl]="form.controls.from" />
+      </div>
+
+      <div class="field">
+        <label>To</label>
+        <input type="date" [formControl]="form.controls.to" />
+      </div>
+
+      <div class="field">
+        <label>位置</label>
+        <select [formControl]="form.controls.position" (change)="onFilterChange()">
+          @for (o of positionOptions; track o.value) {
+          <option [value]="o.value">{{ o.label }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="field">
+        <label>廣告</label>
+        <select [formControl]="form.controls.ad" (change)="onFilterChange()">
+          @for (o of adOptions; track o.value) {
+          <option [value]="o.value">{{ o.label }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="field">
+        <label>圖表</label>
+        <select [formControl]="form.controls.mode" (change)="onFilterChange()">
+          <option value="line">折線</option>
+          <option value="bar">長條</option>
+        </select>
+      </div>
+
+      <button class="btn" type="button" (click)="load()" [disabled]="loading">
+        {{ loading ? '載入中...' : '查詢' }}
+      </button>
+      <a routerLink="/adminpage/Ad" class="btn py-2">回選單</a>
+    </div>
+
+    @if (msg) {
+    <div class="msg">{{ msg }}</div>
+    }
+
+    <div class="chartBox">
+      <canvas #canvas></canvas>
+    </div>
+  </div>
+</div>

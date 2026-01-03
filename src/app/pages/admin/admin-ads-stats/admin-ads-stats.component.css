@@ -1,0 +1,58 @@
+.page {
+  display: grid;
+  gap: 12px;
+  padding: 12px;
+}
+
+.toolbar {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(160px, 1fr)) 120px;
+  gap: 10px;
+  align-items: end;
+}
+
+.field label {
+  display: block;
+  font-size: 12px;
+  color: #6b7280;
+  margin-bottom: 6px;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+}
+
+.btn {
+  height: 38px;
+  border: 1px solid #111827;
+  background: #111827;
+  color: #fff;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.btn:disabled {
+  opacity: .6;
+  cursor: not-allowed;
+}
+
+.msg {
+  padding: 10px 12px;
+  border: 1px solid #fde68a;
+  background: #fffbeb;
+  border-radius: 10px;
+  color: #92400e;
+}
+
+.chartBox {
+  height: 360px;
+  /* 你可調高/調低 */
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 10px;
+  background: #fff;
+}

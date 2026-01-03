@@ -1,0 +1,34 @@
+<!-- Angular 19 control flow -->
+@if (active; as ad) {
+<div class="wrap" [class.float]="variant === 'float'">
+
+  @if (variant === 'float' && closable) {
+  <button class="closeBtn" type="button" (click)="close($event)">✕</button>
+  }
+
+  <a class="cardLink" [href]="ad.linkUrl || '#'" target="_blank" rel="noopener" (click)="trackOnly(ad, $event)">
+
+    @switch (ad.type) {
+    @case ('image') {
+    <img class="media" [src]="ad.mediaUrl" [alt]="ad.title || 'ad'" />
+    }
+    @case ('video') {
+    <video class="media" [src]="ad.mediaUrl" muted autoplay loop playsinline></video>
+    }
+    @default {
+    <img class="media" [src]="ad.mediaUrl" [alt]="ad.title || 'ad'" />
+    }
+    }
+
+    @if (ad.title) {
+    <div class="overlay">
+      <div class="overlayText">{{ ad.title }}</div>
+    </div>
+    }
+  </a>
+</div>
+} @else {
+<div class="empty" [class.floatEmpty]="variant === 'float'">
+  <span class="muted">No ad for slot: {{ positionCode }}</span>
+</div>
+}

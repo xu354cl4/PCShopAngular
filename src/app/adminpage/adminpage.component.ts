@@ -9,32 +9,35 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import { AdsBackComponent } from "../ads-back/ads-back.component";
 import { FaqsBackComponent } from "../faqs-back/faqs-back.component";
 import { OrderlistsComponent } from "./orderlists/orderlists.component";
 import { OrderdetailsComponent } from "./orderdetails/orderdetails.component";
+import { AdminLayoutComponent } from "../pages/admin/admin-layout/admin-layout.component";
+import { ActivatedRoute } from '@angular/router';
 
 type OrderStatus = 'pending' | 'shipping' | 'completed';
-
+type AdminView = 'overview' | 'Ad' | 'Faq' | 'Orders' | 'settings';
 @Component({
   selector: 'app-adminpage',
   standalone: true,
   imports: [
     CommonModule,
-    AdsBackComponent,
     FaqsBackComponent,
     OrderlistsComponent,
-    OrderdetailsComponent
+    OrderdetailsComponent,
+    AdminLayoutComponent
   ],
   templateUrl: './adminpage.component.html',
   styleUrl: './adminpage.component.css'
 })
+
 export class AdminpageComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
-  constructor(private adminService: AdminApiService) { }
+  constructor(private adminService: AdminApiService, private route: ActivatedRoute) { }
   // ===== 畫面狀態 =====
-  mainView: 'overview' | 'Ad' | 'Faq' | 'Orders' | 'settings' = 'overview';
+  mainView: AdminView = 'overview';
+  // mainView: 'overview' | 'Ad' | 'Faq' | 'Orders' | 'settings' = 'overview';
   selectedOrderId: number | null = null;
 
   loading = false;
@@ -74,6 +77,23 @@ export class AdminpageComponent implements OnInit, AfterViewInit, OnDestroy {
   // =============================
 
   ngOnInit(): void {
+    //新增：由 route 觸發 switchView
+    this.route.paramMap.subscribe(params => {
+      const view = params.get('view');
+
+      if (
+        view === 'overview' ||
+        view === 'Ad' ||
+        view === 'Faq' ||
+        view === 'Orders' ||
+        view === 'settings'
+      ) {
+        // ⬆️ 到這裡，TS 已經「確定」
+        // view 的型別是 AdminView
+        this.switchView(view);
+      }
+    });
+
     this.loadDashboardFromApi();
   }
 
@@ -108,7 +128,7 @@ export class AdminpageComponent implements OnInit, AfterViewInit, OnDestroy {
         // 如果你之後要畫折線圖
         // this.yearlyRevenue = res.yearlyRevenue;
 
-      this.loading = false;
+        this.loading = false;
 
         // 資料進來後再畫圖
         this.tryRenderChart();

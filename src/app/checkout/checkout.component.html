@@ -18,49 +18,51 @@
   </div>
 
   <div class="summary-accordion-container">
-    <p-accordion>
-      <p-accordionTab>
-        <ng-template pTemplate="header">
+    <p-accordion value="0">
+      <p-accordion-panel value="0">
+        <p-accordion-header>
           <div class="summary-header">
             <span class="label">共 {{ totalItems }} 件商品，合計</span>
             <span class="price">NT$ {{ totalAmount | number }}</span>
             <span class="detail-hint">(點擊查看明細)</span>
           </div>
-        </ng-template>
+        </p-accordion-header>
 
-        <div class="checkout-items-preview">
-          <div class="preview-item" *ngFor="let item of selectedItems">
-            <div class="item-img">
-              <img [src]="item.imageUrl" alt="商品圖">
-            </div>
-            <div class="item-info">
-              <div class="name">{{ item.name }}</div>
-              <div class="spec">{{ item.spec }}</div>
-              <div class="price-qty">
-                NT$ {{ item.price | number }} x {{ item.quantity }}
+        <p-accordion-content>
+          <div class="checkout-items-preview">
+            <div class="preview-item" *ngFor="let item of selectedItems">
+              <div class="item-img">
+                <img [src]="item.imageUrl" alt="商品圖">
+              </div>
+              <div class="item-info">
+                <div class="name">{{ item.name }}</div>
+                <div class="spec">{{ item.spec }}</div>
+                <div class="price-qty">
+                  NT$ {{ item.price | number }} x {{ item.quantity }}
+                </div>
+              </div>
+              <div class="item-subtotal">
+                NT$ {{ item.price * item.quantity | number }}
               </div>
             </div>
-            <div class="item-subtotal">
-              NT$ {{ item.price * item.quantity | number }}
-            </div>
-          </div>
 
-          <div class="checkout-summary-details">
-            <div class="sum-row" *ngIf="checkoutData?.selectedCoupon">
-              <span>小計</span>
-              <span>NT$ {{ checkoutData.subTotal | number }}</span>
-            </div>
-            <div class="sum-row discount" *ngIf="checkoutData?.selectedCoupon">
-              <span>折抵 ({{ checkoutData.selectedCoupon.name }})</span>
-              <span>- NT$ {{ checkoutData.discountAmount | number }}</span>
-            </div>
-            <div class="sum-row total">
-              <span>結帳總額</span>
-              <span class="highlight">NT$ {{ totalAmount | number }}</span>
+            <div class="checkout-summary-details">
+              <div class="sum-row">
+                <span>小計</span>
+                <span>NT$ {{ subTotal | number }}</span>
+              </div>
+              <div class="sum-row discount" *ngIf="checkoutData?.selectedCoupon">
+                <span>折抵 ({{ checkoutData.selectedCoupon.name }})</span>
+                <span>- NT$ {{ discountAmount | number }}</span>
+              </div>
+              <div class="sum-row total">
+                <span>結帳總額</span>
+                <span class="highlight">NT$ {{ totalAmount | number }}</span>
+              </div>
             </div>
           </div>
-        </div>
-      </p-accordionTab>
+        </p-accordion-content>
+      </p-accordion-panel>
     </p-accordion>
   </div>
 

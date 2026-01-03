@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
+import { AdSlotComponent } from "../ad-slot/ad-slot.component";
 
 @Component({
   selector: 'app-footer',
-  imports: [],
+  imports: [AdSlotComponent],
   templateUrl: './footer.component.html',
   styleUrl: './footer.component.css'
 })
