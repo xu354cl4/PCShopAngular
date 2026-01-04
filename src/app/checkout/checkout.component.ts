@@ -54,6 +54,22 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     { label: 'JP +81', value: '+81' }
   ];
 
+  deliveryLocations = [
+    { label: '台灣', value: 'TW' }
+  ];
+
+  deliveryMethods = [
+    { label: '本島宅配', value: 'mainland_delivery' },
+    { label: '台灣離島宅配', value: 'island_delivery' },
+    { label: '門市自取', value: 'store_pickup' }
+  ];
+
+  paymentMethods = [
+    { label: '信用卡付款', value: 'Credit' },
+    { label: '「綠界金流 ATM 虛擬帳號」', value: 'ATM' },
+    { label: '貨到付款', value: 'COD' }
+  ];
+
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -84,10 +100,16 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       }),
       note: [''],
       delivery: this.fb.group({
+        deliveryLocation: ['TW', Validators.required],
+        deliveryMethod: ['mainland_delivery', Validators.required],
+        paymentMethod: ['Credit', Validators.required],
         sameAsCustomer: [false],
         recipientName: ['', Validators.required],
         recipientCountryCode: ['+886'],
         recipientPhone: ['', Validators.required],
+        city: [''],
+        district: [''],
+        address: [''],
         storeName: ['台北信義門市'] // 預設或選取後的門市
       })
     });

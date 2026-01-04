@@ -241,30 +241,53 @@
   }
 }
 
-/* --- 4. Common Card Style --- */
+/* --- 4. Premium Card Style --- */
 .muji-card {
   background: var(--card-bg);
   border: 1px solid var(--border-color);
-  border-radius: 4px;
-  padding: 1.5rem;
+  border-radius: 8px;
+  /* Slightly more rounded */
   margin-bottom: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  /* Modern soft shadow */
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 0 !important;
+  overflow: hidden;
+}
+
+.muji-card.premium-card:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
 }
 
 .muji-card .card-header {
-  font-size: 1.1rem;
-  font-weight: 500;
-  margin-bottom: 1.5rem;
-  color: var(--text-primary);
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid #F0EFED;
-  /* 比邊框再淺一點 */
+  padding: 1.25rem 1.5rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #fff;
+  /* Keep it clean white */
+}
+
+/* Header Dot Accent */
+.header-dot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--accent-color);
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.muji-card .card-body {
+  padding: 1.5rem;
 }
 
 .muji-card .card-header.flex-between {
-  display: flex;
   justify-content: space-between;
-  align-items: center;
 }
 
 /* --- Form Fields --- */
@@ -274,9 +297,11 @@
 
 .form-field label {
   display: block;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
   font-size: 0.9rem;
-  color: var(--text-secondary);
+  font-weight: 600;
+  color: #4a4a4a;
+  letter-spacing: 0.25px;
 }
 
 /* 輸入框樣式 */
@@ -296,9 +321,60 @@
 .form-field input:focus,
 .form-field textarea:focus {
   background-color: #fff;
-  border-color: var(--accent-color);
-  box-shadow: 0 0 0 1px rgba(158, 139, 120, 0.2);
+  border-color: #000;
+  box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.05);
   outline: none;
+}
+
+/* Modern Dropdown Override */
+.modern-dropdown {
+  width: 100% !important;
+}
+
+.modern-dropdown ::ng-deep .p-dropdown {
+  width: 100% !important;
+  background: #fdfdfd !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 6px !important;
+  transition: all 0.2s;
+}
+
+.modern-dropdown ::ng-deep .p-dropdown:not(.p-disabled):hover {
+  border-color: #cbd5e0 !important;
+}
+
+.modern-dropdown ::ng-deep .p-dropdown:not(.p-disabled).p-focus {
+  border-color: #000 !important;
+  box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Address Grid */
+.address-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.mt-2 {
+  margin-top: 1rem;
+}
+
+/* Animate In Effect */
+.animate-in {
+  animation: slideDown 0.4s cubic-bezier(0, 0, 0.2, 1);
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .note-hint {
@@ -392,31 +468,42 @@
 }
 
 /* 下拉面板樣式覆寫 (針對 appendTo="body" 的情況) */
-::ng-deep .phone-dropdown-panel {
-  background-color: var(--input-bg) !important;
-  /* 使用與輸入框一致的淺灰色底 */
-  border: 1px solid var(--border-color) !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
-  border-radius: 4px !important;
-}
-
-::ng-deep .phone-dropdown-panel .p-dropdown-items {
+::ng-deep .phone-dropdown-panel,
+::ng-deep .modern-dropdown-panel {
+  background-color: #ffffff !important;
+  /* 使用純白不透明背景 */
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+  border-radius: 8px !important;
   padding: 0.5rem 0 !important;
+  margin-top: 4px !important;
+  z-index: 10000 !important;
 }
 
-::ng-deep .phone-dropdown-panel .p-dropdown-item {
-  color: var(--text-primary) !important;
+::ng-deep .phone-dropdown-panel .p-dropdown-items,
+::ng-deep .modern-dropdown-panel .p-dropdown-items {
+  padding: 0 !important;
+  background-color: #ffffff !important;
+}
+
+::ng-deep .phone-dropdown-panel .p-dropdown-item,
+::ng-deep .modern-dropdown-panel .p-dropdown-item {
+  color: #1a1a1a !important;
   padding: 0.75rem 1rem !important;
-  font-size: 0.9rem !important;
+  font-size: 0.95rem !important;
+  transition: all 0.2s !important;
 }
 
-::ng-deep .phone-dropdown-panel .p-dropdown-item.p-highlight {
-  background-color: #F0EFED !important;
-  color: var(--accent-color) !important;
+::ng-deep .phone-dropdown-panel .p-dropdown-item.p-highlight,
+::ng-deep .modern-dropdown-panel .p-dropdown-item.p-highlight {
+  background-color: #f8fafc !important;
+  color: #000 !important;
+  font-weight: 600 !important;
 }
 
-::ng-deep .phone-dropdown-panel .p-dropdown-item:not(.p-highlight):not(.p-disabled):hover {
-  background-color: #F9F8F6 !important;
+::ng-deep .phone-dropdown-panel .p-dropdown-item:not(.p-highlight):not(.p-disabled):hover,
+::ng-deep .modern-dropdown-panel .p-dropdown-item:not(.p-highlight):not(.p-disabled):hover {
+  background-color: #f1f5f9 !important;
 }
 
 /* --- Store Selection --- */
@@ -452,40 +539,74 @@
   background-color: #E0DFDD;
 }
 
-/* --- Payment Display --- */
-.payment-display {
-  background-color: var(--input-bg);
-  padding: 1rem;
-  border-radius: 4px;
+/* --- Payment Instruction Style --- */
+.payment-detail-card {
+  border-left: 4px solid var(--accent-color);
 }
 
-.payment-display .method {
+.payment-instruction {
+  background: #fafafa;
+  padding: 1.25rem;
+  border-radius: 6px;
+}
+
+.instruction-header {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-weight: 500;
-  margin-bottom: 0.5rem;
-  color: var(--text-primary);
+  gap: 0.75rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: #1a1a1a;
 }
 
-.payment-display .info-text {
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-  line-height: 1.4;
+.instruction-header i {
+  font-size: 1.25rem;
+  color: var(--accent-color);
 }
 
-/* --- Submit Button --- */
+.payment-instruction p {
+  font-size: 0.9rem;
+  color: #666;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* --- Buttons --- */
+.modern-btn-primary {
+  background: #1a1a1a !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 6px !important;
+  font-weight: 600 !important;
+  padding: 1.25rem !important;
+  width: 100% !important;
+  transition: all 0.2s !important;
+}
+
+.modern-btn-primary:hover {
+  background: #333 !important;
+  transform: translateY(-1px);
+}
+
+.modern-btn-secondary {
+  background: #f1f5f9 !important;
+  color: #475569 !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 6px !important;
+  font-weight: 500 !important;
+  padding: 0.75rem !important;
+  width: 100% !important;
+}
+
+.modern-btn-secondary:hover {
+  background: #e2e8f0 !important;
+}
+
+/* --- Submit Button Override --- */
 .btn-submit {
-  width: 100%;
-  background-color: var(--accent-color);
-  color: #fff;
-  border: none;
-  padding: 1rem;
-  font-size: 1rem;
-  letter-spacing: 1px;
-  margin-top: 1rem;
-  cursor: pointer;
-  transition: background-color 0.2s;
+  margin-top: 2rem;
+  font-size: 1.1rem;
+  letter-spacing: 2px;
 }
 
 .btn-submit:hover {
