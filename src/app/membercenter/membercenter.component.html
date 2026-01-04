@@ -64,15 +64,18 @@
     @if (selectedOrderId === null && mainView === 'orders') {
 
     @if (orderView === 'pending') {
-    <app-member-order-pending (openDetail)="openOrderDetail($event)"></app-member-order-pending>
+    <app-member-order-pending [state]="orderListState" (stateChange)="orderListState = $event"
+      (openDetail)="openOrderDetail($event)"></app-member-order-pending>
     }
 
     @if (orderView === 'shipping') {
-    <app-member-order-shipping (openDetail)="openOrderDetail($event)"></app-member-order-shipping>
+    <app-member-order-shipping [state]="orderListState" (stateChange)="orderListState = $event"
+      (openDetail)="openOrderDetail($event)"></app-member-order-shipping>
     }
 
     @if (orderView === 'completed') {
-    <app-member-order-history (openDetail)="openOrderDetail($event)"></app-member-order-history>
+    <app-member-order-history [state]="orderListState" (stateChange)="orderListState = $event"
+      (openDetail)="openOrderDetail($event)"></app-member-order-history>
     }
     @if (loading) {
     <div class="card-5">載入中...</div>

@@ -77,7 +77,12 @@ export class MembercenterComponent implements OnInit {
     }
   }
 
-
+  orderListState = {
+    page: 1,
+    pageSize: 4,
+    filterStatus: undefined as string | undefined,
+    keyword: undefined as string | undefined
+  };
   openOrderDetail(orderId: number) {
     this.selectedOrderId = orderId;
   }

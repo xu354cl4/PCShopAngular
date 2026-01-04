@@ -1,26 +1,105 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { OrderApiService } from '../../Services/order-api.service';
 import { CommonModule } from '@angular/common';
-
+import { FormsModule } from '@angular/forms';
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 @Component({
   selector: 'app-member-order-history',
   standalone:true ,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './member-order-history.component.html',
   styleUrl: './member-order-history.component.css'
 })
 export class MemberOrderHistoryComponent implements OnInit{
- @Output() openDetail = new EventEmitter<number>();
-  orders: any[] = [];
+  @Input() state!: {
+    page: number;
+    pageSize: number;
+    filterStatus?: any;
+    keyword?: string;
+  };
 
+  @Output() stateChange = new EventEmitter<any>();
+  @Output() openDetail = new EventEmitter<number>();
+
+  // 🔹 現在 orders 就是「當頁資料」
+  orders: any[] = [];
+  search$ = new Subject<string>();
+  filterStatus = 'completed';
+  keyword = '';
+
+  pageSize = 4;
+  currentPage = 1;
+
+  // 🔹 從後端來
+  totalPages = 1;
+  total = 0;
+
+  loading = false;
+  noData = false;
 
   constructor(private orderService : OrderApiService){}
-ngOnInit() {
-  this.orderService
-    .getOrders('Completed')
-    .subscribe(res => this.orders = res);
+  ngOnInit(): void {
+    this.pageSize = this.state.pageSize;
+    this.currentPage = this.state.page;
+    this.filterStatus = this.state.filterStatus ?? 'completed';
+    this.keyword = this.state.keyword ?? '';
+
+    this.search$
+      .pipe(
+        debounceTime(300),
+        distinctUntilChanged()
+      )
+      .subscribe(() => {
+        this.currentPage = 1;
+        this.saveState();
+        this.loadOrders(this.currentPage);
+      });
+    this.loadOrders(this.currentPage);
+  }
+
+  // ⭐ 核心：統一用這支
+  loadOrders(page: number) {
+    this.loading = true;
+    this.noData = false;
+
+    this.orderService
+      .getOrders(
+        page,
+        this.pageSize,
+        this.filterStatus || undefined,
+        this.keyword || undefined
+      )
+      .subscribe(res => {
+        this.orders = res.items;
+        this.currentPage = res.page;
+        this.pageSize = res.pageSize;
+        this.totalPages = res.totalPages;
+        this.total = res.total;
+
+        this.noData = res.total === 0;
+        this.loading = false;
+      });
+  }
+
+  // ▶ 換頁
+  goToPage(page: number) {
+    if (page < 1 || page > this.totalPages) return;
+    this.saveState()
+    this.loadOrders(page);
+  }
+
+  goDetail(orderid: number) {
+    this.saveState()
+    this.openDetail.emit(orderid);
+  }
+  private saveState() {
+    this.stateChange.emit({
+      page: this.currentPage,
+      pageSize: this.pageSize,
+      filterStatus: this.filterStatus || undefined,
+      keyword: this.keyword || undefined
+    });
+  }
 }
-goDetail(orderId: number) {
-  this.openDetail.emit(orderId);
-}
-}
+
+
