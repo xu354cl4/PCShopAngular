@@ -6,10 +6,12 @@
 
 .toolbar {
   display: grid;
-  grid-template-columns: repeat(5, minmax(160px, 1fr)) 120px;
+  grid-template-columns: repeat(5, minmax(160px, 1fr)) 120px 120px;
+
   gap: 10px;
   align-items: end;
 }
+
 
 .field label {
   display: block;

@@ -5,7 +5,6 @@ import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { GamehomeComponent } from './gamehome/gamehome.component';
-import { FaqsBackComponent } from './faqs-back/faqs-back.component';
 import { AdSlotComponent } from "./ad-slot/ad-slot.component";
 import { AdsVisibilityService } from './Services/ads-visibility.service';
 
@@ -19,7 +18,6 @@ import { AdsVisibilityService } from './Services/ads-visibility.service';
     HeaderComponent,
     FooterComponent,
     MatDialogModule,
-    FaqsBackComponent,
     AdSlotComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'

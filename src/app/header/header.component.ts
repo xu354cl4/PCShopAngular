@@ -7,12 +7,11 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 // 新增：商品 service
 import { ProductService } from '../product/services/product.service';
-import { AdSlotComponent } from '../ad-slot/ad-slot.component';
 
 
 @Component({
   selector: 'app-header',
-  imports: [RouterLink, RouterModule, CommonModule, AdSlotComponent],
+  imports: [RouterLink, RouterModule, CommonModule,],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
