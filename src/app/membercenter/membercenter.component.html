@@ -110,21 +110,20 @@
     <div class="card-5">{{ error }}</div>
     }
 
-    <!-- @if (mainView === 'benefits') {
+    @if (mainView === 'benefits') {
 
-                                                      @if (benefitsView === 'coupon') {
-                                                      <app-member-coupon></app-member-coupon>
-                                                      }
+      @if (benefitsView === 'coupon') {
+      <app-member-benefits-coupon></app-member-benefits-coupon>
+      }
 
-                                                      @if (benefitsView === 'coin') {
-                                                      <app-member-coin></app-member-coin>
-                                                      }
+  @if (benefitsView === 'coin') {
+<app-member-benefits-coin></app-member-benefits-coin>
+}
 
-                                                      @if (benefitsView === 'activity') {
-                                                      <app-member-activity></app-member-activity>
-                                                      }
-
-                                                    }-->
+  @if (benefitsView === 'activity') {
+<app-member-benefits-footprints></app-member-benefits-footprints>
+}
+}
 
     <!-- ================= 帳戶總覽 ================= -->
     @if (!loading && !error && mainView === 'overview' && overview) {
@@ -151,7 +150,12 @@
               : '-' }}
             </span>
           </div>
-
+          <div class="info-item-5">
+            <span class="info-label-5">可用點數</span>
+            <span class="info-value-5 highlight">
+              {{ points | number }} P
+            </span>
+          </div>
           <div class="info-item-5">
             <span class="info-label-5">手機</span>
             <span class="info-value-5">{{ overview.profile.phone }}</span>
