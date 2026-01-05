@@ -205,7 +205,8 @@
   color: var(--text-secondary);
 }
 
-.sum-row.discount {
+.sum-row.discount,
+.sum-row.points {
   color: #B28F75;
   /* 溫暖的折扣色 */
 }

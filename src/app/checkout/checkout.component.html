@@ -55,6 +55,10 @@
                 <span>折抵 ({{ checkoutData.selectedCoupon.name }})</span>
                 <span>- NT$ {{ discountAmount | number }}</span>
               </div>
+              <div class="sum-row points" *ngIf="usePoints > 0">
+                <span>點數折抵</span>
+                <span>- NT$ {{ usePoints | number }}</span>
+              </div>
               <div class="sum-row total">
                 <span>結帳總額</span>
                 <span class="highlight">NT$ {{ totalAmount | number }}</span>
