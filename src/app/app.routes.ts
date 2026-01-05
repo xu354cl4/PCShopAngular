@@ -48,6 +48,10 @@ export const routes: Routes = [
     path: 'checkout', loadComponent: () => import('./checkout/checkout.component').then(m => m.CheckoutComponent),
     title: '結帳作業'
   },
+  {
+    path: 'order-success/:orderId', loadComponent: () => import('./checkout/order-success/order-success.component').then(m => m.OrderSuccessComponent),
+    title: '訂單完成'
+  },
 
   // 未來其他頁面也放這裡
   {

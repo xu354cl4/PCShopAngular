@@ -1,6 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { OrderList } from '../models/Order.model';
+import { OrderList } from '../models/order.model';
+import { CreateOrderRequest } from '../models/order-request.model';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -17,9 +19,19 @@ export class OrderApiService {
       { params: status ? { status } : {} }
     );
   }
-getOrderDetail(orderId: number) {
+
+  getOrderDetail(orderId: number) {
     return this.http.get<any>(
       `${this.apiUrl}/orders/${orderId}`
     );
   }
+
+  createOrder(data: CreateOrderRequest): Observable<{ orderId: number }> {
+    return this.http.post<{ orderId: number }>(`${this.apiUrl}/orders`, data);
+  }
+
+  createCheckoutOrder(data: any): Observable<{ orderId: number }> {
+    return this.http.post<{ orderId: number }>(`https://localhost:7001/api/Checkout/Create`, data);
+  }
+
 }
