@@ -21,6 +21,7 @@ export class ProfileCompleteGuard implements CanActivate {
 
     // 已登入但資料未完成 → 強制補資料
     if (!this.authState.isProfileCompleted) {
+      alert("請先補全資料")
       this.router.navigate(['/register']);
       return false;
     }
