@@ -14,12 +14,14 @@ export class ProfileCompleteGuard implements CanActivate {
   canActivate(): boolean {
     // 沒登入 → 走你原本的 auth guard
     if (!this.authState.isLoggedIn) {
-      this.router.navigate(['/login']);
+      alert("請先登入")
+      this.router.navigate(['/loginpage']);
       return false;
     }
 
     // 已登入但資料未完成 → 強制補資料
     if (!this.authState.isProfileCompleted) {
+      alert("請先補全資料")
       this.router.navigate(['/register']);
       return false;
     }

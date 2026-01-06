@@ -70,7 +70,44 @@
     <!-- 營運總覽 -->
     <div *ngIf="!loading && !error && mainView === 'overview'" class="content-panel-5">
       <h2 class="content-title-5">平台營運總覽</h2>
-      <!-- KPI 內容放這 -->
+
+      <div class="dashboard-grid">
+
+        <div class="card-5 stats-card">
+          <div class="stat-label">會員總數</div>
+          <div class="stat-value">
+            {{ dashboard.totalMembers | number }}
+          </div>
+        </div>
+
+        <div class="card-5 stats-card">
+          <div class="stat-label">年度營收</div>
+          <div class="stat-value highlight">
+            NT$ {{ dashboard.yearlyRevenue | number }}
+          </div>
+        </div>
+        <div class="card-5 stats-card">
+          <div class="stat-label">本月訂單數</div>
+          <div class="stat-value">
+            {{ dashboard.monthOrders | number }}
+          </div>
+        </div>
+        <div class="card-5 stats-card">
+          <div class="stat-label">今年平均客單價</div>
+          <div class="stat-value">
+            NT$ {{ dashboard.avgOrderAmount | number }}
+          </div>
+        </div>
+
+      </div>
+
+      <div class="card-5 chart-card mt-4">
+        <h3>年度營收趨勢</h3>
+        <div class="chart-container">
+          <canvas #pieChartCanvas></canvas>
+        </div>
+      </div>
+
     </div>
 
     <!-- 載入中 -->

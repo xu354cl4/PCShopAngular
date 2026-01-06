@@ -129,8 +129,11 @@ export class AdminpageComponent implements OnInit, AfterViewInit, OnDestroy {
         this.dashboard = res.dashboard;
 
         // 圖表資料（圓餅 / 折線）
-        if (res.spendingAnalysis) {
-          this.overview.spendingAnalysis = res.spendingAnalysis;
+        if (res.yearlyRevenue && res.yearlyRevenue.length) {
+          this.overview.spendingAnalysis = {
+            labels: res.yearlyRevenue.map((x: any) => `${x.month} 月`),
+            data: res.yearlyRevenue.map((x: any) => x.amount)
+          };
         }
 
         // 如果你之後要畫折線圖
