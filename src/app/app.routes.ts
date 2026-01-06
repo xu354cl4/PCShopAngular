@@ -1,5 +1,6 @@
 
 import { Routes } from '@angular/router';
+import { ProfileCompleteGuard } from './guard/profile-complete.guard';
 
 export const routes: Routes = [
   {
@@ -8,10 +9,11 @@ export const routes: Routes = [
   },
   {
     path: 'home',
+    canActivate: [ProfileCompleteGuard],
     loadComponent: () => import('./home/home.component').then(m => m.HomeComponent)
   },
   {
-    path: 'faqs', loadComponent: () => import('./faqs/faqs.component').then(m => m.FaqsComponent)
+    path: 'faqs', canActivate: [ProfileCompleteGuard], loadComponent: () => import('./faqs/faqs.component').then(m => m.FaqsComponent)
   },
   {
     path: 'ad', loadComponent: () => import('./pages/admin/admin-ads/admin-ads.component').then(m => m.AdminAdsComponent)
@@ -38,10 +40,10 @@ export const routes: Routes = [
     path: 'verify-email', loadComponent: () => import('./Memberpages/verify-email/verify-email.component').then(m => m.VerifyEmailComponent)
   },
   {
-    path: 'order-list', loadComponent: () => import('./order-list/order-list.component').then(m => m.OrderListComponent)
+    path: 'order-list', canActivate: [ProfileCompleteGuard], loadComponent: () => import('./order-list/order-list.component').then(m => m.OrderListComponent)
   },
   {
-    path: 'cart', loadComponent: () => import('./cart/cart.component').then(m => m.CartComponent),
+    path: 'cart', canActivate: [ProfileCompleteGuard], loadComponent: () => import('./cart/cart.component').then(m => m.CartComponent),
     title: '我的購物車'
   },
   {
@@ -49,7 +51,7 @@ export const routes: Routes = [
     title: '結帳作業'
   },
   {
-    path: 'products', loadChildren: () => import('./product/product.module').then(m => m.ProductModule)
+    path: 'products', canActivate: [ProfileCompleteGuard], loadChildren: () => import('./product/product.module').then(m => m.ProductModule)
   },
   {
     path: 'forgot-password', loadComponent: () => import('./resetpage/resetpage.component').then(m => m.ResetpageComponent),
@@ -60,12 +62,12 @@ export const routes: Routes = [
     title: '密碼重設'
   },
   {
-    path: 'membercenter', loadComponent: () => import('./membercenter/membercenter.component').then(m => m.MembercenterComponent),
+    path: 'membercenter', canActivate: [ProfileCompleteGuard], loadComponent: () => import('./membercenter/membercenter.component').then(m => m.MembercenterComponent),
     title: '會員中心'
   },
   {
     path: 'adminpage', loadComponent: () => import('./adminpage/adminpage.component').then(m => m.AdminpageComponent),
-    title: '會員中心'
+    title: '管理員中心'
   },
   {
     path: 'adminpage/:view', loadComponent: () => import('./adminpage/adminpage.component').then(m => m.AdminpageComponent),

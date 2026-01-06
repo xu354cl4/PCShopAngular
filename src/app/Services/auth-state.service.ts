@@ -82,6 +82,10 @@ export class AuthStateService {
     return !!this.userSubject.value;
   }
 
+  get isProfileCompleted(): boolean {
+    return this.userSubject.value?.profileCompleted === true;
+  }
+
   private isTokenExpired(token: string): boolean {
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));

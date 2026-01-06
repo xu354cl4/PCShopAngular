@@ -36,7 +36,7 @@
         </ul>
       </li>
 
-      <li (click)="mainView='benefits'">優惠管理
+      <!-- <li (click)="mainView='benefits'">優惠管理
         <ul>
           <li
             (click)="$event.stopPropagation(); mainView='benefits'; benefitsView='coupon';this.selectedOrderId = null">
@@ -50,7 +50,7 @@
             回饋活動
             🎁</li>
         </ul>
-      </li>
+      </li> -->
     </ul>
   </aside>
 
@@ -112,18 +112,18 @@
 
     @if (mainView === 'benefits') {
 
-      @if (benefitsView === 'coupon') {
-      <app-member-benefits-coupon></app-member-benefits-coupon>
-      }
+    @if (benefitsView === 'coupon') {
+    <app-member-benefits-coupon></app-member-benefits-coupon>
+    }
 
-  @if (benefitsView === 'coin') {
-<app-member-benefits-coin></app-member-benefits-coin>
-}
+    @if (benefitsView === 'coin') {
+    <app-member-benefits-coin></app-member-benefits-coin>
+    }
 
-  @if (benefitsView === 'activity') {
-<app-member-benefits-footprints></app-member-benefits-footprints>
-}
-}
+    @if (benefitsView === 'activity') {
+    <app-member-benefits-footprints></app-member-benefits-footprints>
+    }
+    }
 
     <!-- ================= 帳戶總覽 ================= -->
     @if (!loading && !error && mainView === 'overview' && overview) {

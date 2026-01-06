@@ -48,7 +48,6 @@ export class LoginpageComponent implements AfterViewInit {
     this.selectedPanel = panel;
   }
   onGoogleLogin() {
-    console.log("🔥 手動呼叫 Google 登入");
     google.accounts.id.prompt();
   }
 

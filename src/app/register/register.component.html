@@ -61,7 +61,7 @@
 
       <div class="form-row">
         <label>BirthDay</label>
-        <input type="date" formControlName="birthDay" [max]="getTodayString()" />
+        <input type="date" formControlName="birthDay" [max]="getTodayString()" [min]="'1900-01-01'" />
 
         @if (form.get('birthDay')?.invalid && form.get('birthDay')?.touched) {
         <small class="error-text">生日日期無效</small>

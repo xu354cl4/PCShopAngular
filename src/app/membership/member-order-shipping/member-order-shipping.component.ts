@@ -6,12 +6,12 @@ import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-member-order-shipping',
-  standalone:true,
+  standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './member-order-shipping.component.html',
   styleUrl: './member-order-shipping.component.css'
 })
-export class MemberOrderShippingComponent implements OnInit{
+export class MemberOrderShippingComponent implements OnInit {
   @Input() state!: {
     page: number;
     pageSize: number;
@@ -38,11 +38,11 @@ export class MemberOrderShippingComponent implements OnInit{
   loading = false;
   noData = false;
 
-  constructor(private orderService : OrderApiService){}
+  constructor(private orderService: OrderApiService) { }
   ngOnInit(): void {
     this.pageSize = this.state.pageSize;
     this.currentPage = this.state.page;
-    this.filterStatus = this.state.filterStatus ?? 'shipping';
+    this.filterStatus = 'shipping';
     this.keyword = this.state.keyword ?? '';
 
     this.search$
@@ -105,7 +105,6 @@ export class MemberOrderShippingComponent implements OnInit{
     this.stateChange.emit({
       page: this.currentPage,
       pageSize: this.pageSize,
-      filterStatus: this.filterStatus || undefined,
       keyword: this.keyword || undefined
     });
   }

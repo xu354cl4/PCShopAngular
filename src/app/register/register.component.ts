@@ -89,8 +89,10 @@ export class RegisterComponent implements OnInit {
       // 呼叫 CompleteProfile API (不需要密碼)
       this.authService.completeProfile(formData).subscribe({
         next: () => {
-          alert('資料補全成功！');
-          this.router.navigate(['/']); // 跳轉回首頁
+          alert('資料補全成功！ 請重新登入'); // 跳轉回首頁
+          this.authState.clear();
+          // 3. 強制踢回登入頁 (假設你的登入頁路徑是 /login)
+          this.router.navigate(['/login']);
         },
         error: (err) => console.error('補全失敗', err)
       });
