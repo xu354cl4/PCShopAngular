@@ -65,24 +65,41 @@ export class AdminAdsComponent implements OnInit {
     };
   }
 
-
-  reload() {
+  reload(keepId?: number) {
     this.loading = true;
     this.msg = '';
 
+    // ⭐ 一定要先載入位置
     this.api.getPositions().subscribe({
       next: p => {
         this.positions = p ?? [];
+
+        // 若尚未選位置，自動帶第一個
         if (!this.form.value.positionId && this.positions.length) {
-          this.form.patchValue({ positionId: this.positions[0].positionId });
+          this.form.patchValue({
+            positionId: this.positions[0].positionId
+          });
         }
       },
-      error: () => { /* positions 可晚點再處理 */ }
+      error: () => {
+        this.msg = '載入位置失敗';
+      }
     });
 
     this.api.adminListAds().subscribe({
-      next: ads => { this.ads = ads ?? []; this.loading = false; },
-      error: () => { this.msg = '載入失敗'; this.loading = false; }
+      next: ads => {
+        this.ads = ads ?? [];
+        this.loading = false;
+
+        if (keepId) {
+          const found = this.ads.find(a => a.adId === keepId);
+          if (found) this.pick(found);
+        }
+      },
+      error: () => {
+        this.msg = '載入失敗';
+        this.loading = false;
+      }
     });
   }
 
@@ -138,17 +155,30 @@ export class AdminAdsComponent implements OnInit {
     const editingId = this.selected?.adId;
 
     if (!this.selected) {
+      //  新增
       this.api.adminCreateAd(dto).subscribe({
         next: () => {
-          this.msg = '更新成功';
-          this.reloadAndKeep(editingId);
+          this.msg = '新增成功，頁面重新載入中…';
+
+          setTimeout(() => {
+            window.location.reload();
+          }, 300);
         },
-        error: () => { this.msg = '新增失敗'; }
+        error: () => this.msg = '新增失敗'
       });
     } else {
-      this.api.adminUpdateAd(this.selected.adId, dto).subscribe({
-        next: () => { this.msg = '更新成功'; this.reload(); },
-        error: () => { this.msg = '更新失敗'; }
+      //  更新
+      const adId = this.selected.adId;
+
+      this.api.adminUpdateAd(adId, dto).subscribe({
+        next: () => {
+          this.msg = '更新成功，頁面重新載入中…';
+
+          setTimeout(() => {
+            window.location.reload();
+          }, 300);
+        },
+        error: () => this.msg = '更新失敗'
       });
     }
   }
