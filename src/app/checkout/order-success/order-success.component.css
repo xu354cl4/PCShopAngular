@@ -15,6 +15,8 @@
     text-align: center;
     max-width: 500px;
     width: 100%;
+    position: relative;
+    /* For absolute positioning of button if needed */
     animation: slideUp 0.6s ease-out;
 }
 
@@ -30,8 +32,10 @@
     }
 }
 
-.checkmark-wrapper {
+.status-wrapper {
     margin-bottom: 2rem;
+    display: flex;
+    justify-content: center;
 }
 
 .checkmark-circle {
@@ -88,6 +92,16 @@
     }
 }
 
+.failure-circle {
+    width: 100px;
+    height: 100px;
+    border: 4px solid #e74c3c;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 h1 {
     font-size: 2rem;
     color: #2d3436;
@@ -113,9 +127,26 @@ h1 {
 
 .actions {
     display: flex;
-    gap: 1rem;
+    gap: 1.5rem;
     justify-content: center;
+    margin-top: 1rem;
 }
+
+.pay-now-btn {
+    background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%) !important;
+    border: none !important;
+    box-shadow: 0 4px 15px rgba(255, 65, 108, 0.4) !important;
+    color: white !important;
+    padding: 0.75rem 2.5rem !important;
+    font-size: 1.1rem !important;
+}
+
+.pay-now-btn:hover {
+    background: linear-gradient(135deg, #ff4b2b 0%, #ff416c 100%) !important;
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(255, 65, 108, 0.5) !important;
+}
+
 
 ::ng-deep .p-button {
     padding: 0.75rem 1.5rem;

@@ -73,6 +73,10 @@ export const routes: Routes = [
     path: 'adminpage/:view', loadComponent: () => import('./adminpage/adminpage.component').then(m => m.AdminpageComponent),
     title: '會員中心'
   },
+  {
+    path: 'order-success/:orderId', loadComponent: () => import('./checkout/order-success/order-success.component').then(m => m.OrderSuccessComponent),
+    title: '訂單完成'
+  },
   //要加click
   {
     path: '**',
