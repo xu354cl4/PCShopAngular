@@ -14,7 +14,7 @@ export class ProfileCompleteGuard implements CanActivate {
   canActivate(): boolean {
     // 沒登入 → 走你原本的 auth guard
     if (!this.authState.isLoggedIn) {
-      this.router.navigate(['/login']);
+      this.router.navigate(['/loginpage']);
       return false;
     }
 
