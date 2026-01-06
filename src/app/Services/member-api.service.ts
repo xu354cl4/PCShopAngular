@@ -71,4 +71,11 @@ export class MemberApiService {
     return this.http.put(`${this.apiUrl}/email`, { newEmail });
   }
 
+
+
+  getMyPoints() {
+    return this.http.get<{ points: number }>(
+      `${this.apiUrl}/points`
+    );
+  }
 }

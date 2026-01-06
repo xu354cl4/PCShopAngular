@@ -1,8 +1,8 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { OrderList } from '../models/order.model';
 import { CreateOrderRequest } from '../models/order-request.model';
 import { Observable } from 'rxjs';
+import { OrderList, PagedResult } from '../models/order.model';
 
 @Injectable({
   providedIn: 'root'
@@ -13,11 +13,20 @@ export class OrderApiService {
   constructor(private http: HttpClient) { }
 
   //訂單區
-  getOrders(status?: string) {
-    return this.http.get<OrderList[]>(
-      `${this.apiUrl}/orders`,
-      { params: status ? { status } : {} }
-    );
+  getOrders(page: number, pageSize: number, status?: string, orderno?: string) {
+    let params = new HttpParams()
+      .set('page', page)
+      .set('pageSize', pageSize);
+
+    if (status) {
+      params = params.set('status', status);
+    }
+
+    if (orderno) {
+      params = params.set('orderno', orderno);
+    }
+
+    return this.http.get<PagedResult<OrderList>>(`${this.apiUrl}/orders?${params}`);
   }
 
   getOrderDetail(orderId: number) {

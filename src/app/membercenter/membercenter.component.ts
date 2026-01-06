@@ -11,6 +11,9 @@ import { MemberOrderPendingComponent } from "../membership/member-order-pending/
 import { MemberOrderShippingComponent } from "../membership/member-order-shipping/member-order-shipping.component";
 import { MemberOrderHistoryComponent } from "../membership/member-order-history/member-order-history.component";
 import { MemberOrderDetailComponent } from '../membership/member-order-detail/member-order-detail.component';
+import { MemberBenefitsCouponComponent } from "../membership/member-benefits-coupon/member-benefits-coupon.component";
+import { MemberBenefitsCoinComponent } from "../membership/member-benefits-coin/member-benefits-coin.component";
+import { MemberBenefitsFootprintsComponent } from "../membership/member-benefits-footprints/member-benefits-footprints.component";
 
 
 type MainView = 'overview' | 'orders' | 'settings' | 'benefits';
@@ -21,7 +24,7 @@ type BenefitsView = 'coupon' | 'coin' | 'activity';
 @Component({
   selector: 'app-membercenter',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MemberProfileComponent, MemberSecurityComponent, MemberAddressComponent, MemberOrderPendingComponent, MemberOrderShippingComponent, MemberOrderHistoryComponent, MemberOrderDetailComponent],
+  imports: [CommonModule, ReactiveFormsModule, MemberProfileComponent, MemberSecurityComponent, MemberAddressComponent, MemberOrderPendingComponent, MemberOrderShippingComponent, MemberOrderHistoryComponent, MemberOrderDetailComponent, MemberBenefitsCouponComponent, MemberBenefitsCoinComponent, MemberBenefitsFootprintsComponent],
   templateUrl: './membercenter.component.html',
   styleUrl: './membercenter.component.css'
 })
@@ -37,13 +40,15 @@ export class MembercenterComponent implements OnInit {
   overview?: MemberOverview;
   loading = false;
   error = '';
-
+  points = 0;
+  loadingPoints = false;
 
   selectedOrderId: number | null = null;
   constructor(private api: MemberApiService) { }
 
   ngOnInit(): void {
     this.loadOverview();
+    this.loadPoints();
   }
 
   loadOverview() {
@@ -62,6 +67,20 @@ export class MembercenterComponent implements OnInit {
     });
   }
 
+  loadPoints() {
+    this.loadingPoints = true;
+
+    this.api.getMyPoints().subscribe({
+      next: res => {
+        this.points = res.points;
+        this.loadingPoints = false;
+      },
+      error: () => {
+        this.points = 0;
+        this.loadingPoints = false;
+      }
+    });
+  }
   onProfileSaved() {
     this.loadOverview();          // 讓 overview 的顯示資料更新
     this.mainView = 'overview';   // 可選：存完回總覽（不想回去就拿掉這行）
@@ -77,7 +96,12 @@ export class MembercenterComponent implements OnInit {
     }
   }
 
-
+  orderListState = {
+    page: 1,
+    pageSize: 4,
+    filterStatus: undefined as string | undefined,
+    keyword: undefined as string | undefined
+  };
   openOrderDetail(orderId: number) {
     this.selectedOrderId = orderId;
   }

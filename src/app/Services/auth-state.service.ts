@@ -113,10 +113,11 @@ export class AuthStateService {
   }
 
   //前端模擬user / admin身分 這邊直接綁死信箱
+
   getrole(mail: string): UserRole {
 
-
-    if (mail === 'admin@gmail.com' || 'ss860530@gmail.com') {
+    console.log(mail)
+    if (mail === 'admin@gmail.com' || mail === 'ss860530@gmail.com') {
       return 'Admin';
     } else {
       return 'User'
