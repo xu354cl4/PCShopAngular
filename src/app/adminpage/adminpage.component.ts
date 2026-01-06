@@ -17,6 +17,11 @@ import { ActivatedRoute } from '@angular/router';
 
 type OrderStatus = 'pending' | 'shipping' | 'completed';
 type AdminView = 'overview' | 'Ad' | 'Faq' | 'Orders' | 'settings';
+import { AdminProductListComponent } from './admin-product-list/admin-product-list.component';
+
+// ===== 定義可用的後台畫面 =====
+type MainView = 'overview' | 'Ad' | 'Faq' | 'Orders' | 'settings' | 'Products';
+
 @Component({
   selector: 'app-adminpage',
   standalone: true,
@@ -25,7 +30,8 @@ type AdminView = 'overview' | 'Ad' | 'Faq' | 'Orders' | 'settings';
     FaqsBackComponent,
     OrderlistsComponent,
     OrderdetailsComponent,
-    AdminLayoutComponent
+    AdminLayoutComponent,
+    AdminProductListComponent
   ],
   templateUrl: './adminpage.component.html',
   styleUrl: './adminpage.component.css'
@@ -95,6 +101,8 @@ export class AdminpageComponent implements OnInit, AfterViewInit, OnDestroy {
     });
 
     this.loadDashboardFromApi();
+    // 🚫 後端尚未提供 overview API，先停用
+    // this.loadDashboardFromApi();
   }
 
   ngAfterViewInit(): void {
