@@ -55,6 +55,10 @@
                 <span>折抵 ({{ checkoutData.selectedCoupon.name }})</span>
                 <span>- NT$ {{ discountAmount | number }}</span>
               </div>
+              <div class="sum-row points" *ngIf="usePoints > 0">
+                <span>點數折抵</span>
+                <span>- NT$ {{ usePoints | number }}</span>
+              </div>
               <div class="sum-row total">
                 <span>結帳總額</span>
                 <span class="highlight">NT$ {{ totalAmount | number }}</span>
@@ -66,98 +70,181 @@
     </p-accordion>
   </div>
 
-  <form [formGroup]="checkoutForm" (ngSubmit)="onSubmit()">
+  <form [formGroup]="checkoutForm" (ngSubmit)="onConfirmCheckout()">
     <div class="main-grid">
 
       <div class="col-left">
 
-        <div class="muji-card" formGroupName="customer">
-          <div class="card-header">顧客資料</div>
-
-          <div class="form-field">
-            <label for="c-name">顧客名稱</label>
-            <input id="c-name" type="text" pInputText formControlName="name" placeholder="請輸入真實姓名" />
+        <div class="muji-card premium-card" formGroupName="customer">
+          <div class="card-header">
+            <span class="header-dot"></span>
+            顧客資料
           </div>
+          <div class="card-body">
+            <div class="form-field">
+              <label for="c-name">顧客名稱</label>
+              <input id="c-name" type="text" pInputText formControlName="name" placeholder="請輸入真實姓名" />
+            </div>
 
-          <div class="form-field">
-            <label for="c-email">電子信箱</label>
-            <input id="c-email" type="email" pInputText formControlName="email" placeholder="example@email.com" />
-          </div>
+            <div class="form-field">
+              <label for="c-email">電子信箱</label>
+              <input id="c-email" type="email" pInputText formControlName="email" placeholder="example@email.com" />
+            </div>
 
-          <div class="form-field">
-            <label for="c-phone">電話號碼</label>
-            <div class="phone-group">
-              <p-dropdown [options]="countryCodes" formControlName="countryCode" optionLabel="label" optionValue="value"
-                class="code-select" panelStyleClass="phone-dropdown-panel" appendTo="body"></p-dropdown>
-              <input id="c-phone" type="text" pInputText formControlName="phone" placeholder="請輸入電話號碼" />
+            <div class="form-field">
+              <label for="c-phone">電話號碼</label>
+              <div class="phone-group modern-phone">
+                <p-dropdown [options]="countryCodes" formControlName="countryCode" optionLabel="label"
+                  optionValue="value" class="code-select" panelStyleClass="phone-dropdown-panel"
+                  appendTo="body"></p-dropdown>
+                <input id="c-phone" type="text" pInputText formControlName="phone" placeholder="請輸入電話號碼" />
+              </div>
             </div>
           </div>
         </div>
 
-        <div class="muji-card">
-          <div class="card-header">訂單備註</div>
-          <div class="form-field">
-            <label for="order-note">
-              <i class="pi pi-comment" style="margin-right: 4px;"></i>
-              給店家的留言
-            </label>
-            <textarea id="order-note" rows="5" class="p-inputtext" formControlName="note"
-              placeholder="有什麼想告訴賣家的嗎？例如：包裝需求、配送時間備註等 (選填)"></textarea>
-            <small class="note-hint">※ 我們會盡力協助，但特殊需求仍視實際情況而定。</small>
+        <div class="muji-card premium-card">
+          <div class="card-header">
+            <span class="header-dot"></span>
+            訂單備註
+          </div>
+          <div class="card-body">
+            <div class="form-field">
+              <label for="order-note">
+                <i class="pi pi-comment" style="margin-right: 4px;"></i>
+                給店家的留言
+              </label>
+              <textarea id="order-note" rows="5" class="p-inputtext" formControlName="note"
+                placeholder="有什麼想告訴賣家的嗎？例如：包裝需求、配送時間備註等 (選填)"></textarea>
+              <small class="note-hint">※ 我們會盡力協助，但特殊需求仍視實際情況而定。</small>
+            </div>
           </div>
         </div>
 
       </div>
 
-      <div class="col-right">
+      <div class="col-right" formGroupName="delivery">
 
-        <div class="muji-card" formGroupName="delivery">
-          <div class="card-header">送貨資料</div>
-
-          <div class="checkbox-field">
-            <p-checkbox formControlName="sameAsCustomer" [binary]="true" inputId="sameAsCustomer"></p-checkbox>
-            <label for="sameAsCustomer" class="custom-checkbox-label">同顧客資料</label>
+        <!-- Payment & Delivery Selection Card -->
+        <div class="muji-card premium-card">
+          <div class="card-header">
+            <span class="header-dot"></span>
+            選擇送貨及付款方式
           </div>
-
-          <div class="form-field">
-            <label for="d-name">收件人名稱</label>
-            <input id="d-name" type="text" pInputText formControlName="recipientName" />
-          </div>
-
-          <div class="form-field">
-            <label for="d-phone">收件人電話號碼</label>
-            <div class="phone-group">
-              <p-dropdown [options]="countryCodes" formControlName="recipientCountryCode" optionLabel="label"
-                optionValue="value" class="code-select" panelStyleClass="phone-dropdown-panel"
+          <div class="card-body">
+            <div class="form-field">
+              <label>送貨地點</label>
+              <p-dropdown [options]="deliveryLocations" formControlName="deliveryLocation" optionLabel="label"
+                optionValue="value" class="modern-dropdown" panelStyleClass="modern-dropdown-panel"
                 appendTo="body"></p-dropdown>
-              <input id="d-phone" type="text" pInputText formControlName="recipientPhone" placeholder="請輸入電話號碼" />
-            </div>
-          </div>
-
-          <div class="store-section">
-            <div class="selected-store" *ngIf="checkoutForm.get('delivery.storeName')?.value">
-              <i class="pi pi-map-marker"></i>
-              <span>{{ checkoutForm.get('delivery.storeName')?.value }}</span>
             </div>
 
-            <button pButton type="button" label="搜尋門市" class="btn-store-search"></button>
-          </div>
-        </div>
-
-        <div class="muji-card payment-card">
-          <div class="card-header">付款資料</div>
-          <div class="payment-display">
-            <div class="method">
-              <i class="pi pi-credit-card"></i>
-              <span>ATM 虛擬帳號</span>
+            <div class="form-field">
+              <label>送貨方式</label>
+              <p-dropdown [options]="deliveryMethods" formControlName="deliveryMethod" optionLabel="label"
+                optionValue="value" class="modern-dropdown" panelStyleClass="modern-dropdown-panel"
+                appendTo="body"></p-dropdown>
             </div>
-            <div class="info-text">
-              訂單成立後，將提供一組虛擬帳號供您轉帳。
+
+            <div class="form-field">
+              <label>付款方式</label>
+              <p-dropdown [options]="paymentMethods" formControlName="paymentMethod" optionLabel="label"
+                optionValue="value" class="modern-dropdown" panelStyleClass="modern-dropdown-panel"
+                appendTo="body"></p-dropdown>
             </div>
           </div>
         </div>
 
-        <button pButton type="submit" label="前往結帳" class="btn-submit"></button>
+        <!-- Recipient Information Card -->
+        <div class="muji-card premium-card">
+          <div class="card-header">
+            <span class="header-dot"></span>
+            收件人資料
+          </div>
+          <div class="card-body">
+            <div class="checkbox-field modern-checkbox">
+              <p-checkbox formControlName="sameAsCustomer" [binary]="true" inputId="sameAsCustomer"></p-checkbox>
+              <label for="sameAsCustomer" class="custom-checkbox-label">同顧客資料</label>
+            </div>
+
+            <div class="form-field">
+              <label for="d-name">收件人名稱</label>
+              <input id="d-name" type="text" pInputText formControlName="recipientName" placeholder="請輸入收件人姓名" />
+            </div>
+
+            <div class="form-field">
+              <label for="d-phone">收件人電話號碼</label>
+              <div class="phone-group modern-phone">
+                <p-dropdown [options]="countryCodes" formControlName="recipientCountryCode" optionLabel="label"
+                  optionValue="value" class="code-select" panelStyleClass="phone-dropdown-panel"
+                  appendTo="body"></p-dropdown>
+                <input id="d-phone" type="text" pInputText formControlName="recipientPhone" placeholder="請輸入電話號碼" />
+              </div>
+            </div>
+
+            <!-- Address (Conditional) -->
+            <div class="address-section animate-in"
+              *ngIf="checkoutForm.get('delivery.deliveryMethod')?.value !== 'store_pickup'">
+              <div class="form-field">
+                <label>收件地址</label>
+                <div class="address-grid">
+                  <input type="text" pInputText formControlName="city" placeholder="縣市" />
+                  <input type="text" pInputText formControlName="district" placeholder="鄉鎮市區" />
+                </div>
+                <input type="text" pInputText formControlName="address" placeholder="詳細街道地址" class="mt-2" />
+              </div>
+            </div>
+
+            <!-- Store (Conditional) -->
+            <div class="store-section animate-in"
+              *ngIf="checkoutForm.get('delivery.deliveryMethod')?.value === 'store_pickup'">
+              <div class="selected-store" *ngIf="checkoutForm.get('delivery.storeName')?.value">
+                <i class="pi pi-map-marker"></i>
+                <span>{{ checkoutForm.get('delivery.storeName')?.value }}</span>
+              </div>
+              <button pButton type="button" label="搜尋門市" class="btn-store-search modern-btn-secondary"></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Payment Info Display Card -->
+        <div class="muji-card premium-card payment-detail-card"
+          [ngSwitch]="checkoutForm.get('delivery.paymentMethod')?.value">
+          <div class="card-header">
+            <span class="header-dot"></span>
+            付款說明
+          </div>
+          <div class="card-body">
+            <!-- Credit Card -->
+            <div *ngSwitchCase="'Credit'" class="payment-instruction">
+              <div class="instruction-header">
+                <i class="pi pi-credit-card"></i>
+                <span>信用卡線上付款</span>
+              </div>
+              <p>交易採用 256-bit SSL 安全加密技術，您的信用卡資料將由綠界科技（ECPay）嚴密保護，我們不會留存任何卡號資訊。</p>
+            </div>
+
+            <!-- ATM -->
+            <div *ngSwitchCase="'ATM'" class="payment-instruction">
+              <div class="instruction-header">
+                <i class="pi pi-id-card"></i>
+                <span>ATM 虛擬帳號</span>
+              </div>
+              <p>系統會產生一組專屬的銀行虛擬帳號。請於下單後 3 日內完成匯款，逾期訂單將自動取消。</p>
+            </div>
+
+            <!-- COD -->
+            <div *ngSwitchCase="'COD'" class="payment-instruction">
+              <div class="instruction-header">
+                <i class="pi pi-money-bill"></i>
+                <span>貨到付款</span>
+              </div>
+              <p>商品抵達指定地點時，請將訂單金額交予物流人員即可。</p>
+            </div>
+          </div>
+        </div>
+
+        <button pButton type="submit" label="確認結帳" class="btn-submit modern-btn-primary"></button>
 
       </div>
     </div>
