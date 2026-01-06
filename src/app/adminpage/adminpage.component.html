@@ -29,90 +29,55 @@
       <li (click)="switchView('settings')" [class.active]="mainView === 'settings'">
         ⚙️ 系統設定
       </li>
+      <li (click)="switchView('Products')" [class.active]="mainView === 'Products'">
+        🛒 商品管理
+      </li>
     </ul>
   </aside>
 
   <section class="content-5">
 
-    @if (selectedOrderId !== null) {
-    <app-orderdetails [orderId]="selectedOrderId" (close)="closeOrderDetail()">
+    <!-- 訂單明細 -->
+    <app-orderdetails *ngIf="selectedOrderId !== null" [orderId]="selectedOrderId" (close)="closeOrderDetail()">
     </app-orderdetails>
-    }
 
-    @if (selectedOrderId === null && mainView === 'Orders') {
-    <div class="card-5">
+    <!-- 訂單列表 -->
+    <div *ngIf="selectedOrderId === null && mainView === 'Orders'" class="card-5">
       <h2 class="content-title-5">訂單紀錄</h2>
       <app-orderlists [state]="orderListState" (stateChange)="orderListState = $event"
         (openDetail)="openOrderDetail($event)">
       </app-orderlists>
     </div>
-    }
 
-    @if (selectedOrderId === null && mainView === 'Ad') {
-    <div class="card-5">
+    <!-- 廣告管理 -->
+    <div *ngIf="selectedOrderId === null && mainView === 'Ad'" class="card-5">
       <h2 class="content-title-5">廣告管理</h2>
       <app-admin-layout></app-admin-layout>
     </div>
-    }
 
-    @if (selectedOrderId === null && mainView === 'Faq') {
-    <div class="card-5">
+    <!-- 問題管理 -->
+    <div *ngIf="selectedOrderId === null && mainView === 'Faq'" class="card-5">
       <h2 class="content-title-5">問題管理</h2>
       <app-faqs-back></app-faqs-back>
     </div>
-    }
 
-    @if (!loading && !error && mainView === 'overview') {
-
-    <div class="content-panel-5">
-      <h2 class="content-title-5">平台營運總覽</h2>
-
-      <div class="dashboard-grid">
-
-        <div class="card-5 stats-card">
-          <div class="stat-label">會員總數</div>
-          <div class="stat-value">
-            {{ dashboard.totalMembers | number }}
-          </div>
-        </div>
-
-        <div class="card-5 stats-card">
-          <div class="stat-label">年度營收</div>
-          <div class="stat-value highlight">
-            NT$ {{ dashboard.yearlyRevenue | number }}
-          </div>
-        </div>
-        <div class="card-5 stats-card">
-          <div class="stat-label">本月訂單數</div>
-          <div class="stat-value">
-            {{ dashboard.monthOrders | number }}
-          </div>
-        </div>
-        <div class="card-5 stats-card">
-          <div class="stat-label">平均客單價</div>
-          <div class="stat-value">
-            NT$ {{ dashboard.avgOrderAmount | number }}
-          </div>
-        </div>
-
-      </div>
-
-      <div class="card-5 chart-card mt-4">
-        <h3>年度營收趨勢</h3>
-        <div class="chart-container">
-          <canvas #pieChartCanvas></canvas>
-        </div>
-      </div>
-
+    <!-- 商品管理 -->
+    <div *ngIf="selectedOrderId === null && mainView === 'Products'" class="card-5">
+      <h2 class="content-title-5">商品管理</h2>
+      <app-admin-product-list></app-admin-product-list>
     </div>
-    }
-    @if (loading) {
-    <div class="card-5">載入中...</div>
-    }
 
-    @if (!loading && error) {
-    <div class="card-5">{{ error }}</div>
-    }
+    <!-- 營運總覽 -->
+    <div *ngIf="!loading && !error && mainView === 'overview'" class="content-panel-5">
+      <h2 class="content-title-5">平台營運總覽</h2>
+      <!-- KPI 內容放這 -->
+    </div>
+
+    <!-- 載入中 -->
+    <div *ngIf="loading" class="card-5">載入中...</div>
+
+    <!-- 錯誤訊息 -->
+    <div *ngIf="!loading && error" class="card-5">{{ error }}</div>
 
   </section>
 </main>

@@ -13,8 +13,10 @@ import { FaqsBackComponent } from "../faqs-back/faqs-back.component";
 import { OrderlistsComponent } from "./orderlists/orderlists.component";
 import { OrderdetailsComponent } from "./orderdetails/orderdetails.component";
 import { AdminLayoutComponent } from "../pages/admin/admin-layout/admin-layout.component";
+import { AdminProductListComponent } from './admin-product-list/admin-product-list.component';
 
-type OrderStatus = 'pending' | 'shipping' | 'completed';
+// ===== 定義可用的後台畫面 =====
+type MainView = 'overview' | 'Ad' | 'Faq' | 'Orders' | 'settings' | 'Products';
 
 @Component({
   selector: 'app-adminpage',
@@ -24,7 +26,8 @@ type OrderStatus = 'pending' | 'shipping' | 'completed';
     FaqsBackComponent,
     OrderlistsComponent,
     OrderdetailsComponent,
-    AdminLayoutComponent
+    AdminLayoutComponent,
+    AdminProductListComponent
   ],
   templateUrl: './adminpage.component.html',
   styleUrl: './adminpage.component.css'
@@ -34,7 +37,7 @@ export class AdminpageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(private adminService: AdminApiService) { }
   // ===== 畫面狀態 =====
-  mainView: 'overview' | 'Ad' | 'Faq' | 'Orders' | 'settings' = 'overview';
+  mainView: MainView = 'overview';
   selectedOrderId: number | null = null;
 
   loading = false;
@@ -74,7 +77,8 @@ export class AdminpageComponent implements OnInit, AfterViewInit, OnDestroy {
   // =============================
 
   ngOnInit(): void {
-    this.loadDashboardFromApi();
+    // 🚫 後端尚未提供 overview API，先停用
+    // this.loadDashboardFromApi();
   }
 
   ngAfterViewInit(): void {
