@@ -54,6 +54,7 @@ export class OrderSuccessComponent implements OnInit {
                 }
 
                 const orderData = {
+                    OrderId: this.orderId!,
                     TotalAmount: order.totalAmount,
                     ItemName: itemName,
                     TradeDesc: 'PcShop 訂單付款'
