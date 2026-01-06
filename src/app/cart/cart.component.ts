@@ -23,6 +23,7 @@ export interface Coupon {
 
 export interface CartItem {
   id: number;
+  productId: number; // 新增：對應後端 ProductID
   name: string;
   spec: string;
   price: number;

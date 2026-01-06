@@ -59,6 +59,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     { label: '台灣', value: 'TW' }
   ];
 
+
+  // 這邊是前端寫死,要撈後端的運送方式
   deliveryMethods = [
     { label: '本島宅配', value: 'mainland_delivery' },
     { label: '台灣離島宅配', value: 'island_delivery' },
@@ -220,9 +222,13 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   onConfirmCheckout() {
+    console.log('onConfirmCheckout 被觸發');
+    console.log('表單狀態:', this.checkoutForm.valid ? '有效' : '無效');
+
     if (this.checkoutForm.valid) {
       // 使用 getRawValue() 包含被 disabled 的欄位內容
       const formData = this.checkoutForm.getRawValue();
+      console.log('送出的表單原始資料:', formData);
 
       // 組合訂單請求資料
       const orderRequest: CreateOrderRequest = {
@@ -242,25 +248,31 @@ export class CheckoutComponent implements OnInit, OnDestroy {
           quantity: item.quantity
         })),
         totalAmount: this.totalAmount,
+        usedPoints: this.usePoints || 0,
+        userCouponId: this.checkoutData?.selectedCoupon?.userCouponID || null,
+        shippingFee: 0,
         orderNotes: formData.note
       };
+
+      console.log('即時準備送出的訂單內容:', orderRequest);
 
       // 呼叫服務建立訂單 (端點: https://localhost:7001/api/Checkout/Create)
       this.orderService.createCheckoutOrder(orderRequest).subscribe({
         next: (response) => {
-          // 取得後端回傳的單號 (Order ID)
+          console.log('API 回傳成功:', response);
           const orderId = response.orderId;
-          console.log('訂單建立成功，取得 Order ID:', orderId);
+          console.log('取得 Order ID:', orderId);
 
           // 成功後導航到成功頁面 (Step 3)
           this.router.navigate(['/order-success', orderId]);
         },
         error: (err) => {
-          console.error('訂單建立失敗', err);
+          console.error('訂單建立 API 呼叫失敗:', err);
           alert('訂單建立失敗，請稍後再試。');
         }
       });
     } else {
+      console.warn('表單驗證失敗，請檢查欄位狀況:', this.checkoutForm.controls);
       this.checkoutForm.markAllAsTouched();
       alert('請填寫所有必要欄位');
     }
