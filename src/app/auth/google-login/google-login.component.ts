@@ -25,7 +25,6 @@ export class GoogleLoginComponent implements AfterViewInit {
   ) { }
 
   ngAfterViewInit(): void {
-    console.log('🔥 GoogleLoginComponent ngAfterViewInit');
 
     google.accounts.id.initialize({
       client_id: '723650639666-j48h85hrq6agvd0225gkvcfpi7k9nhr8.apps.googleusercontent.com',

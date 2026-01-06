@@ -5,12 +5,12 @@ import { FormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 @Component({
   selector: 'app-member-order-history',
-  standalone:true ,
+  standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './member-order-history.component.html',
   styleUrl: './member-order-history.component.css'
 })
-export class MemberOrderHistoryComponent implements OnInit{
+export class MemberOrderHistoryComponent implements OnInit {
   @Input() state!: {
     page: number;
     pageSize: number;
@@ -37,11 +37,11 @@ export class MemberOrderHistoryComponent implements OnInit{
   loading = false;
   noData = false;
 
-  constructor(private orderService : OrderApiService){}
+  constructor(private orderService: OrderApiService) { }
   ngOnInit(): void {
     this.pageSize = this.state.pageSize;
     this.currentPage = this.state.page;
-    this.filterStatus = this.state.filterStatus ?? 'completed';
+    this.filterStatus = 'completed';
     this.keyword = this.state.keyword ?? '';
 
     this.search$
@@ -96,7 +96,6 @@ export class MemberOrderHistoryComponent implements OnInit{
     this.stateChange.emit({
       page: this.currentPage,
       pageSize: this.pageSize,
-      filterStatus: this.filterStatus || undefined,
       keyword: this.keyword || undefined
     });
   }
