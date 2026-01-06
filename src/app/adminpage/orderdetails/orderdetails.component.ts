@@ -1,6 +1,6 @@
 import { AdminApiService } from './../../Services/admin-api.service';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { OrderDetail } from '../../models/Order.model';
+import { OrderDetail } from '../../models/order.model';
 import { CommonModule } from '@angular/common';
 
 @Component({

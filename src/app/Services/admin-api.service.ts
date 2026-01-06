@@ -1,7 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { OrderList } from '../models/Order.model';
-import { PagedResult } from '../models/Order.model';
+import { OrderList, PagedResult } from '../models/order.model';
 
 @Injectable({
   providedIn: 'root'
