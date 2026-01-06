@@ -16,11 +16,11 @@ import { AdminLayoutComponent } from "../pages/admin/admin-layout/admin-layout.c
 import { ActivatedRoute } from '@angular/router';
 
 type OrderStatus = 'pending' | 'shipping' | 'completed';
-type AdminView = 'overview' | 'Ad' | 'Faq' | 'Orders' | 'settings';
+type AdminView = 'overview' | 'Ad' | 'Faq' | 'Orders' | 'settings' | 'Products';
 import { AdminProductListComponent } from './admin-product-list/admin-product-list.component';
 
 // ===== 定義可用的後台畫面 =====
-type MainView = 'overview' | 'Ad' | 'Faq' | 'Orders' | 'settings' | 'Products';
+type MainView = 'overview' | 'Ad' | 'Faq' | 'Orders' | 'settings';
 
 @Component({
   selector: 'app-adminpage',
