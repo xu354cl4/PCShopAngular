@@ -17,5 +17,8 @@ export interface CreateOrderRequest {
     receiverAddress: string;
     items: OrderItem[];
     totalAmount: number;
+    usedPoints: number;
+    userCouponId: number | null;
+    shippingFee: number;
     orderNotes?: string;
 }
