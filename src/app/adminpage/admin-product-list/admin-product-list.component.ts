@@ -2,7 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AdminProductService } from '../services/admin-product.service';
-import { AdminProductDto, AdminProductListDto } from '../models/admin-product.model';
+import {
+  AdminProductDto,
+  AdminProductListDto,
+  ProductSkuDto
+} from '../models/admin-product.model';
 
 @Component({
   selector: 'app-admin-product-list',
@@ -13,17 +17,34 @@ import { AdminProductDto, AdminProductListDto } from '../models/admin-product.mo
 })
 export class AdminProductListComponent implements OnInit {
 
+  // ------------------------
   // 商品列表
+  // ------------------------
   products: AdminProductListDto[] = [];
+  filteredProducts: AdminProductListDto[] = [];
+  paginatedProducts: AdminProductListDto[] = [];
   loading = false;
   errorMessage = '';
 
+  // ------------------------
+  // 搜尋 + 分頁
+  // ------------------------
+  searchText = '';
+  currentPage = 1;
+  pageSize = 20;
+  totalPages = 1;
+  pagesArray: number[] = [];
+
+  // ------------------------
   // modal 狀態
+  // ------------------------
   showModal = false;
   isEditing = false;
   currentProduct: AdminProductDto = this.createEmptyProduct();
 
+  // ------------------------
   // 分類列表
+  // ------------------------
   categories: { categoryId: number; categoryName: string }[] = [];
   newCategoryName = '';
 
@@ -42,6 +63,7 @@ export class AdminProductListComponent implements OnInit {
     this.adminProductService.getProducts().subscribe({
       next: data => {
         this.products = data;
+        this.applySearch();
         this.loading = false;
       },
       error: err => {
@@ -50,6 +72,44 @@ export class AdminProductListComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  // ------------------------
+  // 搜尋功能
+  // ------------------------
+  applySearch(): void {
+    const text = this.searchText.trim().toLowerCase();
+    this.filteredProducts = text
+      ? this.products.filter(p => p.productName.toLowerCase().includes(text))
+      : [...this.products];
+
+    this.currentPage = 1;
+    this.updatePagination();
+  }
+
+  clearSearch(): void {
+    this.searchText = '';
+    this.applySearch();
+  }
+
+  // ------------------------
+  // 分頁功能
+  // ------------------------
+  updatePagination(): void {
+    this.totalPages = Math.ceil(this.filteredProducts.length / this.pageSize);
+    this.pagesArray = Array.from({ length: this.totalPages }, (_, i) => i + 1);
+    this.paginate();
+  }
+
+  paginate(): void {
+    const start = (this.currentPage - 1) * this.pageSize;
+    this.paginatedProducts = this.filteredProducts.slice(start, start + this.pageSize);
+  }
+
+  goPage(page: number): void {
+    if (page < 1 || page > this.totalPages) return;
+    this.currentPage = page;
+    this.paginate();
   }
 
   // ------------------------
@@ -72,7 +132,7 @@ export class AdminProductListComponent implements OnInit {
     this.adminProductService.createCategory({ categoryName: name }).subscribe({
       next: category => {
         this.categories.push(category);
-        this.currentProduct.categoryId = category.categoryId; // 新增後自動選中
+        this.currentProduct.categoryId = category.categoryId;
         this.newCategoryName = '';
       },
       error: err => console.error('新增分類失敗', err)
@@ -99,7 +159,8 @@ export class AdminProductListComponent implements OnInit {
       status: product.status,
       fullDescription: '',
       warrantyInfo: '',
-      imageUrl: product.imageUrl
+      imageUrl: product.imageUrl,
+      skus: []
     };
 
     this.adminProductService.getProduct(product.productId!).subscribe({
@@ -108,6 +169,11 @@ export class AdminProductListComponent implements OnInit {
         this.currentProduct.warrantyInfo = dto.warrantyInfo;
       },
       error: err => console.error(err)
+    });
+
+    this.adminProductService.getSkus(product.productId!).subscribe({
+      next: skus => this.currentProduct.skus = skus ?? [],
+      error: err => console.error('載入 SKU 失敗', err)
     });
 
     this.showModal = true;
@@ -120,18 +186,20 @@ export class AdminProductListComponent implements OnInit {
     if (this.isEditing && this.currentProduct.productId) {
       this.adminProductService.updateProduct(this.currentProduct.productId, this.currentProduct).subscribe({
         next: () => {
+          alert('商品更新成功！');
           this.showModal = false;
           this.loadProducts();
         },
-        error: err => console.error(err)
+        error: err => alert('商品更新失敗')
       });
     } else {
       this.adminProductService.createProduct(this.currentProduct).subscribe({
         next: () => {
+          alert('商品新增成功！');
           this.showModal = false;
           this.loadProducts();
         },
-        error: err => console.error(err)
+        error: err => alert('商品新增失敗')
       });
     }
   }
@@ -142,8 +210,11 @@ export class AdminProductListComponent implements OnInit {
   deleteProduct(productId: number): void {
     if (!confirm('確定要刪除這個商品嗎？')) return;
     this.adminProductService.deleteProduct(productId).subscribe({
-      next: () => this.products = this.products.filter(p => p.productId !== productId),
-      error: err => console.error(err)
+      next: () => {
+        this.products = this.products.filter(p => p.productId !== productId);
+        this.applySearch();
+      },
+      error: err => alert('刪除商品失敗')
     });
   }
 
@@ -156,8 +227,58 @@ export class AdminProductListComponent implements OnInit {
 
     this.adminProductService.uploadImage(file).subscribe({
       next: res => this.currentProduct.imageUrl = res.imageUrl,
-      error: err => console.error(err)
+      error: err => alert('圖片上傳失敗')
     });
+  }
+
+  // ------------------------
+  // SKU 操作
+  // ------------------------
+  addSku(): void {
+    this.currentProduct.skus = this.currentProduct.skus ?? [];
+    this.currentProduct.skus.push({
+      skuid: 0,
+      skuname: '',
+      stockQuantity: 0,
+      isOutOfStock: false,
+      isOnSale: true,
+      priceAdjustment: 0
+    });
+  }
+
+  saveSku(sku: ProductSkuDto): void {
+    if (!this.currentProduct.productId) return;
+    if (sku.skuid && sku.skuid > 0) {
+      this.adminProductService.updateSku(sku).subscribe({
+        next: () => alert('SKU 更新成功'),
+        error: err => alert('SKU 更新失敗')
+      });
+    } else {
+      this.adminProductService.createSku(this.currentProduct.productId, sku).subscribe({
+        next: res => {
+          sku.skuid = res.skuid;
+          alert('SKU 新增成功');
+        },
+        error: err => alert('SKU 新增失敗')
+      });
+    }
+  }
+
+  deleteSku(index: number): void {
+    const sku = this.currentProduct.skus?.[index];
+    if (!sku) return;
+
+    if (sku.skuid && sku.skuid > 0) {
+      this.adminProductService.deleteSku(sku.skuid).subscribe({
+        next: () => {
+          this.currentProduct.skus!.splice(index, 1);
+          alert('SKU 刪除成功');
+        },
+        error: err => alert('SKU 刪除失敗')
+      });
+    } else {
+      this.currentProduct.skus!.splice(index, 1);
+    }
   }
 
   // ------------------------
@@ -171,7 +292,8 @@ export class AdminProductListComponent implements OnInit {
       status: 1,
       fullDescription: '',
       warrantyInfo: '',
-      imageUrl: ''
+      imageUrl: '',
+      skus: []
     };
   }
 
