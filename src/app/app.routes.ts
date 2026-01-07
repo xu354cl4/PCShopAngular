@@ -9,7 +9,6 @@ export const routes: Routes = [
   },
   {
     path: 'home',
-    canActivate: [ProfileCompleteGuard],
     loadComponent: () => import('./home/home.component').then(m => m.HomeComponent)
   },
   {
