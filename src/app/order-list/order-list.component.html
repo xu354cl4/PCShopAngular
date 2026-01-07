@@ -35,8 +35,8 @@
         </div>
 
         <div class="action-buttons">
-          <button class="btn-outline">查看詳情</button>
-          @if (order.status === 'Completed') {
+          <button class="btn-outline" (click)="viewDetails(order.id)">查看詳情</button>
+          @if (order.status === 'Completed' || order.status === '2') {
           <button class="btn-primary">再次購買</button>
           }
         </div>
@@ -49,4 +49,94 @@
     </div>
     }
   </div>
+
+  <!-- 訂單詳情彈窗 (Modal) -->
+  @if (showModal && selectedOrderDetails) {
+  <div class="modal-overlay" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>訂單詳情 #{{ selectedOrderDetails.orderNo || selectedOrderDetails.orderId || 'N/A' }}</h3>
+        <button class="close-btn" (click)="closeModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <!-- 基礎資訊區 (若有) -->
+        <div class="detail-grid" *ngIf="selectedOrderDetails.receiverName || selectedOrderDetails.paymentMethod">
+          <div class="detail-section">
+            <h4>收件資訊</h4>
+            <p><strong>收件人:</strong> {{ selectedOrderDetails.receiverName || selectedOrderDetails.recipientName || '未提供'
+              }}</p>
+            <p><strong>聯絡電話:</strong> {{ selectedOrderDetails.receiverPhone || selectedOrderDetails.recipientPhone ||
+              '未提供' }}</p>
+            <p><strong>收件地址:</strong> {{ selectedOrderDetails.receiverAddress || selectedOrderDetails.shippingAddress ||
+              '未提供' }}</p>
+            <p><strong>訂單備註:</strong> {{ selectedOrderDetails.remark || selectedOrderDetails.orderNotes || '無' }}</p>
+          </div>
+
+          <div class="detail-section">
+            <h4>付款與運送</h4>
+            <p><strong>付款方式:</strong> {{ selectedOrderDetails.paymentMethod || '未提供' }}</p>
+            <p><strong>運送方式:</strong> {{ selectedOrderDetails.shippingMethod || '未提供' }}</p>
+            <p><strong>下單時間:</strong> {{ (selectedOrderDetails.createDate || selectedOrderDetails.orderDate) |
+              date:'yyyy/MM/dd HH:mm:ss' }}</p>
+          </div>
+        </div>
+
+        <!-- 商品清單 -->
+        <div class="detail-section">
+          <h4>商品清單</h4>
+          <table class="detail-table">
+            <thead>
+              <tr>
+                <th>圖片</th>
+                <th>商品名稱</th>
+                <th class="text-right">單價</th>
+                <th class="text-center">數量</th>
+                <th class="text-right">小計</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (item of (selectedOrderDetails.items || []); track $index) {
+              <tr>
+                <td>
+                  <img [src]="item.imageUrl || item.productImage || 'assets/images/default-product.png'"
+                    class="item-img" alt="product">
+                </td>
+                <td>
+                  <div class="item-name-text">{{ item.productName }}</div>
+                  <div class="item-sku" *ngIf="item.skuName">{{ item.skuName }}</div>
+                </td>
+                <td class="text-right">{{ item.unitPrice | currency:'TWD':'symbol':'1.0-0' }}</td>
+                <td class="text-center">{{ item.quantity }}</td>
+                <td class="text-right">{{ (item.unitPrice * item.quantity) | currency:'TWD':'symbol':'1.0-0' }}</td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <div class="detail-section summary">
+          <div class="summary-row">
+            <span>運費:</span>
+            <span>{{ (selectedOrderDetails.shippingFee || 0) | currency:'TWD':'symbol':'1.0-0' }}</span>
+          </div>
+          <div class="summary-row">
+            <span>紅利折抵:</span>
+            <span>-{{ selectedOrderDetails.usedPoints || 0 }}</span>
+          </div>
+          @if (selectedOrderDetails.couponDiscount > 0 || selectedOrderDetails.discountAmount > 0) {
+          <div class="summary-row">
+            <span>優惠券折抵:</span>
+            <span>-{{ (selectedOrderDetails.couponDiscount || selectedOrderDetails.discountAmount) |
+              currency:'TWD':'symbol':'1.0-0' }}</span>
+          </div>
+          }
+          <div class="summary-row total">
+            <span>總計:</span>
+            <span>{{ selectedOrderDetails.totalAmount | currency:'TWD':'symbol':'1.0-0' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  }
 </div>
