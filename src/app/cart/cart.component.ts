@@ -37,9 +37,6 @@ export interface UserPoints {
   soonExpiringPoints: number;
 }
 
-
-
-
 @Component({
   selector: 'app-cart',
   standalone: true,

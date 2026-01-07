@@ -10,13 +10,13 @@ export class EcpayService {
   // 請確認你的後端執行網址
   private apiUrl = 'https://localhost:7001/api/ECPay';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   /**
    * 向後端請求金流參數
    * @param orderData 包含金額、品名等資訊
    */
   getPaymentParams(orderData: ECPayOrder): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/CreateOrder`, orderData);
+    return this.http.post<any>(`${this.apiUrl}/GetPaymentParams`, orderData);
   }
 }
