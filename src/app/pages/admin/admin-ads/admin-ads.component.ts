@@ -304,6 +304,9 @@ export class AdminAdsComponent implements OnInit {
       });
   }
 
+  // 🔑 這個跟你上方「位置選擇 dropdown」同步
+  selectedPosition: 'top' | 'bottom' | 'right_float' = 'top';
+
   onTogglePage(position: string, page: string, checked: boolean) {
     const list = this.pageRules[position] ?? [];
 

@@ -11,7 +11,7 @@
 <!-- Header -->
 <app-header></app-header>
 
-<app-ad-slot positionCode="top"></app-ad-slot>
+
 
 <!-- Main content for routing -->
 <main>
@@ -20,8 +20,6 @@
 <app-ad-slot *ngIf="(adsVis.floatVisible$ | async)" positionCode="right_float" variant="float" [closable]="true"
   (closed)="adsVis.dismissFloat()">
 </app-ad-slot>
-
-<app-ad-slot positionCode="bottom"></app-ad-slot>
 <!-- Footer -->
 <app-footer></app-footer>
 

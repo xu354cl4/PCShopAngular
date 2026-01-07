@@ -100,69 +100,6 @@
 
           </div>
         </div>
-        <div class="row2">
-          <div>
-            <div class="page-rules-card">
-              <h3 class="card-title">頁面顯示設定</h3>
-
-              <div class="rule-grid">
-                <!-- TOP -->
-                <div class="rule-block">
-                  <div class="rule-header">Top Banner</div>
-                  <div class="rule-options">
-                    @for (p of pageOptions; track p) {
-                    <label class="chk">
-                      <input type="checkbox" [checked]="pageRules['top']?.includes(p)"
-                        (change)="onTogglePage('top', p, $any($event.target).checked)" />
-                      <span>{{ p }}</span>
-                    </label>
-                    }
-                  </div>
-                </div>
-
-                <!-- BOTTOM -->
-                <div class="rule-block">
-                  <div class="rule-header">Bottom Banner</div>
-                  <div class="rule-options">
-                    @for (p of pageOptions; track p) {
-                    <label class="chk">
-                      <input type="checkbox" [checked]="pageRules['bottom']?.includes(p)"
-                        (change)="onTogglePage('bottom', p, $any($event.target).checked)" />
-                      <span>{{ p }}</span>
-                    </label>
-                    }
-                  </div>
-                </div>
-
-                <!-- RIGHT FLOAT -->
-                <div class="rule-block">
-                  <div class="rule-header">Right Floating</div>
-                  <div class="rule-options">
-                    @for (p of pageOptions; track p) {
-                    <label class="chk">
-                      <input type="checkbox" [checked]="pageRules['right_float']?.includes(p)"
-                        (change)="onTogglePage('right_float', p, $any($event.target).checked)" />
-                      <span>{{ p }}</span>
-                    </label>
-                    }
-                  </div>
-                </div>
-              </div>
-
-              <div class="rule-actions">
-                <button class="btn-primary" (click)="savePageRules()">
-                  儲存頁面顯示設定
-                </button>
-              </div>
-            </div>
-
-          </div>
-          <div>
-            <button class="btn primary" (click)="savePageRules()" [disabled]="saving">
-              儲存頁面顯示設定
-            </button>
-          </div>
-        </div>
 
         <div class="row2">
           <div>

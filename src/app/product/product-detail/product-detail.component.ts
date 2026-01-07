@@ -5,12 +5,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { AdSlotComponent } from '../../ad-slot/ad-slot.component';
 
 
 export interface ApiResponse<T> {
   data: T;
   totalItems?: number;
   message?: string;
+
 }
 
 export interface Product {
@@ -41,9 +43,9 @@ export interface AddToCartDto {
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, AdSlotComponent],
   templateUrl: './product-detail.component.html',
-  styleUrls: ['./product-detail.component.css']
+  styleUrls: ['./product-detail.component.css'],
 })
 export class ProductDetailComponent implements OnInit {
 

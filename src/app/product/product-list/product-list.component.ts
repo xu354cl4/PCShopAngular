@@ -9,11 +9,13 @@ import { ProductFilterComponent } from '../product-filter/product-filter.compone
 import { ProductFilter } from '../models/product-filter.model';
 import { Product } from '../models/product.model';
 import { ProductService, ApiResponse } from '../services/product.service';
+import { AdSlotComponent } from '../../ad-slot/ad-slot.component';
+
 
 @Component({
   selector: 'app-product-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, ProductFilterComponent],
+  imports: [CommonModule, FormsModule, RouterModule, ProductFilterComponent, AdSlotComponent],
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.css']
 })
