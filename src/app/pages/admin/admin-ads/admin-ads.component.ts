@@ -44,9 +44,18 @@ export class AdminAdsComponent implements OnInit {
         validators: [this.endNotBeforeStartValidator()] // ✅ 防呆：End >= Start
       });
   }
+  pageRules: Record<string, string[]> = {};
+  pageOptions = ['home', 'product', 'faq', 'cart'];
 
 
   ngOnInit(): void {
+    if (sessionStorage.getItem('ad-save-success') === '1') {
+      alert('儲存成功');
+      sessionStorage.removeItem('ad-save-success'); // ⭐ 清掉，避免下次又跳
+    }
+    this.api.getPageRules().subscribe(rules => {
+      this.pageRules = rules ?? {};
+    });
     this.reload();
   }
 
@@ -141,6 +150,7 @@ export class AdminAdsComponent implements OnInit {
       this.msg = '請填完必填欄位（標題/顯示影像/擺放位置/類別）';
       return;
     }
+
     const v = this.form.getRawValue();
     const dto: AdUpsertDto = {
       title: v.title!,
@@ -152,36 +162,30 @@ export class AdminAdsComponent implements OnInit {
       startTime: v.startTime ? v.startTime : null,
       endTime: v.endTime ? v.endTime : null
     };
-    const editingId = this.selected?.adId;
 
     if (!this.selected) {
-      //  新增
+      // 新增
       this.api.adminCreateAd(dto).subscribe({
         next: () => {
-          this.msg = '新增成功，頁面重新載入中…';
-
-          setTimeout(() => {
-            window.location.reload();
-          }, 300);
+          sessionStorage.setItem('ad-save-success', '1'); // ⭐ 新增
+          window.location.reload();
         },
         error: () => this.msg = '新增失敗'
       });
     } else {
-      //  更新
+      // 更新
       const adId = this.selected.adId;
 
       this.api.adminUpdateAd(adId, dto).subscribe({
         next: () => {
-          this.msg = '更新成功，頁面重新載入中…';
-
-          setTimeout(() => {
-            window.location.reload();
-          }, 300);
+          sessionStorage.setItem('ad-save-success', '1'); // ⭐ 新增
+          window.location.reload();
         },
         error: () => this.msg = '更新失敗'
       });
     }
   }
+
   private reloadAndKeep(adId?: number) {
     this.reload();
 
@@ -282,5 +286,33 @@ export class AdminAdsComponent implements OnInit {
       }
     });
   }
+  saving = false;
 
+  savePageRules() {
+    this.saving = true;
+
+    this.api.savePageRules({ rules: this.pageRules })
+      .subscribe({
+        next: () => {
+          this.saving = false;
+          alert('頁面顯示設定已套用');
+        },
+        error: () => {
+          this.saving = false;
+          alert('儲存失敗');
+        }
+      });
+  }
+
+  onTogglePage(position: string, page: string, checked: boolean) {
+    const list = this.pageRules[position] ?? [];
+
+    if (checked) {
+      if (!list.includes(page)) {
+        this.pageRules[position] = [...list, page];
+      }
+    } else {
+      this.pageRules[position] = list.filter(p => p !== page);
+    }
+  }
 }

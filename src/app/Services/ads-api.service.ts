@@ -70,4 +70,20 @@ export class AdsApiService {
     );
   }
 
+
+  // ===============================
+  // ⭐ 新增：後台設定的頁面顯示規則
+  // ===============================
+  getPageRules() {
+    return this.http.get<Record<string, string[]>>(
+      `/admin/ads/page-rules`
+    );
+  }
+
+  savePageRules(payload: { rules: Record<string, string[]> }) {
+    return this.http.post(
+      '/api/admin/ads/page-rules',
+      payload
+    );
+  }
 }
