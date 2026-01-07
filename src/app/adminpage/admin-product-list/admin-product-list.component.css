@@ -1,10 +1,40 @@
 /* =========================
-   基本版面
+   容器 & 基本版面
 ========================= */
 .admin-product-list {
-  display: block;
   padding: 16px;
+  font-family: Arial, sans-serif;
 }
+
+/* =========================
+   搜尋區
+========================= */
+.search-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.search-container input {
+  flex: 1;
+  padding: 6px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.search-container button {
+  padding: 6px 12px;
+  border-radius: 4px;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  color: #fff;
+}
+
+.search-btn { background-color: #007bff; }
+.clear-btn { background-color: #6c757d; }
 
 /* =========================
    通用按鈕
@@ -19,42 +49,25 @@
   transition: opacity 0.2s ease;
 }
 
-.btn:hover {
-  opacity: 0.85;
-}
+.btn:hover { opacity: 0.85; }
 
-/* 按鈕顏色 */
-.btn-add {
-  background-color: #28a745;
-  margin-bottom: 12px;
-}
-
-.btn-edit {
-  background-color: #007bff;
-}
-
-.btn-delete {
-  background-color: #dc3545;
-}
-
-.btn-save {
-  background-color: #28a745;
-}
-
-.btn-cancel {
-  background-color: #6c757d;
-}
+.btn-add { background-color: #28a745; margin-bottom: 12px; }
+.btn-edit { background-color: #007bff; }
+.btn-delete { background-color: #dc3545; }
+.btn-save { background-color: #28a745; }
+.btn-cancel { background-color: #6c757d; }
 
 /* =========================
    表格
 ========================= */
-.product-table {
+.product-table, .sku-table {
   width: 100%;
   border-collapse: collapse;
+  margin-bottom: 12px;
 }
 
-.product-table th,
-.product-table td {
+.product-table th, .product-table td,
+.sku-table th, .sku-table td {
   border: 1px solid #ccc;
   padding: 8px;
   text-align: center;
@@ -62,7 +75,9 @@
 }
 
 .product-table th:last-child,
-.product-table td:last-child {
+.product-table td:last-child,
+.sku-table th:last-child,
+.sku-table td:last-child {
   width: 160px;
 }
 
@@ -71,6 +86,35 @@
   display: flex;
   justify-content: center;
   gap: 8px;
+}
+
+/* =========================
+   分頁
+========================= */
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.pagination button {
+  padding: 4px 10px;
+  border: 1px solid #007bff;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #007bff;
+  cursor: pointer;
+}
+
+.pagination button.active {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.pagination button:hover:not(.active) {
+  background-color: #e2e6ea;
 }
 
 /* =========================
@@ -86,45 +130,71 @@
   margin-top: 8px;
 }
 
-/* =========================
-   Modal
-========================= */
+/* Modal 背景 */
 .modal {
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,0.5);
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start; /* 讓 Modal 從上方開始 */
+  padding-top: 40px;       /* 距離頂部 */
+  z-index: 1000;
 }
 
+/* Modal 內容 */
 .modal-content {
   background: #fff;
   padding: 20px;
-  width: 400px;
+  width: 700px;          /* 調整整體寬度 */
+  max-height: 90vh;      /* 高度不超過視窗 */
+  overflow-y: auto;      /* 內容過長自動滾動 */
   border-radius: 8px;
   display: flex;
-  flex-direction: column;
+  gap: 20px;             /* 左右商品/SKU 區間距 */
 }
 
+/* 左右欄 */
+.modal-left,
+.modal-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* 表單元素 */
 .modal-content label {
-  margin-top: 10px;
   font-weight: 500;
 }
-
 .modal-content input,
-.modal-content textarea,
-.modal-content select {
+.modal-content select,
+.modal-content textarea {
   width: 100%;
   padding: 6px;
-  margin-top: 4px;
   box-sizing: border-box;
+}
+
+/* SKU 表格 */
+.sku-table input[type="text"],
+.sku-table input[type="number"] {
+  width: 100px; /* 控制 SKU 輸入框寬度 */
+}
+.sku-table input[type="checkbox"] {
+  width: auto;
 }
 
 /* Modal 按鈕 */
 .modal-actions {
   display: flex;
-  justify-content: flex-end;
-  gap: 10px;
+  justify-content: flex-end; /* 右對齊 */
+  gap: 8px;
   margin-top: 16px;
+}
+
+.modal-actions button {
+  width: auto;        /* 自動寬度，不撐滿 */
+  padding: 6px 12px;  /* 高度縮小 */
+  font-size: 14px;
+  flex-shrink: 0;     /* 不縮小 */
 }

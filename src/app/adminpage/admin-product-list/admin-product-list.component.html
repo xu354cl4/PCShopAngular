@@ -2,9 +2,14 @@
 
   <h2>商品管理</h2>
 
-  <button class="btn btn-add" (click)="openCreateModal()">新增商品</button>
+  <div class="search-container">
+    <input [(ngModel)]="searchText" placeholder="搜尋商品名稱">
+    <button class="search-btn btn" (click)="applySearch()">搜尋</button>
+    <button class="clear-btn btn" (click)="clearSearch()">清除</button>
+    <button class="btn btn-add" (click)="openCreateModal()">新增商品</button>
+  </div>
 
-  <table class="product-table" *ngIf="products.length">
+  <table class="product-table" *ngIf="paginatedProducts.length">
     <thead>
       <tr>
         <th>圖片</th>
@@ -16,10 +21,8 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let p of products">
-        <td>
-          <img [src]="p.imageUrl" alt="商品圖片" class="thumb">
-        </td>
+      <tr *ngFor="let p of paginatedProducts">
+        <td><img [src]="p.imageUrl" alt="商品圖片" class="thumb"></td>
         <td>{{ p.productName }}</td>
         <td>{{ p.categoryName }}</td>
         <td>{{ p.basePrice | number }}</td>
@@ -35,48 +38,79 @@
   <div *ngIf="loading">載入中...</div>
   <div *ngIf="errorMessage">{{ errorMessage }}</div>
 
-  <!-- Modal -->
-  <div class="modal" *ngIf="showModal">
-    <div class="modal-content">
-      <h3>{{ isEditing ? '編輯商品' : '新增商品' }}</h3>
-
-      <label>名稱</label>
-      <input [(ngModel)]="currentProduct.productName">
-
-      <label>分類</label>
-      <select [(ngModel)]="currentProduct.categoryId">
-        <option *ngFor="let cat of categories" [value]="cat.categoryId">{{ cat.categoryName }}</option>
-      </select>
-
-      <div style="margin-top:5px; display:flex; gap:5px;">
-        <input [(ngModel)]="newCategoryName" placeholder="新增分類名稱">
-        <button type="button" (click)="addCategory()" class="btn btn-add">新增分類</button>
-      </div>
-
-      <label>價格</label>
-      <input type="number" [(ngModel)]="currentProduct.basePrice">
-
-      <label>狀態</label>
-      <select [(ngModel)]="currentProduct.status">
-        <option [value]="1">上架</option>
-        <option [value]="0">下架</option>
-      </select>
-
-      <label>詳細描述</label>
-      <textarea [(ngModel)]="currentProduct.fullDescription"></textarea>
-
-      <label>保固資訊</label>
-      <textarea [(ngModel)]="currentProduct.warrantyInfo"></textarea>
-
-      <label>圖片</label>
-      <input type="file" (change)="onFileChange($event)">
-      <img *ngIf="currentProduct.imageUrl" [src]="currentProduct.imageUrl" class="thumb preview">
-
-      <div class="modal-actions">
-        <button class="btn btn-save" (click)="saveProduct()">{{ isEditing ? '更新' : '儲存' }}</button>
-        <button class="btn btn-cancel" (click)="showModal = false">取消</button>
-      </div>
-    </div>
+  <!-- 分頁 -->
+  <div class="pagination" *ngIf="totalPages > 1">
+    <button (click)="goPage(currentPage - 1)">上一頁</button>
+    <button *ngFor="let p of pagesArray" [class.active]="p === currentPage" (click)="goPage(p)">
+      {{ p }}
+    </button>
+    <button (click)="goPage(currentPage + 1)">下一頁</button>
   </div>
 
+  <!-- ---------------- Modal ---------------- -->
+  <div class="modal" *ngIf="showModal">
+    <div class="modal-content">
+      <!-- 左欄: 商品基本資訊 -->
+      <div class="modal-left">
+        <h3>{{ isEditing ? '編輯商品' : '新增商品' }}</h3>
+        <label>名稱</label>
+        <input [(ngModel)]="currentProduct.productName">
+        <label>分類</label>
+        <select [(ngModel)]="currentProduct.categoryId">
+          <option *ngFor="let cat of categories" [value]="cat.categoryId">{{ cat.categoryName }}</option>
+        </select>
+        <label>價格</label>
+        <input type="number" [(ngModel)]="currentProduct.basePrice">
+        <label>狀態</label>
+        <select [(ngModel)]="currentProduct.status">
+          <option [value]="1">上架</option>
+          <option [value]="0">下架</option>
+        </select>
+        <label>詳細描述</label>
+        <textarea [(ngModel)]="currentProduct.fullDescription"></textarea>
+        <label>保固資訊</label>
+        <textarea [(ngModel)]="currentProduct.warrantyInfo"></textarea>
+        <label>圖片</label>
+        <input type="file" (change)="onFileChange($event)">
+        <img *ngIf="currentProduct.imageUrl" [src]="currentProduct.imageUrl" class="thumb preview">
+      </div>
+
+      <!-- 右欄: SKU -->
+      <div class="modal-right">
+        <h4>SKU 列表</h4>
+        <table class="sku-table">
+          <thead>
+            <tr>
+              <th>SKU 名稱</th>
+              <th>庫存</th>
+              <th>缺貨</th>
+              <th>上架</th>
+              <th>價格調整</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let sku of currentProduct.skus; let i = index">
+              <td><input [(ngModel)]="sku.skuname"></td>
+              <td><input type="number" [(ngModel)]="sku.stockQuantity"></td>
+              <td><input type="checkbox" [(ngModel)]="sku.isOutOfStock"></td>
+              <td><input type="checkbox" [(ngModel)]="sku.isOnSale"></td>
+              <td><input type="number" [(ngModel)]="sku.priceAdjustment"></td>
+              <td>
+                <button class="btn btn-save" (click)="saveSku(sku)">儲存</button>
+                <button class="btn btn-delete" (click)="deleteSku(i)">刪除</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <button type="button" (click)="addSku()" class="btn btn-add">新增 SKU</button>
+      </div>
+    </div>
+
+    <!-- Modal 按鈕 -->
+    <div class="modal-actions">
+      <button class="btn btn-save" (click)="saveProduct()">{{ isEditing ? '更新商品' : '儲存商品' }}</button>
+      <button class="btn btn-cancel" (click)="showModal = false">取消</button>
+    </div>
+  </div>
 </div>
