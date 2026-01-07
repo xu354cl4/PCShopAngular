@@ -40,7 +40,7 @@
                 class="p-button-raised p-button-primary" *ngIf="status !== 'waiting'"></button>
 
             <!-- 查看訂單：一律顯示 -->
-            <button pButton label="查看訂單" icon="pi pi-list" routerLink="/order-list" class="p-button-outlined"></button>
+            <button pButton label="查看訂單" icon="pi pi-list" (click)="onViewOrder()" class="p-button-outlined"></button>
 
             <!-- 去付款：僅等待付款狀態顯示，並使用顏色更突出的樣式 -->
             <button pButton label="去付款" icon="pi pi-credit-card" (click)="onPay()"

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { EcpayService } from '../../Services/ecpay.service';
 import { OrderApiService } from '../../Services/order-api.service';
@@ -18,6 +18,7 @@ export class OrderSuccessComponent implements OnInit {
 
     constructor(
         private route: ActivatedRoute,
+        private router: Router,
         private ecpayService: EcpayService,
         private orderService: OrderApiService
     ) { }
@@ -89,6 +90,23 @@ export class OrderSuccessComponent implements OnInit {
             error: (err) => {
                 console.error('取得訂單失敗', err);
                 alert('無法取得訂單資訊，請洽客服。');
+            }
+        });
+    }
+
+    onViewOrder(): void {
+        if (!this.orderId) return;
+
+        this.orderService.getOrderItems(Number(this.orderId)).subscribe({
+            next: (items) => {
+                console.log('取得訂單項目成功:', items);
+                // 這裡訂閱後可以決定要導向哪裡，原先按鈕是到 /order-list
+                this.router.navigate(['/order-list']);
+            },
+            error: (err) => {
+                console.error('取得訂單項目失敗', err);
+                // 即使失敗也導向訂單列表，或者提示錯誤
+                this.router.navigate(['/order-list']);
             }
         });
     }

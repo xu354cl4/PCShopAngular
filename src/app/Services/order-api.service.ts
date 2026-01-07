@@ -8,7 +8,7 @@ import { OrderList, PagedResult } from '../models/order.model';
   providedIn: 'root'
 })
 export class OrderApiService {
-  private apiUrl = '/api/order'; // 使用相對路徑透過 proxy 轉發
+  private apiUrl = '/api/Order'; // 使用大寫 O 以符合常見後端慣例
 
   constructor(private http: HttpClient) { }
 
@@ -43,4 +43,12 @@ export class OrderApiService {
     return this.http.post<{ orderId: number }>(`/api/Checkout/Create`, data);
   }
 
+  getOrderItems(orderId: number): Observable<any[]> {
+    return this.http.get<any[]>(`/api/OrderItems/${orderId}`);
+  }
+
+  getOrderDetailByApi(orderId: string | number): Observable<any> {
+    // 根據追蹤與 404 報錯，/api/detail 並不存在。改用專案中已確認可運行的路徑。
+    return this.http.get<any>(`${this.apiUrl}/orders/${orderId}`);
+  }
 }
