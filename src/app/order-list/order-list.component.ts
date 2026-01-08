@@ -122,26 +122,18 @@ export class OrderListComponent implements OnInit {
           return;
         }
 
-        // 結構標準化
-        // 1. 如果回傳是陣列，轉換為物件
-        let finalDetails = Array.isArray(details) ? { items: details } : { ...details };
-
-        // 2. 確保商品清單統一儲存在 items 屬性中
-        if (!finalDetails.items && finalDetails.orderItems) {
-          finalDetails.items = finalDetails.orderItems;
-        }
-
-        // 3. 補齊基本資訊（如果 API 回傳的欄位跟清單不同）
+        // 由於已經有了 OrderDetailDto 介面，我們可以直接讀取欄位，不需再做陣列轉物件或欄位檢查
         this.selectedOrderDetails = {
           ...listOrder,
-          ...finalDetails,
-          orderNo: finalDetails.orderNo || finalDetails.OrderNo || listOrder?.orderId || 'N/A',
-          createDate: finalDetails.createDate || finalDetails.orderDate || listOrder?.orderDate,
-          // 確保 items 內的欄位也標準化 (有些 API 回傳 productName, 有些回傳 name)
-          items: (finalDetails.items || []).map((i: any) => ({
-            ...i,
-            productName: i.productName || i.name || '未知商品',
-            unitPrice: i.priceAtPurchase || i.unitPrice || i.price || 0
+          ...details,
+          // 確保優先選用細節介面的欄位，並做備援
+          orderNo: details.orderNo || listOrder?.orderId || 'N/A',
+          createDate: details.createDate || listOrder?.orderDate,
+          // 欄位轉換：將 OrderItemDto 轉換為組件內部的 OrderItem 格式
+          items: (details.items || []).map((i) => ({
+            name: i.productName || '未知商品',
+            quantity: i.quantity || 1,
+            price: i.priceAtPurchase || 0
           }))
         };
 

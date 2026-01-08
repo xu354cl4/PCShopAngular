@@ -4,6 +4,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { EcpayService } from '../../Services/ecpay.service';
 import { OrderApiService } from '../../Services/order-api.service';
+import { OrderDetailDto, OrderItemDto } from '../../models/order-request.model';
 
 @Component({
     selector: 'app-order-success',
@@ -15,6 +16,9 @@ import { OrderApiService } from '../../Services/order-api.service';
 export class OrderSuccessComponent implements OnInit {
     orderId: string | null = null;
     status: 'waiting' | 'success' | 'failure' = 'waiting';
+    orderItems: any[] = []; // 儲存商品明細 (用於顯示)
+    orderDetail: OrderDetailDto | null = null; // 儲存完整訂單詳情
+    showDetails: boolean = false; // 控制是否顯示明細
 
     constructor(
         private route: ActivatedRoute,
@@ -51,7 +55,7 @@ export class OrderSuccessComponent implements OnInit {
                 // 處理品名，ECPay 品名若有多項通常用 # 分隔
                 let itemName = 'PcShop 商品';
                 if (order.items && order.items.length > 0) {
-                    itemName = order.items.map((i: any) => i.name || i.productName).join('#');
+                    itemName = order.items.map((i: OrderItemDto) => i.productName || '商品').join('#');
                 }
 
                 const orderData = {
@@ -97,16 +101,27 @@ export class OrderSuccessComponent implements OnInit {
     onViewOrder(): void {
         if (!this.orderId) return;
 
-        this.orderService.getOrderItems(Number(this.orderId)).subscribe({
-            next: (items) => {
-                console.log('取得訂單項目成功:', items);
-                // 這裡訂閱後可以決定要導向哪裡，原先按鈕是到 /order-list
-                this.router.navigate(['/order-list']);
+        // 取得完整訂單詳情 (包含收件資訊與商品清單)
+        this.orderService.getOrderDetail(Number(this.orderId)).subscribe({
+            next: (data: OrderDetailDto) => {
+                console.log('取得訂單詳情成功:', data);
+                this.orderDetail = data;
+
+                // 資料標準化 (對應新定義的 OrderItemDto 欄位)
+                this.orderItems = (data.items || []).map(i => ({
+                    ...i,
+                    productName: i.productName || '未知商品',
+                    skuName: i.skuName || '',
+                    unitPrice: i.priceAtPurchase || 0,
+                    imageUrl: i.imageUrl || 'assets/images/default-product.png',
+                    quantity: i.quantity || 0
+                }));
+
+                this.showDetails = true;
             },
             error: (err) => {
-                console.error('取得訂單項目失敗', err);
-                // 即使失敗也導向訂單列表，或者提示錯誤
-                this.router.navigate(['/order-list']);
+                console.error('取得訂單詳情失敗', err);
+                alert('暫時無法取得訂單明細，請稍後再試。');
             }
         });
     }
