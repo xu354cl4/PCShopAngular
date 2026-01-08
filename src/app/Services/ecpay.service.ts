@@ -8,7 +8,7 @@ import { ECPayOrder } from '../models/ecpay.models';
 })
 export class EcpayService {
   // 請確認你的後端執行網址
-  private apiUrl = 'https://localhost:7001/api/ECPay';
+  private apiUrl = '/api/ECPay';
 
   constructor(private http: HttpClient) { }
 

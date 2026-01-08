@@ -184,7 +184,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   private fetchUserData() {
-    this.http.get<any>('https://localhost:7001/api/Checkout/Users')
+    this.http.get<any>('/api/Checkout/Users')
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (user) => {
@@ -202,13 +202,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
           }
         },
         error: (err) => {
-          console.error('訂單建立失敗');
-
-          console.log('HttpErrorResponse:', err);
-          console.log('err.error:', err.error);
-          console.log('err.error.errors:', err.error?.errors);
-
-          alert('訂單建立失敗（請看 console）');
+          console.error('獲取使用者資料失敗', err);
         }
         // error: (err) => {
         //   console.error('獲取使用者資料失敗', err);
@@ -230,6 +224,11 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       const formData = this.checkoutForm.getRawValue();
       console.log('送出的表單原始資料:', formData);
 
+      // 根據運送方式決定地址
+      const address = formData.delivery.deliveryMethod === 'store_pickup'
+        ? formData.delivery.storeName
+        : `${formData.delivery.city}${formData.delivery.district}${formData.delivery.address}`.trim();
+
       // 組合訂單請求資料
       const orderRequest: CreateOrderRequest = {
         customerName: formData.customer.name,
@@ -237,10 +236,10 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         customerPhone: formData.customer.phone,
         shippingMethod: formData.delivery.deliveryMethod,
         paymentMethod: formData.delivery.paymentMethod,
-        shippingAddress: `${formData.delivery.city}${formData.delivery.district}${formData.delivery.address}`.trim(),
+        shippingAddress: address,
         receiverName: formData.delivery.recipientName,
         receiverPhone: formData.delivery.recipientPhone,
-        receiverAddress: `${formData.delivery.city}${formData.delivery.district}${formData.delivery.address}`.trim(),
+        receiverAddress: address,
         items: this.selectedItems.map(item => ({
           productId: item.productId,
           name: item.name,
@@ -263,8 +262,13 @@ export class CheckoutComponent implements OnInit, OnDestroy {
           const orderId = response.orderId;
           console.log('取得 Order ID:', orderId);
 
-          // 成功後導航到成功頁面 (Step 3)
-          this.router.navigate(['/order-success', orderId]);
+          // 根據付款方式決定流程
+          if (formData.delivery.paymentMethod === 'Credit' || formData.delivery.paymentMethod === 'ATM') {
+            this.processEcpayPayment(orderId, orderRequest);
+          } else {
+            // 非線上支付，成功後導航到成功頁面 (Step 3)
+            this.router.navigate(['/order-success', orderId]);
+          }
         },
         error: (err) => {
           console.error('訂單建立 API 呼叫失敗:', err);
@@ -278,28 +282,52 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     }
   }
 
-  //Angular 不能直接用 HttpClient POST 到綠界（因為綠界需要的是頁面跳轉），所以我們需要動態建立一個隱藏表單：
-  checkout() {
-    const orderData = { TotalAmount: 100, ItemName: '測試商品', TradeDesc: '訂單描述' };
+  /**
+   * 處理綠界支付跳轉
+   */
+  private processEcpayPayment(orderId: number, orderRequest: CreateOrderRequest) {
+    // 組合商品名稱 (綠界限制：多項商品用 # 分隔)
+    const itemName = orderRequest.items.map(item => item.name).join('#');
 
-    this.ecpayService.getPaymentParams(orderData).subscribe(params => {
-      // 建立一個隱藏的 Form 並 POST 到綠界測試環境
-      const form = document.createElement('form');
-      form.method = 'POST';
-      form.action = 'https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5';
+    // 準備傳送給綠界服務的資料
+    const ecpayOrderData: any = {
+      OrderId: orderId.toString(),
+      TotalAmount: orderRequest.totalAmount,
+      ItemName: itemName.length > 200 ? itemName.substring(0, 197) + '...' : itemName,
+      TradeDesc: `PcShop Order #${orderId}`
+    };
 
-      for (const key in params) {
-        if (params.hasOwnProperty(key)) {
-          const hiddenField = document.createElement('input');
-          hiddenField.type = 'hidden';
-          hiddenField.name = key;
-          hiddenField.value = params[key];
-          form.appendChild(hiddenField);
+    console.log('送出綠界參數請求:', ecpayOrderData);
+
+    this.ecpayService.getPaymentParams(ecpayOrderData).subscribe({
+      next: (params) => {
+        console.log('取得綠界金流參數:', params);
+
+        // 建立一個隱藏的 Form 並 POST 到綠界測試環境
+        const form = document.createElement('form');
+        form.method = 'POST';
+        // 建議根據後端回傳或是環境變數決定 URL，目前先用測試環境
+        form.action = 'https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5';
+
+        for (const key in params) {
+          if (params.hasOwnProperty(key)) {
+            const hiddenField = document.createElement('input');
+            hiddenField.type = 'hidden';
+            hiddenField.name = key;
+            hiddenField.value = params[key];
+            form.appendChild(hiddenField);
+          }
         }
-      }
 
-      document.body.appendChild(form);
-      form.submit(); // 自動送出表單，頁面會跳轉到綠界付款頁
+        document.body.appendChild(form);
+        form.submit(); // 自動送出表單，頁面會跳轉到綠界付款頁
+      },
+      error: (err) => {
+        console.error('取得綠界參數失敗:', err);
+        alert('訂單已建立，但支付系統連線失敗，請至訂單查詢進行後續操作。');
+        // 失敗時還是導向成功頁面，讓使用者知道訂單已成立
+        this.router.navigate(['/order-success', orderId]);
+      }
     });
   }
 

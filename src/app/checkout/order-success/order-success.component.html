@@ -56,19 +56,19 @@
             <div class="info-grid">
                 <div class="info-item">
                     <label>收件人：</label>
-                    <span>{{ orderDetail.receiverName || orderDetail.ReceiverName }}</span>
+                    <span>{{ orderDetail.receiverName }}</span>
                 </div>
                 <div class="info-item">
                     <label>聯絡電話：</label>
-                    <span>{{ orderDetail.receiverPhone || orderDetail.ReceiverPhone }}</span>
+                    <span>{{ orderDetail.receiverPhone }}</span>
                 </div>
                 <div class="info-item">
                     <label>收件地址：</label>
-                    <span>{{ orderDetail.shippingAddress || orderDetail.ShippingAddress }}</span>
+                    <span>{{ orderDetail.shippingAddress }}</span>
                 </div>
                 <div class="info-item">
                     <label>運送方式：</label>
-                    <span>{{ orderDetail.shippingMethodName || orderDetail.ShippingMethodName }}</span>
+                    <span>{{ orderDetail.shippingMethodName }}</span>
                 </div>
             </div>
 
@@ -103,23 +103,20 @@
             <div class="summary-box">
                 <div class="summary-line">
                     <span>運費</span>
-                    <span>{{ (orderDetail.shippingFee || orderDetail.ShippingFee || 0) | currency:'TWD':'symbol':'1.0-0'
-                        }}</span>
+                    <span>{{ (orderDetail.shippingFee || 0) | currency:'TWD':'symbol':'1.0-0' }}</span>
                 </div>
-                <div class="summary-line" *ngIf="orderDetail.usedPoints || orderDetail.UsedPoints">
+                <div class="summary-line" *ngIf="orderDetail.usedPoints > 0">
                     <span>紅利折抵</span>
-                    <span>-{{ orderDetail.usedPoints || orderDetail.UsedPoints }}</span>
+                    <span>-{{ orderDetail.usedPoints }}</span>
                 </div>
                 <div class="summary-line"
-                    *ngIf="orderDetail.couponDiscount > 0 || orderDetail.CouponDiscount > 0 || orderDetail.discountAmount > 0 || orderDetail.DiscountAmount > 0">
+                    *ngIf="orderDetail.couponDiscount > 0 || orderDetail.discountAmount > 0">
                     <span>優惠折扣</span>
-                    <span>-{{ (orderDetail.couponDiscount || orderDetail.CouponDiscount || orderDetail.discountAmount ||
-                        orderDetail.DiscountAmount) | currency:'TWD':'symbol':'1.0-0' }}</span>
+                    <span>-{{ (orderDetail.couponDiscount || orderDetail.discountAmount) | currency:'TWD':'symbol':'1.0-0' }}</span>
                 </div>
                 <div class="summary-line total">
                     <span>總計</span>
-                    <span>{{ (orderDetail.totalAmount || orderDetail.TotalAmount) | currency:'TWD':'symbol':'1.0-0'
-                        }}</span>
+                    <span>{{ orderDetail.totalAmount | currency:'TWD':'symbol':'1.0-0' }}</span>
                 </div>
             </div>
 

@@ -21,7 +21,28 @@ export class MemberOrderDetailComponent implements OnChanges {
 
     this.orderService
       .getOrderDetail(this.orderId)
-      .subscribe(res => this.order = res);
+      .subscribe(res => {
+        // 將後端的 OrderDetailDto 映射為前端用的 OrderDetail 介面
+        // 樣板中預期 status 為 'Pending' | 'Shipping' | 'Completed'
+        const statusMap: any = {
+          0: 'Pending',
+          1: 'Shipping',
+          2: 'Completed'
+        };
+
+        this.order = {
+          orderId: res.orderId,
+          orderNo: res.orderNo,
+          status: statusMap[res.orderStatus] || res.statusName || 'Pending',
+          totalAmount: res.totalAmount,
+          items: (res.items || []).map(item => ({
+            productName: item.productName,
+            productImage: item.imageUrl,
+            unitPriceAtPurchase: item.priceAtPurchase || 0,
+            quantity: item.quantity
+          }))
+        };
+      });
   }
 
 }
