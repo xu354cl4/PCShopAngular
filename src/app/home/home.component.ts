@@ -1,6 +1,8 @@
 import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
+
 import { ProductService, ApiResponse } from '../product/services/product.service';
 import { Product } from '../product/models/product.model';
 
@@ -13,49 +15,78 @@ declare var bootstrap: any;
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements AfterViewInit, OnInit {
+export class HomeComponent implements OnInit, AfterViewInit {
 
+  /* =========================
+     Hot Products（暫時硬寫 ID）
+     ========================= */
+  hotProductIds: number[] = [21, 22, 23];
   hotProducts: Product[] = [];
-  categories: { id: number; name: string }[] = [];
-  loading = false;
-  error = '';
+  loadingHot = false;
+  errorHot = '';
 
-  constructor(private productService: ProductService, private router: Router) { }
+  /* =========================
+     Latest Products（真的最新）
+     ========================= */
+  latestProducts: Product[] = [];
+  loadingLatest = false;
+  errorLatest = '';
+
+  constructor(
+    private productService: ProductService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
     this.loadHotProducts();
-    this.loadCategories();
+    this.loadLatestProducts();
   }
 
+  /** 🔥 Hot Products：用商品 ID 一筆一筆抓（目前最安全） */
   loadHotProducts(): void {
-    this.loading = true;
-    this.error = '';
+    this.loadingHot = true;
+    this.errorHot = '';
 
-    this.productService.getProducts('', 1, 3, 'sales')
-      .subscribe({
-        next: (res: ApiResponse<Product[]>) => {
-          this.hotProducts = res.data.map(p => ({
-            ...p,
-            imageUrl: p.imageUrl
-          }));
-          this.loading = false;
-        },
-        error: (err) => {
-          console.error('載入熱銷商品失敗', err);
-          this.error = '載入熱銷商品失敗';
-          this.loading = false;
-        }
-      });
-  }
+    // 用商品 ID 一筆一筆抓詳細
+    const requests = this.hotProductIds.map(id =>
+      this.productService.getProductDetail(id)
+    );
 
-  loadCategories(): void {
-    this.productService.getCategories().subscribe({
-      next: (res: ApiResponse<{ id: number; name: string }[]>) => {
-        this.categories = res.data || [];
+    forkJoin(requests).subscribe({
+      next: (responses: ApiResponse<any>[]) => {
+        this.hotProducts = responses.map(r => ({
+          id: r.data.id,
+          name: r.data.name,
+          category: '',                // 補齊 Product 需要的欄位
+          rating: 0,                    // Hot Products 暫時不顯示評分
+          price: r.data.price,
+          imageUrl: r.data.images?.[0] || '/images/no-image.png'
+        }));
+        this.loadingHot = false;
       },
       error: (err) => {
-        console.error('載入分類失敗', err);
-        this.categories = [];
+        console.error(err);
+        this.errorHot = '載入 Hot Products 失敗';
+        this.loadingHot = false;
+      }
+    });
+  }
+
+
+  /** ✨ Latest Products：最新 6 筆 */
+  loadLatestProducts(): void {
+    this.loadingLatest = true;
+    this.errorLatest = '';
+
+    this.productService.getLatestProducts(6).subscribe({
+      next: (res: ApiResponse<Product[]>) => {
+        this.latestProducts = res.data || [];
+        this.loadingLatest = false;
+      },
+      error: (err) => {
+        console.error(err);
+        this.errorLatest = '載入最新商品失敗';
+        this.loadingLatest = false;
       }
     });
   }
@@ -64,17 +95,10 @@ export class HomeComponent implements AfterViewInit, OnInit {
     this.router.navigate(['/products', productId]);
   }
 
-  goToCategory(categoryName: string): void {
-    // 多個分類也可用 , 分隔
-    const queryParams = { categories: categoryName };
-    this.router.navigate(['/products'], { queryParams });
-  }
-
   ngAfterViewInit(): void {
     const carouselEl = document.querySelector('#carouselExampleInterval');
     if (carouselEl) {
       new bootstrap.Carousel(carouselEl, {
-        ride: 'carousel',
         interval: 3000
       });
     }

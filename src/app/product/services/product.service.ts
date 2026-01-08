@@ -56,4 +56,20 @@ export class ProductService {
   getCategories(): Observable<ApiResponse<{ id: number, name: string }[]>> {
     return this.http.get<ApiResponse<{ id: number, name: string }[]>>(this.categoryApiUrl);
   }
+  /**
+ * 取得最新上架商品（例如首頁 Hot Products）
+ * @param limit 要抓幾筆，預設 6
+ */
+  getLatestProducts(limit: number = 6): Observable<ApiResponse<Product[]>> {
+    const params = new HttpParams().set('limit', limit.toString());
+    return this.http.get<ApiResponse<Product[]>>(`${this.apiUrl}/latest`, { params });
+  }
+
+  /**
+ * 取得單一商品詳細
+ * 對應後端：GET /api/products/{id}
+ */
+  getProductDetail(id: number): Observable<ApiResponse<Product>> {
+    return this.http.get<ApiResponse<Product>>(`${this.apiUrl}/${id}`);
+  }
 }
