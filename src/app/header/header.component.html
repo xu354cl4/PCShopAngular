@@ -55,6 +55,20 @@
         <div class="col-lg-4 col-md-2 col-5">
           <div class="middle-right-area d-flex align-items-center justify-content-end">
             <!-- 這裡已刪除 wishlist + cart -->
+            <div class="navbar-cart d-flex align-items-center">
+              <div class="wishlist">
+                <a href="javascript:void(0)">
+                  <i class="lni lni-heart"></i>
+                  <!-- <span class="total-items">0</span> -->
+                </a>
+              </div>
+              <div class="cart-items">
+                <a href="javascript:void(0)" routerLink="/cart" class="main-btn" routerLink="/cart">
+                  <i class="lni lni-cart"></i>
+                </a>
+                <!--/ End Shopping Item -->
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -94,9 +108,8 @@
                 <ul class="navbar-nav ms-auto">
                   <li class="nav-item"><a routerLink="/home" class="nav-link">首頁</a></li>
                   <li class="nav-item"><a routerLink="/products" class="nav-link">商城</a></li>
-                  <li class="nav-item"><a routerLink="/faqs" class="nav-link">問題專區</a></li>
                   <li class="nav-item"><a routerLink="/order-list" class="nav-link">訂單</a></li>
-                  <li class="nav-item"><a routerLink="/cart" class="nav-link">購物車</a></li>
+                  <li class="nav-item"><a routerLink="/faqs" class="nav-link">問題專區</a></li>
                 </ul>
               </div>
             </nav>
