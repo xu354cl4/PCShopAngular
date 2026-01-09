@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CreateOrderRequest, OrderDetailDto, OrderItemDto } from '../models/order-request.model';
+import { CreateOrderRequest, CreateOrderResponse, OrderDetailDto, OrderItemDto } from '../models/order-request.model';
 import { Observable } from 'rxjs';
 import { OrderList, PagedResult } from '../models/order.model';
 
@@ -39,8 +39,9 @@ export class OrderApiService {
     return this.http.post<{ orderId: number }>(`${this.apiUrl}/orders`, data);
   }
 
-  createCheckoutOrder(data: CreateOrderRequest): Observable<{ orderId: number }> {
-    return this.http.post<{ orderId: number }>(`/api/Checkout/Create`, data);
+  createCheckoutOrder(data: CreateOrderRequest): Observable<CreateOrderResponse> {
+    const apiUrl = 'https://localhost:7001/api/Checkout/Create';
+    return this.http.post<CreateOrderResponse>(apiUrl, data);
   }
 
   getOrderItems(orderId: number): Observable<OrderItemDto[]> {
