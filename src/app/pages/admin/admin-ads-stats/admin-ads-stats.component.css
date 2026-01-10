@@ -1,40 +1,230 @@
+/* ===============================
+   基礎 Layout
+================================ */
 .page {
   display: grid;
+  gap: 16px;
+  padding: 16px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1.25fr;
+  gap: 16px;
+}
+
+@media (max-width: 980px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===============================
+   標題列
+================================ */
+.rowHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   gap: 12px;
+}
+
+/* ===============================
+   卡片通用
+================================ */
+.card,
+.item,
+.chartBox {
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  background: #ffffff;
+}
+
+.card {
+  padding: 16px;
+  display: grid;
+  gap: 10px;
+}
+
+.chartBox {
+  height: 360px;
   padding: 12px;
 }
 
-.toolbar {
+/* ===============================
+   左側廣告清單
+================================ */
+.list {
   display: grid;
-  grid-template-columns: repeat(5, minmax(160px, 1fr)) 120px 120px;
-
   gap: 10px;
-  align-items: end;
 }
 
+.item {
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: border-color .15s ease, background .15s ease;
+}
 
-.field label {
-  display: block;
+.item:hover {
+  background: #fafafa;
+}
+
+.item.active {
+  border-color: #111827;
+}
+
+.itemTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.meta {
+  margin-top: 6px;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+/* ===============================
+   標籤 Pills
+================================ */
+.pill {
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+  color: #374151;
+}
+
+.pill.on {
+  background: #ecfdf5;
+  border-color: #10b981;
+  color: #065f46;
+}
+
+.pill.off {
+  background: #fef2f2;
+  border-color: #ef4444;
+  color: #7f1d1d;
+}
+
+/* ===============================
+   表單欄位（兩頁共用）
+================================ */
+.field label,
+.muted {
   font-size: 12px;
   color: #6b7280;
-  margin-bottom: 6px;
 }
 
 .field input,
-.field select {
+.field select,
+.card input,
+.card select {
   width: 100%;
-  padding: 8px 10px;
+  padding: 9px 12px;
   border: 1px solid #e5e7eb;
   border-radius: 10px;
+  font-size: 14px;
+  background: #fff;
 }
 
+.field input:focus,
+.field select:focus,
+.card input:focus,
+.card select:focus {
+  outline: none;
+  border-color: #111827;
+}
+
+/* ===============================
+   兩欄列
+================================ */
+.row2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.chk {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* ===============================
+   拖拉上傳
+================================ */
+.dropzone {
+  border: 2px dashed #d1d5db;
+  border-radius: 14px;
+  background: #fafafa;
+  padding: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: .15s ease;
+}
+
+.dropzone.dragging {
+  border-color: #111827;
+  background: #ffffff;
+}
+
+.dz-text {
+  display: grid;
+  gap: 8px;
+  place-items: center;
+  text-align: center;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* ===============================
+   圖片 / 影片預覽
+================================ */
+.preview img,
+.preview video {
+  width: 100%;
+  border-radius: 12px;
+}
+
+/* ===============================
+   Toolbar（統計頁）
+================================ */
+.toolbar {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(160px, 1fr)) 120px 120px;
+  gap: 12px;
+  align-items: end;
+}
+
+/* ===============================
+   按鈕（全站統一）
+================================ */
 .btn {
   height: 38px;
+  padding: 0 14px;
+  border-radius: 10px;
   border: 1px solid #111827;
   background: #111827;
-  color: #fff;
-  border-radius: 10px;
+  color: #ffffff;
+  font-size: 14px;
   cursor: pointer;
+}
+
+.btn.secondary {
+  background: #ffffff;
+  color: #111827;
 }
 
 .btn:disabled {
@@ -42,19 +232,54 @@
   cursor: not-allowed;
 }
 
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+/* ===============================
+   危險按鈕
+================================ */
+.danger {
+  border: 1px solid #ef4444;
+  background: #ffffff;
+  color: #ef4444;
+  border-radius: 10px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+/* ===============================
+   訊息提示
+================================ */
 .msg {
   padding: 10px 12px;
+  border-radius: 12px;
+  font-size: 13px;
+}
+
+.msg.warn {
   border: 1px solid #fde68a;
   background: #fffbeb;
-  border-radius: 10px;
   color: #92400e;
 }
 
-.chartBox {
-  height: 360px;
-  /* 你可調高/調低 */
+.msg.info {
   border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 10px;
-  background: #fff;
+  background: #fafafa;
+}
+
+/* ===============================
+   表單錯誤
+================================ */
+.err {
+  color: #ef4444;
+  font-size: 12px;
+  margin-top: -4px;
+}
+
+.invalid {
+  border-color: #ef4444 !important;
+  background: #fff7f7;
 }

@@ -1,40 +1,43 @@
-/* src/app/pages/admin/admin-layout.component.css */
-.container {
-  max-width: 1100px;
-  margin: 24px auto;
-  padding: 0 16px;
-}
-
+/* 上方區塊本身 */
 .topbar {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: 16px;
-  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: center;
+  /* 水平置中 */
+  padding: 24px 0 16px;
 }
 
-.sub {
-  color: #6b7280;
-  font-size: 12px;
-  margin-top: 4px;
-}
-
+/* 導航區塊 */
 .nav {
   display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
+  gap: 14px;
 }
 
+/* 按鈕本體 */
 .nav a {
   text-decoration: none;
+  padding: 10px 18px;
+  border-radius: 999px;
+  /* 膠囊型 */
+  font-size: 14px;
+  font-weight: 500;
+
+  color: #374151;
+  background: #f9fafb;
   border: 1px solid #e5e7eb;
-  padding: 6px 10px;
-  border-radius: 10px;
-  color: #111827;
-  background: #fff;
-  font-size: 13px;
+
+  transition: all 0.2s ease;
 }
 
+/* hover */
+.nav a:hover {
+  background: #f3f4f6;
+}
+
+/* active 狀態 */
 .nav a.active {
+  color: #111827;
+  background: #ffffff;
   border-color: #111827;
+  font-weight: 600;
 }
