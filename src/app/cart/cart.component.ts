@@ -11,7 +11,7 @@ import { MenuItem } from 'primeng/api';
 
 // 1. 定義介面 (確保放在 @Component 之前) UserID(下拉選單)
 export interface Coupon {
-  userCouponID: number; // 新增：後端對應的 UserCouponID
+  userCouponId: number; // 修正：統一使用 userCouponId
   couponCode: string;
   name: string;
   discountType: string;

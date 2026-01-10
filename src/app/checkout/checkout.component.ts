@@ -69,7 +69,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   paymentMethods = [
     { label: '信用卡付款', value: 'Credit' },
     { label: '「綠界金流 ATM 虛擬帳號」', value: 'ATM' },
-    { label: '貨到付款', value: 'COD' }
+    { label: '貨到付款', value: 'COD' },
+    { label: '「綠界金流」', value: 'ecpay' }
   ];
 
   private destroy$ = new Subject<void>();
@@ -130,9 +131,9 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       { label: '填寫資料' },
       { label: '訂單確認' }
     ];
-
+    console.log('呼叫userdata');
     this.fetchUserData();
-
+   
     // 監聽 "同顧客資料" Checkbox 變化
     this.checkoutForm.get('delivery.sameAsCustomer')?.valueChanges
       .pipe(takeUntil(this.destroy$))
@@ -182,10 +183,11 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   private fetchUserData() {
-    this.http.get<any>('/api/Checkout/Users')
+    this.http.get<any>('https://localhost:7001/api/Checkout/Users')
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (user) => {
+          console.log('user', user);
           if (user) {
             this.checkoutForm.get('customer')?.patchValue({
               name: user.name || user.fullName || '',
@@ -247,7 +249,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       //   quantity: item.quantity
       // })),
       usePoints: this.usePoints || 0,
-      userCouponId: this.checkoutData?.selectedCoupon?.userCouponID || null,
+      userCouponId: this.checkoutData?.selectedCoupon?.userCouponId || 0,
     };
 
     console.log('送出的訂單內容:', orderRequest);
