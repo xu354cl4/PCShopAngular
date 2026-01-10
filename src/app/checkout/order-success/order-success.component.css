@@ -159,3 +159,151 @@ h1 {
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
+
+/* Order Details Styles */
+.order-details-section {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #eee;
+    text-align: left;
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.order-details-section h3 {
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+    color: #2d3436;
+    border-left: 4px solid #0984e3;
+    padding-left: 10px;
+}
+
+.items-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1rem;
+}
+
+.items-table th {
+    text-align: left;
+    color: #636e72;
+    font-weight: 600;
+    padding: 0.75rem;
+    border-bottom: 2px solid #f1f2f6;
+}
+
+.items-table td {
+    padding: 1rem 0.75rem;
+    border-bottom: 1px solid #f1f2f6;
+    color: #2d3436;
+    vertical-align: middle;
+}
+
+.product-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.product-info img {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    object-fit: cover;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.product-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.product-text .name {
+    font-weight: 500;
+    color: #2d3436;
+}
+
+.product-text .sku {
+    font-size: 0.8rem;
+    color: #95a5a6;
+}
+
+.mt-3 {
+    margin-top: 1rem;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.info-item label {
+    font-size: 0.85rem;
+    color: #636e72;
+    font-weight: 600;
+}
+
+.info-item span {
+    color: #2d3436;
+    font-weight: 500;
+}
+
+.summary-box {
+    margin-left: auto;
+    max-width: 300px;
+    background: #fdfdfd;
+    padding: 1rem;
+    border-radius: 10px;
+    border: 1px solid #f1f2f6;
+}
+
+.summary-line {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    color: #636e72;
+}
+
+.summary-line.total {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 2px dashed #eee;
+    color: #e74c3c;
+    font-weight: 700;
+    font-size: 1.2rem;
+}
+
+.text-right {
+    text-align: right !important;
+}
+
+.text-center {
+    text-align: center !important;
+}
+
+@media (max-width: 480px) {
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+}

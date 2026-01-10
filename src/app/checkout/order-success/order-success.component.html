@@ -39,12 +39,89 @@
             <button pButton label="繼續購物" icon="pi pi-shopping-bag" routerLink="/products"
                 class="p-button-raised p-button-primary" *ngIf="status !== 'waiting'"></button>
 
-            <!-- 查看訂單：一律顯示 -->
-            <button pButton label="查看訂單" icon="pi pi-list" (click)="onViewOrder()" class="p-button-outlined"></button>
+            <!-- 查看訂單：點擊後顯示明細 -->
+            <button pButton label="查看訂單" icon="pi pi-list" (click)="onViewOrder()" class="p-button-outlined"
+                *ngIf="!showDetails"></button>
 
-            <!-- 去付款：僅等待付款狀態顯示，並使用顏色更突出的樣式 -->
+            <!-- 去付款：僅等待付款狀態顯示 -->
             <button pButton label="去付款" icon="pi pi-credit-card" (click)="onPay()"
                 class="p-button-raised p-button-danger pay-now-btn" *ngIf="status === 'waiting'"></button>
+        </div>
+
+        <!-- 訂單明細內容 -->
+        <div class="order-details-section" *ngIf="showDetails && orderDetail">
+            <h3>訂單明細</h3>
+
+            <!-- 基礎資訊 (根據您提供的 OrderDetailDto) -->
+            <div class="info-grid">
+                <div class="info-item">
+                    <label>收件人：</label>
+                    <span>{{ orderDetail.receiverName }}</span>
+                </div>
+                <div class="info-item">
+                    <label>聯絡電話：</label>
+                    <span>{{ orderDetail.receiverPhone }}</span>
+                </div>
+                <div class="info-item">
+                    <label>收件地址：</label>
+                    <span>{{ orderDetail.shippingAddress }}</span>
+                </div>
+                <div class="info-item">
+                    <label>運送方式：</label>
+                    <span>{{ orderDetail.shippingMethodName }}</span>
+                </div>
+            </div>
+
+            <!-- 商品表格 -->
+            <table class="items-table">
+                <thead>
+                    <tr>
+                        <th>商品</th>
+                        <th class="text-right">單價</th>
+                        <th class="text-center">數量</th>
+                        <th class="text-right">小計</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of orderItems">
+                        <td class="product-info">
+                            <img [src]="item.imageUrl" alt="product">
+                            <div class="product-text">
+                                <div class="name">{{ item.productName }}</div>
+                                <div class="sku" *ngIf="item.skuName">{{ item.skuName }}</div>
+                            </div>
+                        </td>
+                        <td class="text-right">{{ item.unitPrice | currency:'TWD':'symbol':'1.0-0' }}</td>
+                        <td class="text-center">{{ item.quantity }}</td>
+                        <td class="text-right">{{ (item.unitPrice * item.quantity) | currency:'TWD':'symbol':'1.0-0' }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- 金額彙總 -->
+            <div class="summary-box">
+                <div class="summary-line">
+                    <span>運費</span>
+                    <span>{{ (orderDetail.shippingFee || 0) | currency:'TWD':'symbol':'1.0-0' }}</span>
+                </div>
+                <div class="summary-line" *ngIf="orderDetail.usedPoints > 0">
+                    <span>紅利折抵</span>
+                    <span>-{{ orderDetail.usedPoints }}</span>
+                </div>
+                <div class="summary-line"
+                    *ngIf="orderDetail.couponDiscount > 0 || orderDetail.discountAmount > 0">
+                    <span>優惠折扣</span>
+                    <span>-{{ (orderDetail.couponDiscount || orderDetail.discountAmount) | currency:'TWD':'symbol':'1.0-0' }}</span>
+                </div>
+                <div class="summary-line total">
+                    <span>總計</span>
+                    <span>{{ orderDetail.totalAmount | currency:'TWD':'symbol':'1.0-0' }}</span>
+                </div>
+            </div>
+
+            <button pButton label="收起明細" icon="pi pi-chevron-up" (click)="showDetails = false"
+                class="p-button-text p-button-sm mt-3"></button>
         </div>
 
     </div>

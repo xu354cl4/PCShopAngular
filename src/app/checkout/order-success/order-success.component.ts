@@ -4,6 +4,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { EcpayService } from '../../Services/ecpay.service';
 import { OrderApiService } from '../../Services/order-api.service';
+import { OrderDetailDto, OrderItemDto } from '../../models/order-request.model';
 
 @Component({
     selector: 'app-order-success',
@@ -15,6 +16,9 @@ import { OrderApiService } from '../../Services/order-api.service';
 export class OrderSuccessComponent implements OnInit {
     orderId: string | null = null;
     status: 'waiting' | 'success' | 'failure' = 'waiting';
+    orderItems: any[] = []; // 儲存商品明細 (用於顯示)
+    orderDetail: OrderDetailDto | null = null; // 儲存完整訂單詳情
+    showDetails: boolean = false; // 控制是否顯示明細
 
     constructor(
         private route: ActivatedRoute,
@@ -43,70 +47,68 @@ export class OrderSuccessComponent implements OnInit {
     onPay(): void {
         if (!this.orderId) return;
 
-        // 1. 取得訂單詳情 (為了金額和品名)
-        this.orderService.getOrderDetail(Number(this.orderId)).subscribe({
-            next: (order) => {
-                console.log('取得訂單資訊成功:', order);
-
-                // 處理品名，ECPay 品名若有多項通常用 # 分隔
-                let itemName = 'PcShop 商品';
-                if (order.items && order.items.length > 0) {
-                    itemName = order.items.map((i: any) => i.name || i.productName).join('#');
+        // 直接向後端請求此訂單的金流參數 (由後端封裝成 HTML 表單)
+        this.ecpayService.getPaymentParams(Number(this.orderId)).subscribe({
+            next: (response) => {
+                if (response.success && response.htmlForm) {
+                    console.log('取得 ECPay 表單，準備執行跳轉...');
+                    this.executeEcpayForm(response.htmlForm);
+                } else {
+                    console.error('取得金流參數失敗:', response.message);
+                    alert(response.message || '金流初始化失敗，請聯繫客服。');
                 }
-
-                const orderData = {
-                    OrderId: this.orderId!,
-                    TotalAmount: order.totalAmount,
-                    ItemName: itemName,
-                    TradeDesc: 'PcShop 訂單付款'
-                };
-
-                // 2. 取得 ECPay 參數並提交表單
-                this.ecpayService.getPaymentParams(orderData).subscribe({
-                    next: (params) => {
-                        console.log('取得 ECPay 參數:', params);
-                        const form = document.createElement('form');
-                        form.method = 'POST';
-                        form.action = 'https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5';
-
-                        for (const key in params) {
-                            if (params.hasOwnProperty(key)) {
-                                const hiddenField = document.createElement('input');
-                                hiddenField.type = 'hidden';
-                                hiddenField.name = key;
-                                hiddenField.value = params[key];
-                                form.appendChild(hiddenField);
-                            }
-                        }
-                        document.body.appendChild(form);
-                        form.submit();
-                    },
-                    error: (err) => {
-                        console.error('取得 ECPay 參數失敗', err);
-                        alert('金流初始化失敗，請稍後再試。');
-                    }
-                });
             },
             error: (err) => {
-                console.error('取得訂單失敗', err);
-                alert('無法取得訂單資訊，請洽客服。');
+                console.error('取得 ECPay 參數失敗', err);
+                alert('無法與金流系統連線，請稍後再試。');
             }
         });
+    }
+
+    /**
+     * 執行綠界自動跳轉表單
+     */
+    private executeEcpayForm(htmlForm: string): void {
+        // 建立臨時容器
+        const div = document.createElement('div');
+        div.style.display = 'none';
+        div.innerHTML = htmlForm;
+        document.body.appendChild(div);
+
+        // 尋找表單並提交
+        const form = div.querySelector('form');
+        if (form) {
+            form.submit();
+        } else {
+            console.error('HTML 中找不到表單元素');
+            alert('系統錯誤：找不到支付表單');
+        }
     }
 
     onViewOrder(): void {
         if (!this.orderId) return;
 
-        this.orderService.getOrderItems(Number(this.orderId)).subscribe({
-            next: (items) => {
-                console.log('取得訂單項目成功:', items);
-                // 這裡訂閱後可以決定要導向哪裡，原先按鈕是到 /order-list
-                this.router.navigate(['/order-list']);
+        // 取得完整訂單詳情 (包含收件資訊與商品清單)
+        this.orderService.getOrderDetail(Number(this.orderId)).subscribe({
+            next: (data: OrderDetailDto) => {
+                console.log('取得訂單詳情成功:', data);
+                this.orderDetail = data;
+
+                // 資料標準化 (對應新定義的 OrderItemDto 欄位)
+                this.orderItems = (data.items || []).map(i => ({
+                    ...i,
+                    productName: i.productName || '未知商品',
+                    skuName: i.skuName || '',
+                    unitPrice: i.priceAtPurchase || 0,
+                    imageUrl: i.imageUrl || 'assets/images/default-product.png',
+                    quantity: i.quantity || 0
+                }));
+
+                this.showDetails = true;
             },
             error: (err) => {
-                console.error('取得訂單項目失敗', err);
-                // 即使失敗也導向訂單列表，或者提示錯誤
-                this.router.navigate(['/order-list']);
+                console.error('取得訂單詳情失敗', err);
+                alert('暫時無法取得訂單明細，請稍後再試。');
             }
         });
     }

@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CreateOrderRequest } from '../models/order-request.model';
+import { CreateOrderRequest, CreateOrderResponse, OrderDetailDto, OrderItemDto } from '../models/order-request.model';
 import { Observable } from 'rxjs';
 import { OrderList, PagedResult } from '../models/order.model';
 
@@ -29,8 +29,8 @@ export class OrderApiService {
     return this.http.get<PagedResult<OrderList>>(`${this.apiUrl}/orders`, { params });
   }
 
-  getOrderDetail(orderId: number) {
-    return this.http.get<any>(
+  getOrderDetail(orderId: number): Observable<OrderDetailDto> {
+    return this.http.get<OrderDetailDto>(
       `${this.apiUrl}/orders/${orderId}`
     );
   }
@@ -39,16 +39,17 @@ export class OrderApiService {
     return this.http.post<{ orderId: number }>(`${this.apiUrl}/orders`, data);
   }
 
-  createCheckoutOrder(data: CreateOrderRequest): Observable<{ orderId: number }> {
-    return this.http.post<{ orderId: number }>(`/api/Checkout/Create`, data);
+  createCheckoutOrder(data: CreateOrderRequest): Observable<CreateOrderResponse> {
+    const apiUrl = '/api/Checkout/Create';
+    return this.http.post<CreateOrderResponse>(apiUrl, data);
   }
 
-  getOrderItems(orderId: number): Observable<any[]> {
-    return this.http.get<any[]>(`/api/OrderItems/${orderId}`);
+  getOrderItems(orderId: number): Observable<OrderItemDto[]> {
+    return this.http.get<OrderItemDto[]>(`/api/OrderItems/detail/${orderId}`);
   }
 
-  getOrderDetailByApi(orderId: string | number): Observable<any> {
+  getOrderDetailByApi(orderId: string | number): Observable<OrderDetailDto> {
     // 根據追蹤與 404 報錯，/api/detail 並不存在。改用專案中已確認可運行的路徑。
-    return this.http.get<any>(`${this.apiUrl}/orders/${orderId}`);
+    return this.http.get<OrderDetailDto>(`${this.apiUrl}/orders/${orderId}`);
   }
 }
