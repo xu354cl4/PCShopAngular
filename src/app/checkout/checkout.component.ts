@@ -215,7 +215,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   //更新executeEcpayForm方法
   onConfirmCheckout() {
     console.log('onConfirmCheckout 被觸發');
-    console.log('表單狀態:', this.checkoutForm.valid ? '有效' : '無效');
 
     // 1. 表單驗證
     if (this.checkoutForm.invalid) {
@@ -226,159 +225,71 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     }
 
     // 2. 準備資料
-    // 使用 getRawValue() 以包含被 disabled 的欄位 (如自動帶入的收件人資料)
     const formData = this.checkoutForm.getRawValue();
-    console.log('送出的表單原始資料:', formData);
 
-    // 根據運送方式決定地址邏輯
+    // 根據運送方式決定地址
     const address = formData.delivery.deliveryMethod === 'store_pickup'
       ? formData.delivery.storeName
       : `${formData.delivery.city}${formData.delivery.district}${formData.delivery.address}`.trim();
 
-    // 組合訂單請求物件 (CreateOrderRequest)
+    // 組合訂單請求物件
     const orderRequest: CreateOrderRequest = {
-      customerName: formData.customer.name,
-      customerEmail: formData.customer.email,
-      customerPhone: formData.customer.phone,
+      shippingMethodId: formData.delivery.deliveryMethodId,
       shippingMethod: formData.delivery.deliveryMethod,
       paymentMethod: formData.delivery.paymentMethod,
       shippingAddress: address,
       receiverName: formData.delivery.recipientName,
       receiverPhone: formData.delivery.recipientPhone,
-      receiverAddress: address,
-      items: this.selectedItems.map(item => ({
-        productId: item.productId,
-        name: item.name,
-        price: item.price,
-        quantity: item.quantity
-      })),
-      totalAmount: this.totalAmount,
-      usedPoints: this.usePoints || 0,
+      // items: this.selectedItems.map(item => ({
+      //   productId: item.productId,
+      //   name: item.name,
+      //   price: item.price,
+      //   quantity: item.quantity
+      // })),
+      usePoints: this.usePoints || 0,
       userCouponId: this.checkoutData?.selectedCoupon?.userCouponID || null,
-      shippingFee: 0,
-      orderNotes: formData.note
     };
 
-    console.log('即時準備送出的訂單內容:', orderRequest);
+    console.log('送出的訂單內容:', orderRequest);
 
     // 3. 呼叫 API 建立訂單
     this.orderService.createCheckoutOrder(orderRequest).subscribe({
       next: (response: CreateOrderResponse) => {
-        console.log('API 回傳結果:', response);
-
         if (response.success) {
-          // 判斷邏輯更新：檢查後端是否回傳了綠界專用的 htmlForm
           if (response.htmlForm) {
-            console.log('取得綠界表單，準備執行跳轉...');
-            // 呼叫新方法執行 HTML 插入與 Submit
+            console.log('取得綠界表單，執行跳轉...');
             this.executeEcpayForm(response.htmlForm);
           } else {
-            // 沒有 htmlForm，代表是一般訂單 (如貨到付款) 或不需要即時付款
-            console.log('訂單建立成功，前往成功頁面');
+            console.log('訂單建立成功，導向成功頁');
             this.router.navigate(['/order-success', response.orderId]);
           }
         } else {
-          // 邏輯上的失敗 (例如庫存不足、點數不夠等)
           alert(response.message || '訂單建立失敗');
         }
       },
-      error: (err: any) => {
-        console.error('訂單建立 API 系統錯誤:', err);
+      error: (err) => {
+        console.error('API 錯誤:', err);
         alert('系統發生錯誤，請稍後再試。');
       }
     });
-
-
-
-
-    if (this.checkoutForm.valid) {
-      // 使用 getRawValue() 包含被 disabled 的欄位內容
-      const formData = this.checkoutForm.getRawValue();
-      console.log('送出的表單原始資料:', formData);
-
-      // 根據運送方式決定地址
-      const address = formData.delivery.deliveryMethod === 'store_pickup'
-        ? formData.delivery.storeName
-        : `${formData.delivery.city}${formData.delivery.district}${formData.delivery.address}`.trim();
-
-      // 組合訂單請求資料
-      const orderRequest: CreateOrderRequest = {
-        customerName: formData.customer.name,
-        customerEmail: formData.customer.email,
-        customerPhone: formData.customer.phone,
-        shippingMethod: formData.delivery.deliveryMethod,
-        paymentMethod: formData.delivery.paymentMethod,
-        shippingAddress: address,
-        receiverName: formData.delivery.recipientName,
-        receiverPhone: formData.delivery.recipientPhone,
-        receiverAddress: address,
-        items: this.selectedItems.map(item => ({
-          productId: item.productId,
-          name: item.name,
-          price: item.price,
-          quantity: item.quantity
-        })),
-        totalAmount: this.totalAmount,
-        usedPoints: this.usePoints || 0,
-        userCouponId: this.checkoutData?.selectedCoupon?.userCouponID || null,
-        shippingFee: 0,
-        orderNotes: formData.note
-      };
-
-      console.log('即時準備送出的訂單內容:', orderRequest);
-
-      // 呼叫服務建立訂單 (端點: https://localhost:7001/api/Checkout/Create)
-      this.orderService.createCheckoutOrder(orderRequest).subscribe({
-        next: (response: CreateOrderResponse) => {
-          console.log('API 回傳成功:', response);
-          const orderId = response.orderId;
-
-          // ⭐ 修正邏輯：檢查是否有 htmlForm (代表是綠界付款)
-          if (response.success && response.htmlForm) {
-            console.log('取得綠界表單，準備跳轉...');
-            this.executeEcpayForm(response.htmlForm);
-          } else {
-            // 一般訂單 (如貨到付款) 或無須跳轉，直接導向成功頁
-            this.router.navigate(['/order-success', orderId]);
-          }
-        },
-        error: (err: any) => {
-          console.error('訂單建立 API 呼叫失敗:', err);
-          alert('訂單建立失敗，請稍後再試。');
-        }
-      });
-
-    } else {
-      console.warn('表單驗證失敗，請檢查欄位狀況:', this.checkoutForm.controls);
-      this.checkoutForm.markAllAsTouched();
-      alert('請填寫所有必要欄位');
-    }
   }
 
   /**
    * 提交資料到綠界金流
    */
   private executeEcpayForm(htmlForm: string) {
-    // ✂️ 【新增這行】強制移除後端傳來的自動送出腳本
-    // 這樣瀏覽器就絕對不會自己跳轉了
-    htmlForm = htmlForm.replace(/<script\b[^>]*>([\s\S]*?)<\/script>/gm, "");
-
-    // 1. 建立一個隱藏的 div 來放置這段 HTML
+    // 建立一個隱藏的 div 來放置 HTML
     const div = document.createElement('div');
-    // div.style.display = 'none'; // 👁️ 【建議】先註解掉這行，直接顯示在畫面上比較好找
+    div.style.display = 'none';
     div.innerHTML = htmlForm;
-
-    // 2. 將 div 加入到 body 中
     document.body.appendChild(div);
 
-    // 3. 抓取 form 元素
+    // 尋找表單並提交
     const form = div.querySelector('form');
-
     if (form) {
-      console.log('表單已建立，自動跳轉已攔截！請檢查 Elements 面板');
-      console.log(form); // 也可以直接在 Console 印出這個 form 物件來看
+      form.submit();
     } else {
-      console.error('無法解析綠界表單，HTML內容:', htmlForm);
+      console.error('無法解析綠界表單');
       alert('跳轉金流失敗，請聯繫客服');
     }
   }

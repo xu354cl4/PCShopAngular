@@ -40,7 +40,7 @@ export class OrderApiService {
   }
 
   createCheckoutOrder(data: CreateOrderRequest): Observable<CreateOrderResponse> {
-    const apiUrl = 'https://localhost:7001/api/Checkout/Create';
+    const apiUrl = '/api/Checkout/Create';
     return this.http.post<CreateOrderResponse>(apiUrl, data);
   }
 
