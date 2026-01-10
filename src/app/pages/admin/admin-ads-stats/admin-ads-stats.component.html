@@ -1,7 +1,7 @@
 <div class="container py-5">
   <div class="page">
+    <h3>點擊次數統計圖表</h3>
     <div class="toolbar">
-
       <div class="field">
         <label>From</label>
         <input type="date" [formControl]="form.controls.from" />
@@ -52,6 +52,7 @@
 
     <div class="chartBox">
       <canvas #canvas></canvas>
+      <!-- Chart.js 一定要畫在 <canvas>  #canvas 是給 TS 用 @ViewChild 抓 DOM -->
     </div>
   </div>
 </div>
