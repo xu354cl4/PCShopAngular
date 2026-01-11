@@ -9,7 +9,7 @@ import { OrderList, PagedResult } from '../models/order.model';
 })
 export class OrderApiService {
   private apiUrl = '/api/Order'; // 使用大寫 O 以符合常見後端慣例
-  private orderItemapiUrl = '/api/OrderItems'; 
+  private orderItemapiUrl = '/api/OrderItems';
   constructor(private http: HttpClient) { }
 
   // 訂單區
@@ -26,7 +26,7 @@ export class OrderApiService {
       params = params.set('orderno', orderno);
     }
 
-    return this.http.get<PagedResult<OrderList>>(`${this.apiUrl}/orders`, { params });
+    return this.http.get<PagedResult<OrderList>>(`https://localhost:7001${this.apiUrl}/orders`, { params });
   }
 
   getOrderDetail(orderId: number): Observable<OrderDetailDto> {
