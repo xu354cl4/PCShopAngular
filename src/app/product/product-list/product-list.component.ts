@@ -28,7 +28,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
   sortBy = 'name';
 
   itemsPerPageOptions = [5, 10, 15];
-  itemsPerPage = 5;
+  itemsPerPage = 15;
 
   currentPage = 1;
   totalPages = 1;

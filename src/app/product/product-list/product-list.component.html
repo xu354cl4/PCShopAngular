@@ -63,7 +63,17 @@
                       {{ product.name }}
                     </a>
                   </h6>
-                  <p class="text-primary fw-bold mb-1">$ {{ product.price }}</p>
+                  <p class="mb-1">
+                    <!-- 原價永遠畫線，灰色 -->
+                    <span *ngIf="product.salePrice" class="original-price">
+                      $ {{ product.price | number:'1.0-0' }}
+                    </span>
+
+                    <!-- 折扣價或原價加粗，紅色 -->
+                    <span class="sale-price">
+                      $ {{ product.salePrice || product.price | number:'1.0-0' }}
+                    </span>
+                  </p>
                 </div>
 
                 <!-- 星星評分，固定底部 -->
