@@ -100,10 +100,11 @@ export class OrderSuccessComponent implements OnInit {
                     ...i,
                     productName: i.productName || '未知商品',
                     skuName: i.skuName || '',
-                    unitPrice: i.priceAtPurchase || 0,
+                    unitPriceAtPurchase: i.unitPriceAtPurchase || 0,
                     imageUrl: i.imageUrl || 'assets/images/default-product.png',
                     quantity: i.quantity || 0
                 }));
+                console.log('訂單商品明細:', this.orderItems);
 
                 this.showDetails = true;
             },

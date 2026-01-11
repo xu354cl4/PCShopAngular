@@ -28,6 +28,7 @@ export interface OrderItemDto {
   skuName: string;
   quantity: number;
   priceAtPurchase: number;
+  unitPriceAtPurchase: number;
   imageUrl: string;
 }
 

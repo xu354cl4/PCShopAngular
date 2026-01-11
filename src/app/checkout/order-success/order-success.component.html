@@ -110,9 +110,10 @@
                                 <div class="sku" *ngIf="item.skuName">{{ item.skuName }}</div>
                             </div>
                         </td>
-                        <td class="text-right">{{ item.unitPrice | currency:'TWD':'symbol':'1.0-0' }}</td>
+                        <td class="text-right">{{ item.unitPriceAtPurchase | currency:'TWD':'symbol':'1.0-0' }}</td>
                         <td class="text-center">{{ item.quantity }}</td>
-                        <td class="text-right">{{ (item.unitPrice * item.quantity) | currency:'TWD':'symbol':'1.0-0' }}
+                        <td class="text-right">{{ item.subTotal |
+                            currency:'TWD':'symbol':'1.0-0' }}
                         </td>
                     </tr>
                 </tbody>

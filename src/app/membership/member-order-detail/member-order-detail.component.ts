@@ -35,6 +35,10 @@ export class MemberOrderDetailComponent implements OnChanges {
           orderNo: res.orderNo,
           status: statusMap[res.orderStatus] || res.statusName || 'Pending',
           totalAmount: res.totalAmount,
+          receiverName: res.receiverName,
+          shippingMethodName: res.shippingMethodName,
+          shippingAddress: res.shippingAddress,
+          receiverPhone: res.receiverPhone,
           items: (res.items || []).map(item => ({
             productName: item.productName,
             productImage: item.imageUrl,
