@@ -19,36 +19,36 @@ export class FaqBackApiService {
     parentCategoryId?: number;
   }) {
     return this.http.post<FaqCategory>(
-      `${this.base}/categories`,
+      `https://localhost:7001/api/faqs-admin/categories`,
       dto
     );
   }
 
   // 問題
   getFaqsByCategory(categoryId: number) {
-    return this.http.get<FaqList[]>(`${this.base}?categoryId=${categoryId}`);
+    return this.http.get<FaqList[]>(`https://localhost:7001/api/faqs-admin/?categoryId=${categoryId}`);
   }
 
   getFaqForEdit(faqId: number) {
-    return this.http.get<FaqAdminModel>(`${this.base}/${faqId}`);
+    return this.http.get<FaqAdminModel>(`$https://localhost:7001/api/faqs-admin/${faqId}`);
   }
 
   upsertFaq(dto: FaqUpsertDto) {
-    return this.http.post(`${this.base}/upsert`, dto);
+    return this.http.post(`https://localhost:7001/api/faqs-admin/upsert`, dto);
   }
 
   uploadImage(file: File) {
     const form = new FormData();
     form.append('file', file);
     return this.http.post<{ imageUrl: string }>(
-      '/api/upload/faq-image',
+      'https://localhost:7001/api/upload/faq-image',
       form
     );
   }
   deleteFaq(faqId: number) {
-    return this.http.delete<void>(`${this.base}/${faqId}`);
+    return this.http.delete<void>(`https://localhost:7001/api/faqs-admin/${faqId}`);
   }
   deleteCategory(categoryId: number) {
-    return this.http.delete<void>(`${this.base}/categories/${categoryId}`);
+    return this.http.delete<void>(`https://localhost:7001/api/faqs-admin/categories/${categoryId}`);
   }
 }
