@@ -3,9 +3,10 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil, startWith } from 'rxjs';
 import { OrderApiService } from '../Services/order-api.service';
 import { CreateOrderRequest, CreateOrderResponse } from '../models/order-request.model';
+import { TAIWAN_ADDRESS_DATA } from '../models/taiwan-address-data';
 
 // PrimeNG Imports
 import { StepsModule } from 'primeng/steps';
@@ -69,8 +70,12 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   paymentMethods = [
     { label: '信用卡付款', value: 'Credit' },
     { label: '「綠界金流 ATM 虛擬帳號」', value: 'ATM' },
-    { label: '貨到付款', value: 'COD' }
+    { label: '貨到付款', value: 'COD' },
+    { label: '「綠界金流」', value: 'ecpay' }
   ];
+
+  cities = Object.keys(TAIWAN_ADDRESS_DATA);
+  districts: string[] = [];
 
   private destroy$ = new Subject<void>();
 
@@ -109,9 +114,9 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         recipientName: ['', Validators.required],
         recipientCountryCode: ['+886'],
         recipientPhone: ['', Validators.required],
-        city: [''],
-        district: [''],
-        address: [''],
+        city: ['', Validators.required],
+        district: ['', Validators.required],
+        address: ['', Validators.required],
         storeName: ['台北信義門市'] // 預設或選取後的門市
       })
     });
@@ -130,7 +135,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       { label: '填寫資料' },
       { label: '訂單確認' }
     ];
-
+    console.log('呼叫userdata');
     this.fetchUserData();
 
     // 監聽 "同顧客資料" Checkbox 變化
@@ -146,6 +151,34 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         if (this.checkoutForm.get('delivery.sameAsCustomer')?.value) {
           this.syncCustomerToDelivery();
+        }
+      });
+
+    // 監聽縣市變化以更新鄉鎮市區
+    this.checkoutForm.get('delivery.city')?.valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((city) => {
+        this.districts = TAIWAN_ADDRESS_DATA[city] || [];
+        // 當縣市改變時，清空原本選取的鄉鎮市區
+        this.checkoutForm.get('delivery.district')?.setValue('', { emitEvent: false });
+      });
+
+    // 監聽送貨方式以啟用/停用地址欄位
+    this.checkoutForm.get('delivery.deliveryMethod')?.valueChanges
+      .pipe(takeUntil(this.destroy$), startWith(this.checkoutForm.get('delivery.deliveryMethod')?.value))
+      .subscribe((method) => {
+        const cityCtrl = this.checkoutForm.get('delivery.city');
+        const districtCtrl = this.checkoutForm.get('delivery.district');
+        const addressCtrl = this.checkoutForm.get('delivery.address');
+
+        if (method === 'store_pickup') {
+          cityCtrl?.disable();
+          districtCtrl?.disable();
+          addressCtrl?.disable();
+        } else {
+          cityCtrl?.enable();
+          districtCtrl?.enable();
+          addressCtrl?.enable();
         }
       });
   }
@@ -182,10 +215,11 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   private fetchUserData() {
-    this.http.get<any>('/api/Checkout/Users')
+    this.http.get<any>('https://localhost:7001/api/Checkout/Users')
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (user) => {
+          console.log('user', user);
           if (user) {
             this.checkoutForm.get('customer')?.patchValue({
               name: user.name || user.fullName || '',
@@ -247,7 +281,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       //   quantity: item.quantity
       // })),
       usePoints: this.usePoints || 0,
-      userCouponId: this.checkoutData?.selectedCoupon?.userCouponID || null,
+      userCouponId: this.checkoutData?.selectedCoupon?.userCouponId || null,
     };
 
     console.log('送出的訂單內容:', orderRequest);

@@ -4,6 +4,7 @@ import { Router, RouterModule } from '@angular/router'; // 1. 引入 Router
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { AuthStateService } from '../Services/auth-state.service';
+import { CartService } from '../Services/cart.service';
 import { take } from 'rxjs';
 import { StepsModule } from 'primeng/steps';
 import { MenuItem } from 'primeng/api';
@@ -11,7 +12,7 @@ import { MenuItem } from 'primeng/api';
 
 // 1. 定義介面 (確保放在 @Component 之前) UserID(下拉選單)
 export interface Coupon {
-  userCouponID: number; // 新增：後端對應的 UserCouponID
+  userCouponId: number; // 修正：統一使用 userCouponId
   couponCode: string;
   name: string;
   discountType: string;
@@ -67,7 +68,8 @@ export class CartComponent implements OnInit {
   constructor(
     private router: Router,
     private http: HttpClient,
-    private authStateService: AuthStateService
+    private authStateService: AuthStateService,
+    private cartService: CartService
   ) { }
 
   goToCheckout() {
@@ -124,24 +126,10 @@ export class CartComponent implements OnInit {
       }
     });
 
-    this.http.get<CartItem[]>('https://localhost:7001/api/Cart').subscribe({
-      next: (data) => {
-        console.log('購物車 API 回傳:', data);
-        const rawItems = Array.isArray(data) ? data : [];
-
-        // 修正圖片路徑：若是相對路徑則補上 API 前綴
-        this.cartItems = rawItems.map(item => ({
-          ...item,
-          imageUrl: item.imageUrl
-            ? (item.imageUrl.startsWith('http') ? item.imageUrl : `https://localhost:7001${item.imageUrl}`)
-            : 'https://localhost:7001/images/products/noimage.jpg',
-          selected: item.selected ?? false
-        }));
-
+    this.cartService.cartItems$.subscribe({
+      next: (items) => {
+        this.cartItems = items;
         this.checkAllStatus();
-      },
-      error: (err) => {
-        console.error('載入購物車失敗', err);
       }
     });
   }
@@ -200,21 +188,23 @@ export class CartComponent implements OnInit {
     const type = String(this.selectedCoupon.discountType || '').toLowerCase();
     const val = this.selectedCoupon.discountValue || 0;
 
-    if (type === 'fixed' || type === '0' || type === 'amount') {
+    if (type === 'fixedamount') {
       // 1. 固定金額折扣
       return val;
-    } else {
-      // 2. 百分比/倍率折扣 (例如: 0.1 代表折扣 10%)
+    } else if (type === 'percentage') {
+      // 2. 百分比/倍率折扣 (例如: 10 代表 10% off, 0.9 代表 9折)
 
-      // 如果數值大於 1 (例如 10 代表 10%)，則除以 100
+      // 如果數值大於 1 (例如 10 代表 10% off)，則除以 100
       if (val > 1) {
         return Math.round(this.subTotal * (val / 100));
       }
 
-      // 如果數值是 0.1 這種形式，直接作為折扣比例計算 (總額 * 0.1)
-      // 若後端 0.9 代表 "9折" (即扣 10%)，請再告知我調整為 (1 - val)
-      return Math.round(this.subTotal * val);
+      // 如果數值是 0.9 這種形式，代表「9折」，折扣金額為總額的 10% (1 - 0.9)
+      // 如果您的 0.1 是直接代表「扣 10%」而非「1折」，請將 (1 - val) 改回 val
+      return Math.round(this.subTotal * (1 - val));
     }
+
+    return 0;
   }
 
   // 最終金額 (小計 - 折扣碼 - 點數)
@@ -238,23 +228,13 @@ export class CartComponent implements OnInit {
   // ★ 變更數量 (您原本報錯的地方)
   updateQty(item: CartItem, delta: number): void {
     const newQty = item.quantity + delta;
-    console.log(item);
     if (newQty >= 1) {
-      // 呼叫 API 更新後端購物車數量
-      this.http.post('https://localhost:7001/api/Cart/Update', {
-        cartItemId: item.id,
-        quantity: newQty
-      }).subscribe({
+      this.cartService.updateQty(item.id, newQty).subscribe({
         next: () => {
-          // API 成功後再修改前端畫面
-          item.quantity = newQty;
-          // 數量變更可能導致金額不足低消，需重新驗證
           this.validateCoupon();
         },
         error: (err) => {
           console.error('更新數量失敗', err);
-          // 這裡可以視需求加入報錯提示，例如：
-          // alert('更新數量失敗，請稍重試');
         }
       });
     }
@@ -262,18 +242,9 @@ export class CartComponent implements OnInit {
 
   // ★ 刪除商品
   removeItem(id: number): void {
-    console.log(`現在的id是${id}`);
     if (confirm('確定要將此商品移出購物車嗎？')) {
-      this.http.delete(`https://localhost:7001/api/Cart/Delete/${id}`).subscribe({
-        next: (response) => {
-          console.log('商品已成功刪除', response);
-          // API 成功後才過濾掉該商品並重新賦值，觸發 Angular 變更偵測
-          this.cartItems = this.cartItems.filter(item => item.id !== id);
-
-          // 更新全選狀態
-          this.checkAllStatus();
-
-          // 刪除後可能導致金額低於折價券門檻，需重新驗證
+      this.cartService.removeItem(id).subscribe({
+        next: () => {
           this.validateCoupon();
         },
         error: (err) => {
@@ -303,6 +274,7 @@ export class CartComponent implements OnInit {
     // 根據需求呼叫 GET 端點
     this.http.get<Coupon>(`https://localhost:7001/api/Cart/Coupons/${couponsCode}`).subscribe({
       next: (coupon) => {
+        console.log(coupon);
         if (!coupon) {
           alert('無效的折扣碼');
           return;

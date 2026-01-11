@@ -136,6 +136,14 @@
           </div>
         </div>
       </div>
+
+      <!-- 額外操作按鈕：若為待付款狀態 (1) -->
+      @if (String(selectedOrderDetails.status) === 'Pending') {
+      <div class="modal-footer">
+        <button class="btn-primary" (click)="continuePayment(selectedOrderDetails)">繼續付款</button>
+        <button class="btn-outline" (click)="cancelOrder(selectedOrderDetails)">取消訂單</button>
+      </div>
+      }
     </div>
   </div>
   }

@@ -40,7 +40,7 @@ export class OrderApiService {
   }
 
   createCheckoutOrder(data: CreateOrderRequest): Observable<CreateOrderResponse> {
-    const apiUrl = '/api/Checkout/Create';
+    const apiUrl = 'https://localhost:7001/api/Checkout/Create';
     return this.http.post<CreateOrderResponse>(apiUrl, data);
   }
 
@@ -51,5 +51,9 @@ export class OrderApiService {
   getOrderDetailByApi(orderId: string | number): Observable<OrderDetailDto> {
     // 根據追蹤與 404 報錯，/api/detail 並不存在。改用專案中已確認可運行的路徑。
     return this.http.get<OrderDetailDto>(`${this.apiUrl}/orders/${orderId}`);
+  }
+
+  cancelOrder(orderId: number | string): Observable<boolean> {
+    return this.http.post<boolean>(`https://localhost:7001/api/OrderItems/cancelOrder/${orderId}`, {});
   }
 }

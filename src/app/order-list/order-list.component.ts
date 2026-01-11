@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OrderApiService } from '../Services/order-api.service';
+import { EcpayService } from '../Services/ecpay.service';
 
 // 引入 CommonModule 以使用 CurrencyPipe 等功能
 
@@ -35,8 +36,12 @@ export class OrderListComponent implements OnInit {
   orders: Order[] = [];
   selectedOrderDetails: any = null;
   showModal: boolean = false;
+  String = String;
 
-  constructor(private orderService: OrderApiService) { }
+  constructor(
+    private orderService: OrderApiService,
+    private ecpayService: EcpayService
+  ) { }
 
   ngOnInit(): void {
     // 改用 OrderApiService 並確保分頁處理
@@ -97,10 +102,18 @@ export class OrderListComponent implements OnInit {
   getStatusLabel(status: string | number): string {
     const s = String(status);
     const statusMap: Record<string, string> = {
+      // '0': '處理中',
+      // 'Pending': '待付款',
+      // '1': '運送中',
+      // 'Shipped': '配送中',
+      // '2': '已完成',
+      // 'Completed': '已完成',
+      // '3': '已取消',
+      // 'Cancelled': '已取消'
       '0': '處理中',
-      'Pending': '處理中',
-      '1': '運送中',
-      'Shipped': '運送中',
+      'Pending': '待付款',
+      '1': '待付款',
+      'Shipped': '配送中',
       '2': '已完成',
       'Completed': '已完成',
       '3': '已取消',
@@ -122,18 +135,26 @@ export class OrderListComponent implements OnInit {
           return;
         }
 
-        // 由於已經有了 OrderDetailDto 介面，我們可以直接讀取欄位，不需再做陣列轉物件或欄位檢查
+        // 根據使用者提供的資料結構，更新對應的欄位映射
         this.selectedOrderDetails = {
           ...listOrder,
           ...details,
-          // 確保優先選用細節介面的欄位，並做備援
+          // 優先選用細節介面的欄位
           orderNo: details.orderNo || listOrder?.orderId || 'N/A',
           createDate: details.createDate || listOrder?.orderDate,
-          // 欄位轉換：將 OrderItemDto 轉換為組件內部的 OrderItem 格式
-          items: (details.items || []).map((i) => ({
-            name: i.productName || '未知商品',
+          shippingFee: details.shippingFee || 0,
+
+          // 處理後端可能的拼錯 (discointAmount) 並對應到前端 discountAmount
+          discountAmount: (details as any).discointAmount !== undefined ? (details as any).discointAmount : (details.discountAmount || 0),
+          // 紅利部分對應 UsedPoints
+          usedPoints: details.usedPoints || (details as any).UsedPoints || 0,
+
+          // 欄位轉換：確保與 HTML 模板使用的欄位一致 (productName, unitPrice, productImage)
+          items: (details.items || []).map((i: any) => ({
+            productName: i.productName || '未知商品',
             quantity: i.quantity || 1,
-            price: i.priceAtPurchase || 0
+            unitPrice: i.unitPriceAtPurchase || i.priceAtPurchase || 0,
+            productImage: i.productImage || i.imageUrl || 'assets/images/default-product.png'
           }))
         };
 
@@ -147,9 +168,61 @@ export class OrderListComponent implements OnInit {
     });
   }
 
+  continuePayment(order: any): void {
+    console.log('準備繼續付款, 訂單 ID:', order.id);
+    this.ecpayService.getPaymentParams(order.id).subscribe({
+      next: (response) => {
+        if (response.success && response.htmlForm) {
+          this.executeEcpayForm(response.htmlForm);
+        } else {
+          alert(response.message || '無法取得付款參數');
+        }
+      },
+      error: (err) => {
+        console.error('取得金流參數失敗:', err);
+        alert('系統錯誤，請連繫客服');
+      }
+    });
+  }
+
+  cancelOrder(order: any): void {
+    if (confirm(`確定要取消訂單 #${order.orderId} 嗎？`)) {
+      console.log('執行取消訂單, 訂單 ID:', order.id);
+      this.orderService.cancelOrder(order.id).subscribe({
+        next: (success) => {
+          if (success) {
+            alert('訂單已成功取消');
+            this.closeModal();
+            this.ngOnInit(); // 重新整理列表
+          } else {
+            alert('取消訂單失敗，請稍後再試');
+          }
+        },
+        error: (err) => {
+          console.error('取消訂單時發生錯誤:', err);
+          alert('系統錯誤，無法取消訂單');
+        }
+      });
+    }
+  }
+
+  private executeEcpayForm(htmlForm: string) {
+    const div = document.createElement('div');
+    div.style.display = 'none';
+    div.innerHTML = htmlForm;
+    document.body.appendChild(div);
+
+    const form = div.querySelector('form');
+    if (form) {
+      form.submit();
+    } else {
+      console.error('無法解析綠界表單');
+      alert('跳轉金流失敗，請連繫客服');
+    }
+  }
+
   closeModal(): void {
     this.showModal = false;
     this.selectedOrderDetails = null;
   }
-
 }

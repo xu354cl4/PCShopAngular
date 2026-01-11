@@ -19,6 +19,7 @@ export class OrderSuccessComponent implements OnInit {
     orderItems: any[] = []; // 儲存商品明細 (用於顯示)
     orderDetail: OrderDetailDto | null = null; // 儲存完整訂單詳情
     showDetails: boolean = false; // 控制是否顯示明細
+    activeIndex: number = 2; // 當前步驟索引 (訂單確認為第 3 步，索引為 2)
 
     constructor(
         private route: ActivatedRoute,
@@ -99,10 +100,11 @@ export class OrderSuccessComponent implements OnInit {
                     ...i,
                     productName: i.productName || '未知商品',
                     skuName: i.skuName || '',
-                    unitPrice: i.priceAtPurchase || 0,
+                    unitPriceAtPurchase: i.unitPriceAtPurchase || 0,
                     imageUrl: i.imageUrl || 'assets/images/default-product.png',
                     quantity: i.quantity || 0
                 }));
+                console.log('訂單商品明細:', this.orderItems);
 
                 this.showDetails = true;
             },

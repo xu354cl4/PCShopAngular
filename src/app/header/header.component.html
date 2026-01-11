@@ -65,7 +65,40 @@
               <div class="cart-items">
                 <a href="javascript:void(0)" routerLink="/cart" class="main-btn" routerLink="/cart">
                   <i class="lni lni-cart"></i>
+                  <span class="total-items">{{ cartService.totalItems }}</span>
                 </a>
+                <!-- Shopping Item -->
+                <div class="shopping-item">
+                  <div class="dropdown-cart-header">
+                    <span>{{ (cartService.cartItems$ | async)?.length || 0 }} 項</span>
+                    <a routerLink="/cart">購物車</a>
+                  </div>
+                  <ul class="shopping-list">
+                    @for (item of (cartService.cartItems$ | async); track item.id) {
+                    <li>
+                      <a href="javascript:void(0)" class="remove" title="Remove this item"
+                        (click)="cartService.removeItem(item.id).subscribe()"><i class="lni lni-close"></i></a>
+                      <div class="cart-img-head">
+                        <a class="cart-img" routerLink="/cart"><img [src]="item.imageUrl" [alt]="item.name"></a>
+                      </div>
+                      <div class="content">
+                        <h4><a routerLink="/cart">{{ item.name }}</a></h4>
+                        <p class="quantity">{{ item.quantity }}x - <span class="amount">${{ item.price | number
+                            }}</span></p>
+                      </div>
+                    </li>
+                    }
+                  </ul>
+                  <div class="bottom">
+                    <div class="total">
+                      <span>總金額</span>
+                      <span class="total-amount">${{ cartService.totalAmount | number }}</span>
+                    </div>
+                    <div class="button">
+                      <a routerLink="/cart" class="btn animate">結帳</a>
+                    </div>
+                  </div>
+                </div>
                 <!--/ End Shopping Item -->
               </div>
             </div>

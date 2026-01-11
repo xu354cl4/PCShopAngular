@@ -10,17 +10,16 @@
         <p class="order-no">訂單編號：{{ order?.orderNo }}</p>
       </div>
 
-      <span class="status-badge"
-        [ngClass]="{
+      <span class="status-badge" [ngClass]="{
           pending: order?.status === 'Pending',
           shipping: order?.status === 'Shipping',
           completed: order?.status === 'Completed'
         }">
         {{
-          order?.status === 'Pending' ? '待付款'
-          : order?.status === 'Shipping' ? '配送中'
-          : order?.status === 'Completed' ? '已完成'
-          : '異常'
+        order?.status === 'Pending' ? '待付款'
+        : order?.status === 'Shipping' ? '配送中'
+        : order?.status === 'Completed' ? '已完成'
+        : '異常'
         }}
       </span>
     </div>
@@ -34,16 +33,38 @@
 
   <hr />
 
+  <!-- Shipping Info -->
+  @if (order) {
+  <div class="shipping-info">
+    <h4>收件資訊</h4>
+    <div class="info-grid">
+      <div class="info-item">
+        <label>收件人：</label>
+        <span>{{ order.receiverName }}</span>
+      </div>
+      <div class="info-item">
+        <label>聯絡電話：</label>
+        <span>{{ order.receiverPhone }}</span>
+      </div>
+      <div class="info-item">
+        <label>收件地址：</label>
+        <span>{{ order.shippingAddress }}</span>
+      </div>
+      <div class="info-item">
+        <label>運送方式：</label>
+        <span>{{ order.shippingMethodName }}</span>
+      </div>
+    </div>
+  </div>
+  <hr />
+  }
+
   <!-- Items -->
   @if (order) {
   <div class="order-items">
     <div class="order-item" *ngFor="let item of order.items">
 
-      <img
-        class="product-img"
-        [src]="item.productImage || '/assets/no-image.png'"
-        alt="商品圖片"
-      />
+      <img class="product-img" [src]="item.productImage || '/assets/no-image.png'" alt="商品圖片" />
 
       <div class="item-info">
         <div class="name">{{ item.productName }}</div>

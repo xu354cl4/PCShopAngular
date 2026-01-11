@@ -10,12 +10,16 @@ export interface OrderList {
 export interface OrderDetail {
   orderId: number;
   orderNo: string;
-  status: number | string ;
+  status: number | string;
   totalAmount: number;
+  receiverName: string;
+  shippingMethodName: string;
+  shippingAddress: string;
+  receiverPhone: string;
   items: {
     productName: string;
-    productImage:string;
-    unitPriceAtPurchase:number;
+    productImage: string;
+    unitPriceAtPurchase: number;
     quantity: number;
   }[];
 }

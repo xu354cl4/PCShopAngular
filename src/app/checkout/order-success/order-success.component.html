@@ -1,4 +1,23 @@
 <div class="success-container">
+    <div class="muji-stepper-wrapper">
+        <div class="muji-stepper">
+            <div class="step-item" [class.active]="activeIndex >= 0">
+                <div class="step-circle">1</div>
+                <div class="step-label">購物車</div>
+            </div>
+            <div class="step-line"></div>
+            <div class="step-item" [class.active]="activeIndex >= 1">
+                <div class="step-circle">2</div>
+                <div class="step-label">填寫資料</div>
+            </div>
+            <div class="step-line"></div>
+            <div class="step-item" [class.active]="activeIndex >= 2">
+                <div class="step-circle">3</div>
+                <div class="step-label">訂單確認</div>
+            </div>
+        </div>
+    </div>
+
     <div class="success-card">
         <!-- Waiting State -->
         <ng-container *ngIf="status === 'waiting'">
@@ -91,9 +110,10 @@
                                 <div class="sku" *ngIf="item.skuName">{{ item.skuName }}</div>
                             </div>
                         </td>
-                        <td class="text-right">{{ item.unitPrice | currency:'TWD':'symbol':'1.0-0' }}</td>
+                        <td class="text-right">{{ item.unitPriceAtPurchase | currency:'TWD':'symbol':'1.0-0' }}</td>
                         <td class="text-center">{{ item.quantity }}</td>
-                        <td class="text-right">{{ (item.unitPrice * item.quantity) | currency:'TWD':'symbol':'1.0-0' }}
+                        <td class="text-right">{{ item.subTotal |
+                            currency:'TWD':'symbol':'1.0-0' }}
                         </td>
                     </tr>
                 </tbody>
@@ -109,10 +129,10 @@
                     <span>紅利折抵</span>
                     <span>-{{ orderDetail.usedPoints }}</span>
                 </div>
-                <div class="summary-line"
-                    *ngIf="orderDetail.couponDiscount > 0 || orderDetail.discountAmount > 0">
+                <div class="summary-line" *ngIf="orderDetail.couponDiscount > 0 || orderDetail.discountAmount > 0">
                     <span>優惠折扣</span>
-                    <span>-{{ (orderDetail.couponDiscount || orderDetail.discountAmount) | currency:'TWD':'symbol':'1.0-0' }}</span>
+                    <span>-{{ (orderDetail.couponDiscount || orderDetail.discountAmount) |
+                        currency:'TWD':'symbol':'1.0-0' }}</span>
                 </div>
                 <div class="summary-line total">
                     <span>總計</span>
