@@ -13,7 +13,7 @@ export interface SubmitGameScoreDto {
 })
 export class GameService {
 
-  private apiUrl = '/api/game';
+  private apiUrl = 'https://localhost:7001/api/game';
 
   constructor(private http: HttpClient) { }
 

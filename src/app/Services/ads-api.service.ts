@@ -12,37 +12,37 @@ export class AdsApiService {
 
   // ===== public =====
   getPositions(): Observable<PositionDto[]> {
-    return this.http.get<PositionDto[]>(`/api/ads/positions`);
+    return this.http.get<PositionDto[]>(`https://localhost:7001/api/ads/positions`);
   }
 
   getSlot(positionCode: string): Observable<AdDto[]> {
-    return this.http.get<AdDto[]>(`/api/ads/slot/${encodeURIComponent(positionCode)}`);
+    return this.http.get<AdDto[]>(`https://localhost:7001/api/ads/slot/${encodeURIComponent(positionCode)}`);
   }
 
   trackClick(dto: TrackClickDto): Observable<void> {
-    return this.http.post<void>(`/api/ads/track/click`, dto);
+    return this.http.post<void>(`https://localhost:7001/api/ads/track/click`, dto);
   }
 
   // ===== admin =====
   adminListAds(): Observable<AdDto[]> {
-    return this.http.get<AdDto[]>(`/api/admin/ads`);
+    return this.http.get<AdDto[]>(`https://localhost:7001/api/admin/ads`);
   }
 
   adminCreateAd(dto: AdUpsertDto): Observable<{ adId: number }> {
-    return this.http.post<{ adId: number }>(`/api/admin/ads`, dto);
+    return this.http.post<{ adId: number }>(`https://localhost:7001/api/admin/ads`, dto);
   }
 
   adminUpdateAd(adId: number, dto: AdUpsertDto): Observable<void> {
-    return this.http.put<void>(`/api/admin/ads/${adId}`, dto);
+    return this.http.put<void>(`https://localhost:7001/api/admin/ads/${adId}`, dto);
   }
 
   adminDeleteAd(adId: number): Observable<void> {
-    return this.http.delete<void>(`/api/admin/ads/${adId}`);
+    return this.http.delete<void>(`https://localhost:7001/api/admin/ads/${adId}`);
   }
 
   adminReport(from: string, to: string): Observable<ReportRowDto[]> {
     return this.http.get<ReportRowDto[]>(
-      `/api/admin/ads/report?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`
+      `https://localhost:7001/api/admin/ads/report?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`
     );
   }
   uploadAdMedia(file: File) {
@@ -50,7 +50,7 @@ export class AdsApiService {
     fd.append('file', file);
 
     return this.http.post<{ url?: string; imageUrl?: string; type?: 'image' | 'video' }>(
-      `/api/upload/ad-media`,
+      `https://localhost:7001/api/upload/ad-media`,
       fd
     );
   }
@@ -59,13 +59,13 @@ export class AdsApiService {
     fd.append('file', file);
 
     return this.http.post<{ url: string; type: 'image' | 'video' }>(
-      `/api/admin/ads/upload`,
+      `https://localhost:7001/api/admin/ads/upload`,
       fd
     );
   }
   getClickStats(from: string, to: string) {
     return this.http.get<AdsClickStatDto[]>(
-      `/api/admin/ads/report`,
+      `https://localhost:7001/api/admin/ads/report`,
       { params: { from, to } }
     );
   }
@@ -76,7 +76,7 @@ export class AdsApiService {
   // ===============================
   getPageRules() {
     return this.http.get<Record<string, string[]>>(
-      `/admin/ads/page-rules`
+      `https://localhost:7001/admin/ads/page-rules`
     );
   }
 

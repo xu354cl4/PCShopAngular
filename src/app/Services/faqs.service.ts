@@ -9,15 +9,15 @@ export class FaqService {
   private api = '/api/faq';
 
   getCategories() {
-    return this.http.get<FaqCategory[]>(`${this.api}/categories`);
+    return this.http.get<FaqCategory[]>(`https://localhost:7001/api/faq/categories`);
   }
 
   getFaqsByCategory(categoryId: number) {
-    return this.http.get<FaqList[]>(`${this.api}/by-category/${categoryId}`);
+    return this.http.get<FaqList[]>(`https://localhost:7001/api/faq/by-category/${categoryId}`);
   }
 
   getFaqDetail(faqId: number) {
-    return this.http.get<FaqDetail>(`${this.api}/${faqId}`);
+    return this.http.get<FaqDetail>(`https://localhost:7001/api/faq/${faqId}`);
   }
 }
 
