@@ -82,7 +82,7 @@ export class AdsApiService {
 
   savePageRules(payload: { rules: Record<string, string[]> }) {
     return this.http.post(
-      'https://localhost:7001/api/admin/ads/page-rules',
+      '/api/admin/ads/page-rules',
       payload
     );
   }
