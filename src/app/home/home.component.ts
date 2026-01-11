@@ -57,9 +57,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
         this.hotProducts = responses.map(r => ({
           id: r.data.id,
           name: r.data.name,
-          category: '',                // 補齊 Product 需要的欄位
-          rating: 0,                    // Hot Products 暫時不顯示評分
+          category: r.data.category || '',
+          rating: 0,  // Hot Products 暫不顯示
           price: r.data.price,
+          salePrice: r.data.salePrice,   // <-- 這行最重要
           imageUrl: r.data.images?.[0] || '/images/no-image.png'
         }));
         this.loadingHot = false;
@@ -80,7 +81,13 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
     this.productService.getLatestProducts(6).subscribe({
       next: (res: ApiResponse<Product[]>) => {
-        this.latestProducts = res.data || [];
+        this.latestProducts = res.data.map(p => {
+          // 保留 base price 與 sale price
+          return {
+            ...p,
+            salePrice: p.salePrice !== undefined ? p.salePrice : undefined
+          } as Product;
+        });
         this.loadingLatest = false;
       },
       error: (err) => {

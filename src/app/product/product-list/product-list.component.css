@@ -170,3 +170,20 @@
     height: 180px;
   }
 }
+
+/* =========================
+   價格
+========================= */
+.original-price {
+  font-size: 0.9rem;
+  color: #999; /* 灰色 */
+  text-decoration: line-through;
+  margin-bottom: 2px;
+}
+
+.sale-price {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #e53935; /* 紅色醒目 */
+  margin-left: 0.5rem; /* 和原價有點間距 */
+}

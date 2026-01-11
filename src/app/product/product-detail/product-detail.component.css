@@ -28,3 +28,21 @@
     max-height: 300px;
   }
 }
+
+.price-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.original-price {
+  font-size: 0.9rem;
+  color: #999;
+  text-decoration: line-through;
+  margin-bottom: 2px;
+}
+
+.sale-price {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #e53935; /* 紅色醒目 */
+}

@@ -43,7 +43,18 @@
           <img [src]="product.imageUrl" class="card-img-top" [alt]="product.name">
           <div class="card-body d-flex flex-column">
             <h5 class="card-title">{{ product.name }}</h5>
-            <p class="card-text mt-auto">${{ product.price }}</p>
+            <p class="mb-1 mt-auto">
+              <!-- 原價永遠畫線 -->
+              <span *ngIf="product.salePrice" class="original-price">
+                $ {{ product.price | number:'1.0-0' }}
+              </span>
+
+              <!-- 折扣價或原價加粗 -->
+              <span class="sale-price ms-1">
+                $ {{ product.salePrice !== undefined ? (product.salePrice | number:'1.0-0') : (product.price |
+                number:'1.0-0') }}
+              </span>
+            </p>
           </div>
         </div>
       </div>
@@ -74,7 +85,18 @@
           <img [src]="product.imageUrl" class="card-img-top" [alt]="product.name">
           <div class="card-body d-flex flex-column">
             <h5 class="card-title">{{ product.name }}</h5>
-            <p class="card-text mt-auto">${{ product.price }}</p>
+            <p class="mb-1 mt-auto">
+              <!-- 原價永遠畫線 -->
+              <span *ngIf="product.salePrice" class="original-price">
+                $ {{ product.price | number:'1.0-0' }}
+              </span>
+
+              <!-- 折扣價或原價加粗 -->
+              <span class="sale-price ms-1">
+                $ {{ product.salePrice !== undefined ? (product.salePrice | number:'1.0-0') : (product.price |
+                number:'1.0-0') }}
+              </span>
+            </p>
           </div>
         </div>
       </div>

@@ -15,9 +15,17 @@
         <p class="text-muted">{{ product.category }}</p>
 
         <!-- 商品價格 -->
-        <p class="text-primary fw-bold">
-          NT$ {{ (selectedSku ? getSkuPrice(selectedSku) : product.price) | number:'1.0-0' }}
-        </p>
+        <div class="price-wrapper mb-2">
+          <!-- 原價：只有在有折扣時顯示 -->
+          <span class="original-price" *ngIf="selectedSku && selectedSku.priceAdjustment != 0">
+            NT$ {{ product.price | number:'1.0-0' }}
+          </span>
+
+          <!-- 折扣後價格 -->
+          <span class="sale-price">
+            NT$ {{ (selectedSku ? getSkuPrice(selectedSku) : product.price) | number:'1.0-0' }}
+          </span>
+        </div>
 
         <!-- 星星評價 -->
         <div class="text-warning mb-2">

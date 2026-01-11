@@ -31,3 +31,17 @@
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
   z-index: 10;
 }
+
+/* 價格調整 */
+.original-price {
+  font-size: 0.9rem;
+  color: #999; /* 灰色 */
+  text-decoration: line-through;
+  margin-bottom: 2px;
+}
+
+.sale-price {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #e53935; /* 紅色醒目 */
+}

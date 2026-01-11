@@ -56,9 +56,22 @@
         <label>名稱</label>
         <input [(ngModel)]="currentProduct.productName">
         <label>分類</label>
-        <select [(ngModel)]="currentProduct.categoryId">
-          <option *ngFor="let cat of categories" [value]="cat.categoryId">{{ cat.categoryName }}</option>
+        <!-- 編輯模式：顯示分類，不可修改 -->
+        <input *ngIf="isEditing" type="text" [value]="currentProduct.categoryName" disabled />
+
+        <!-- 新增模式：可選分類 -->
+        <select *ngIf="!isEditing" [(ngModel)]="currentProduct.categoryId">
+          <option [ngValue]="0">請選擇分類</option>
+          <option *ngFor="let cat of categories" [ngValue]="cat.categoryId">
+            {{ cat.categoryName }}
+          </option>
         </select>
+
+        <!-- 新增分類（只在新增商品時顯示） -->
+        <div *ngIf="!isEditing">
+          <input placeholder="新增分類名稱" [(ngModel)]="newCategoryName" />
+          <button type="button" class="btn btn-add" (click)="addCategory()">新增分類</button>
+        </div>
         <label>價格</label>
         <input type="number" [(ngModel)]="currentProduct.basePrice">
         <label>狀態</label>
