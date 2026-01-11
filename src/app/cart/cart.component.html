@@ -79,9 +79,12 @@
       <div class="action-row">
         <div class="code-input-group">
           <label for="codeInput">輸入折扣碼</label>
-          <div class="input-with-button">
-            <input type="text" id="codeInput" [(ngModel)]="couponCodeInput" placeholder="例如: SAVE2025">
-            <button class="btn-apply-code" (click)="applyCouponCode()">套用</button>
+          <div class="group-inner-column">
+            <div class="input-with-button">
+              <input type="text" id="codeInput" [(ngModel)]="couponCodeInput" placeholder="例如: SAVE2025">
+              <button class="btn-apply-code" (click)="applyCouponCode()">套用</button>
+            </div>
+            <div class="coupon-message" *ngIf="couponMessage">{{ couponMessage }}</div>
           </div>
         </div>
 
