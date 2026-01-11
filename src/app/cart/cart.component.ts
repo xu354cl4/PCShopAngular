@@ -52,6 +52,7 @@ export class CartComponent implements OnInit {
   // 新增：目前選中的折價券
   selectedCoupon: Coupon | null = null;
   couponCodeInput: string = ''; // 新增：折扣碼輸入框繫結
+  couponMessage: string = '';   // 新增：顯示折扣提示訊息
 
   // 改為空陣列，等待 API 回傳
   rawCoupons: Coupon[] = [];
@@ -259,6 +260,7 @@ export class CartComponent implements OnInit {
   validateCoupon(): void {
     if (this.selectedCoupon && this.subTotal < this.selectedCoupon.minOrderAmount) {
       this.selectedCoupon = null;
+      this.couponMessage = ''; // 清空訊息
       alert('商品總額未達門檻，已取消折價券套用');
     }
   }
@@ -279,14 +281,22 @@ export class CartComponent implements OnInit {
           alert('無效的折扣碼');
           return;
         }
-
         if (this.subTotal < coupon.minOrderAmount) {
           alert(`此折扣碼最低消費門檻為 NT$ ${coupon.minOrderAmount}，目前尚未達成。`);
           return;
         }
-
         // 成功套用
         this.selectedCoupon = coupon;
+
+        // 根據折扣類型設定提示訊息
+        const type = coupon.discountType?.toLowerCase();
+        if (type === 'percentage') {
+          // 判斷是 10% off (val=10) 還是 0.9 (代表 9折)
+          const discountDesc = coupon.discountValue > 1 ? `${coupon.discountValue}% off` : `${coupon.discountValue * 10}折`;
+          this.couponMessage = `已套用：滿 NT$ ${coupon.minOrderAmount} 享 ${discountDesc} 優惠`;
+        } else if (type === 'fixedamount') {
+          this.couponMessage = `已套用：滿 NT$ ${coupon.minOrderAmount} 現折 NT$ ${coupon.discountValue} 元`;
+        }
 
         // 如果這個手動輸入的券尚未在 rawCoupons 清單中，則加入
         const exists = this.rawCoupons.find(c => c.couponCode === coupon.couponCode);
@@ -320,6 +330,17 @@ export class CartComponent implements OnInit {
     // 如果選中「不使用優惠券」(null)，清空折扣碼輸入框
     if (this.selectedCoupon === null) {
       this.couponCodeInput = '';
+      this.couponMessage = ''; // 清空訊息
+    } else {
+      // 如果是從下拉選單選的，也要更新訊息
+      const c = this.selectedCoupon;
+      const type = c.discountType?.toLowerCase();
+      if (type === 'percentage') {
+        const discountDesc = c.discountValue > 1 ? `${c.discountValue}% off` : `${c.discountValue * 10}折`;
+        this.couponMessage = `已套用：滿 NT$ ${c.minOrderAmount} 享 ${discountDesc} 優惠`;
+      } else if (type === 'fixedamount') {
+        this.couponMessage = `已套用：滿 NT$ ${c.minOrderAmount} 現折 NT$ ${c.discountValue} 元`;
+      }
     }
   }
 

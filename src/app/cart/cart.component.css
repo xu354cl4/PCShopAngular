@@ -50,7 +50,8 @@
   background: #E6E3DE;
   margin: 0 -15px;
   position: relative;
-  top: -14px; /* 對齊圓圈中央 */
+  top: -14px;
+  /* 對齊圓圈中央 */
 }
 
 /* Active 狀態 (當前進度) */
@@ -84,7 +85,8 @@
 .cart-header,
 .cart-item {
   display: grid;
-  grid-template-columns: 50px 4fr 1.5fr 2fr 1.5fr 1fr; /* 恢復 checkbox 欄位 */
+  grid-template-columns: 50px 4fr 1.5fr 2fr 1.5fr 1fr;
+  /* 恢復 checkbox 欄位 */
   align-items: center;
   gap: 10px;
   padding: 15px 20px;
@@ -157,6 +159,7 @@
     cursor: pointer;
     color: #666;
     transition: background 0.2s;
+
     &:hover {
       background: #f5f5f5;
     }
@@ -189,6 +192,7 @@
   color: var(--muji-text-light);
   cursor: pointer;
   font-size: 14px;
+
   &:hover {
     color: var(--muji-danger);
     text-decoration: underline;
@@ -207,7 +211,8 @@
   border-radius: 3px;
   display: flex;
   justify-content: space-between;
-  align-items: flex-start; /* ★ 改為靠上對齊 */
+  align-items: flex-start;
+  /* ★ 改為靠上對齊 */
   box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.05);
   z-index: 100;
 
@@ -219,14 +224,16 @@
     font-size: 15px;
     color: #333;
     white-space: nowrap;
-    padding-top: 8px; /* ★ 使文字對齊右側輸入框的一行 */
+    padding-top: 8px;
+    /* ★ 使文字對齊右側輸入框的一行 */
   }
 
   .bar-right {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    gap: 25px; /* ★ 增加兩排之間的距離，避免擠在一起 */
+    gap: 25px;
+    /* ★ 增加兩排之間的距離，避免擠在一起 */
     flex: 1;
 
     .action-row {
@@ -234,7 +241,9 @@
       align-items: center;
       gap: 30px;
 
-      .code-input-group, .points-input-group, .coupon-selector {
+      .code-input-group,
+      .points-input-group,
+      .coupon-selector {
         display: flex;
         align-items: center;
         gap: 10px;
@@ -268,9 +277,12 @@
             border: none;
             padding: 8px 15px;
             cursor: pointer;
-            &:hover { background: #7a685f; }
+
+            &:hover {
+              background: #7a685f;
+            }
           }
-          
+
           .points-unit {
             padding-right: 12px;
             font-size: 13px;
@@ -278,62 +290,92 @@
           }
         }
 
-        select {
-          padding: 8px 30px 8px 12px;
-          border: 1px solid #ddd;
-          border-radius: 4px;
+        .coupon-message {
+          font-size: 12px;
+          color: #2e7d32;
+          margin-top: 4px;
+        }
+
+        .group-inner-column {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 2px;
+        }
+      }
+
+      select {
+        padding: 8px 30px 8px 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+        cursor: pointer;
+        background: #fff url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e") no-repeat right 10px center;
+        background-size: 12px;
+        appearance: none;
+      }
+    }
+  }
+
+  .summary-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 30px;
+
+    .total-info {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+
+      .price-line {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+
+        .label {
           font-size: 14px;
-          cursor: pointer;
-          background: #fff url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e") no-repeat right 10px center;
-          background-size: 12px;
-          appearance: none;
+          color: #666;
+        }
+
+        .original-price {
+          font-size: 14px;
+          color: #999;
+          text-decoration: line-through;
+        }
+
+        .final-price {
+          font-size: 28px;
+          color: #800010;
+          font-weight: 700;
+          line-height: 1;
+        }
+      }
+
+      .discount-line {
+        height: 18px;
+        margin-top: 5px;
+
+        /* ★ 增加點間距 */
+        .discount-text {
+          color: #2e7d32;
+          font-size: 13px;
         }
       }
     }
 
-    .summary-row {
-      display: flex;
-      align-items: flex-end;
-      gap: 30px;
+    .btn-checkout {
+      background: #800010;
+      color: #fff;
+      border: none;
+      padding: 12px 40px;
+      font-size: 18px;
+      font-weight: 500;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: opacity 0.2s;
 
-      .total-info {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-        
-        .price-line {
-          display: flex;
-          align-items: baseline;
-          gap: 10px;
-
-          .label { font-size: 14px; color: #666; }
-          .original-price { font-size: 14px; color: #999; text-decoration: line-through; }
-          .final-price {
-            font-size: 28px;
-            color: #800010;
-            font-weight: 700;
-            line-height: 1;
-          }
-        }
-
-        .discount-line {
-          height: 18px;
-          margin-top: 5px; /* ★ 增加點間距 */
-          .discount-text { color: #2e7d32; font-size: 13px; }
-        }
-      }
-
-      .btn-checkout {
-        background: #800010;
-        color: #fff;
-        border: none;
-        padding: 12px 40px;
-        font-size: 18px;
-        font-weight: 500;
-        cursor: pointer;
-        border-radius: 4px;
-        transition: opacity 0.2s;
-        &:hover { opacity: 0.9; }
+      &:hover {
+        opacity: 0.9;
       }
     }
   }
@@ -343,26 +385,49 @@
   .checkout-bar {
     flex-direction: column;
     height: auto;
-    .bar-left { margin-bottom: 20px; width: 100%; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+
+    .bar-left {
+      margin-bottom: 20px;
+      width: 100%;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 10px;
+    }
+
     .bar-right {
       width: 100%;
       align-items: stretch;
+
       .action-row {
         flex-direction: column;
         align-items: stretch;
         gap: 15px;
-        .code-input-group, .points-input-group, .coupon-selector {
+
+        .code-input-group,
+        .points-input-group,
+        .coupon-selector {
           justify-content: space-between;
-          .input-with-button, select { flex: 1; max-width: 200px; }
+
+          .input-with-button,
+          select {
+            flex: 1;
+            max-width: 200px;
+          }
         }
       }
+
       .summary-row {
         flex-direction: column;
         align-items: stretch;
         margin-top: 20px;
         gap: 15px;
-        .total-info { align-items: flex-end; }
-        .btn-checkout { width: 100%; }
+
+        .total-info {
+          align-items: flex-end;
+        }
+
+        .btn-checkout {
+          width: 100%;
+        }
       }
     }
   }
