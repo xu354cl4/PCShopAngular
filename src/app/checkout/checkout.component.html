@@ -188,8 +188,11 @@
               <div class="form-field">
                 <label>收件地址</label>
                 <div class="address-grid">
-                  <input type="text" pInputText formControlName="city" placeholder="縣市" />
-                  <input type="text" pInputText formControlName="district" placeholder="鄉鎮市區" />
+                  <p-dropdown [options]="cities" formControlName="city" placeholder="縣市" class="modern-dropdown"
+                    panelStyleClass="modern-dropdown-panel" appendTo="body"></p-dropdown>
+                  <p-dropdown [options]="districts" formControlName="district" placeholder="鄉鎮市區"
+                    class="modern-dropdown" panelStyleClass="modern-dropdown-panel" appendTo="body"
+                    [disabled]="!checkoutForm.get('delivery.city')?.value"></p-dropdown>
                 </div>
                 <input type="text" pInputText formControlName="address" placeholder="詳細街道地址" class="mt-2" />
               </div>

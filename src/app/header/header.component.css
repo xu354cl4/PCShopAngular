@@ -106,7 +106,8 @@
 /* ==================== HEADER BOTTOM ==================== */
 
 .mega-category-menu {
-  position: relative; /* 關鍵 */
+  position: relative;
+  /* 關鍵 */
 }
 
 /* 分類按鈕 */
@@ -127,15 +128,17 @@
 /* ===== 子分類選單 ===== */
 .sub-category {
   list-style: none;
-  padding: 6px 0;              /* ⭐ 讓 hover 有實體高度 */
+  padding: 6px 0;
+  /* ⭐ 讓 hover 有實體高度 */
   margin: 0;
   position: absolute;
-  top: calc(100% - 2px);       /* ⭐ 消除 hover 縫隙 */
+  top: calc(100% - 2px);
+  /* ⭐ 消除 hover 縫隙 */
   left: 0;
 
   background-color: #fff;
   min-width: 160px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   z-index: 999;
 
   /* ⭐ 正確顯示控制（不要用 display） */
@@ -199,4 +202,28 @@
 
 .nav-inner .navbar-nav .nav-item .nav-link:hover {
   color: #007bff;
+}
+
+/* ==================== 購物車下拉選單滾動 ==================== */
+.shopping-list {
+  max-height: 335px;
+  /* 約三樣物品的高度，超過則出現滾輪 */
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 5px;
+  /* 為滾輪留一點空間 */
+}
+
+/* 客製化滾輪樣式 */
+.shopping-list::-webkit-scrollbar {
+  width: 5px;
+}
+
+.shopping-list::-webkit-scrollbar-thumb {
+  background: #0167F3;
+  border-radius: 10px;
+}
+
+.shopping-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
 }

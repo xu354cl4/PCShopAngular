@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { CartService } from '../../Services/cart.service';
 
 
 export interface ApiResponse<T> {
@@ -61,7 +62,8 @@ export class ProductDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private cartService: CartService
   ) { }
 
   ngOnInit(): void {
@@ -169,13 +171,7 @@ export class ProductDetailComponent implements OnInit {
       quantity: this.quantity
     };
 
-    this.http.post<ApiResponse<string>>(
-      'https://localhost:7001/api/cart/add',
-      dto,
-      {
-        headers: { 'Authorization': `Bearer ${token}` }
-      }
-    ).subscribe({
+    this.cartService.addToCart(this.selectedSku.skuid, this.quantity).subscribe({
       next: (res) => alert(res.message || '已成功加入購物車'),
       error: (err) => {
         if (err.status === 401) {

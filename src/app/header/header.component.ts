@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 // 新增：商品 service
 import { ProductService } from '../product/services/product.service';
+import { CartService } from '../Services/cart.service';
 
 
 @Component({
@@ -22,11 +23,14 @@ export class HeaderComponent implements OnInit {
   categories: { id: number; name: string }[] = [];
   loadingCategories = false;
 
-  constructor(private authState: AuthStateService, private router: Router, private productService: ProductService) {
-
+  constructor(
+    private authState: AuthStateService,
+    private router: Router,
+    private productService: ProductService,
+    public cartService: CartService
+  ) {
     this.user$ = this.authState.user$;      // ⭐ 這裡再接
     this.avatarUrl$ = this.authState.avatarUrl$;
-
   }
 
 

@@ -1,7 +1,85 @@
+:host {
+    --text-primary: #454545;
+    --text-secondary: #7A7A7A;
+    --border-color: #E6E3DE;
+    --accent-color: #333333;
+}
+
 .success-container {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    /* 改為縱向排列以放置步驟條 */
     align-items: center;
+    min-height: 80vh;
+    padding: 2rem;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+/* --- 自定義步驟條 (Muji Style) --- */
+.muji-stepper-wrapper {
+    width: 100%;
+    max-width: 600px;
+    margin-bottom: 2rem;
+}
+
+.muji-stepper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.step-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+}
+
+.step-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--border-color);
+    background: #fff;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    z-index: 2;
+}
+
+.step-label {
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.step-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border-color);
+    position: relative;
+    top: -13px;
+}
+
+/* Active 狀態 */
+.step-item.active .step-circle {
+    background: var(--accent-color);
+    border-color: var(--accent-color);
+    color: #fff;
+}
+
+.step-item.active .step-label {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.success-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     min-height: 80vh;
     padding: 2rem;
     background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);

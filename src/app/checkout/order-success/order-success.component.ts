@@ -19,6 +19,7 @@ export class OrderSuccessComponent implements OnInit {
     orderItems: any[] = []; // 儲存商品明細 (用於顯示)
     orderDetail: OrderDetailDto | null = null; // 儲存完整訂單詳情
     showDetails: boolean = false; // 控制是否顯示明細
+    activeIndex: number = 2; // 當前步驟索引 (訂單確認為第 3 步，索引為 2)
 
     constructor(
         private route: ActivatedRoute,
