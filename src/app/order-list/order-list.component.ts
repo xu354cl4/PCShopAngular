@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { OrderApiService } from '../Services/order-api.service';
 import { EcpayService } from '../Services/ecpay.service';
 
@@ -26,7 +27,7 @@ export interface Order {
 @Component({
   selector: 'app-order-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './order-list.component.html',
   styleUrl: './order-list.component.css'
 })
@@ -37,6 +38,33 @@ export class OrderListComponent implements OnInit {
   selectedOrderDetails: any = null;
   showModal: boolean = false;
   String = String;
+  currentFilter: string = 'all';
+  searchQuery: string = '';
+
+  // 分頁相關變數 (自定義實作)
+  totalRecords: number = 0;
+  pageSize: number = 3;
+  currentPage: number = 1;
+  
+  get totalPages(): number {
+    return Math.ceil(this.totalRecords / this.pageSize) || 1;
+  }
+
+  get pageNumbers(): number[] {
+    const pages = [];
+    const maxVisiblePages = 5;
+    let startPage = Math.max(1, this.currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(this.totalPages, startPage + maxVisiblePages - 1);
+
+    if (endPage - startPage + 1 < maxVisiblePages) {
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+    return pages;
+  }
 
   constructor(
     private orderService: OrderApiService,
@@ -44,25 +72,35 @@ export class OrderListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // 改用 OrderApiService 並確保分頁處理
-    this.orderService.getOrders(1, 10).subscribe({
+    this.loadOrders(1);
+  }
+
+  loadOrders(page: number): void {
+    this.currentPage = page;
+    
+    // 轉換 status 為 API 預期的格式
+    let apiStatus = undefined;
+    if (this.currentFilter !== 'all') {
+      apiStatus = this.currentFilter;
+    }
+
+    this.orderService.getOrders(page, this.pageSize, apiStatus, this.searchQuery).subscribe({
       next: (result: any) => {
         console.log('取得訂單列表結果:', result);
 
-        // 兼容不同的 API 回傳結構 (PagedResult 或 Array)
         let rawOrders: any[] = [];
         if (result && result.items) {
           rawOrders = result.items;
+          this.totalRecords = result.total || 0;
         } else if (Array.isArray(result)) {
           rawOrders = result;
+          this.totalRecords = result.length;
         } else if (result && result.result) {
           rawOrders = result.result;
+          this.totalRecords = result.totalCount || result.total || rawOrders.length;
         }
 
-        console.log('解析後的訂單陣列:', rawOrders);
-
         this.orders = rawOrders.map((o: any) => {
-          // 取得狀態值，需注意 0 是 falsy，所以不能直接使用 ||
           const currentStatus = o.orderStatus !== undefined && o.orderStatus !== null ? o.orderStatus :
             (o.status !== undefined && o.status !== null ? o.status : (o.orderStatusLabel || 'Pending'));
 
@@ -84,6 +122,17 @@ export class OrderListComponent implements OnInit {
         console.error('Failed to fetch orders', err);
       }
     });
+  }
+
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages && page !== this.currentPage) {
+      this.loadOrders(page);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  onSearchChange(): void {
+    this.loadOrders(1);
   }
 
   // 輔助功能：根據狀態回傳對應的 CSS Class 名稱
@@ -122,11 +171,21 @@ export class OrderListComponent implements OnInit {
     return statusMap[s] || s;
   }
 
+  // 因為現在是伺服器分頁，filteredOrders 只需要回傳當前頁面的 items
+  get filteredOrders(): Order[] {
+    return this.orders;
+  }
+
+  setFilter(filter: string): void {
+    this.currentFilter = filter;
+    this.loadOrders(1);
+  }
+
   viewDetails(id: number): void {
     const listOrder = this.orders.find(o => o.id === id);
     console.log('正在查看訂單 ID:', id, '對應清單資料:', listOrder);
 
-    this.orderService.getOrderDetailByApi(id).subscribe({
+    this.orderService.getOrderDetailByApi2(id).subscribe({
       next: (details) => {
         console.log('從 API 取得的訂單詳情原始資料:', details);
 
@@ -143,7 +202,7 @@ export class OrderListComponent implements OnInit {
           orderNo: details.orderNo || listOrder?.orderId || 'N/A',
           createDate: details.createDate || listOrder?.orderDate,
           shippingFee: details.shippingFee || 0,
-
+          selectedPayment: details.selectedPayment,
           // 處理後端可能的拼錯 (discointAmount) 並對應到前端 discountAmount
           discountAmount: (details as any).discointAmount !== undefined ? (details as any).discointAmount : (details.discountAmount || 0),
           // 紅利部分對應 UsedPoints

@@ -9,7 +9,7 @@ import { OrderList, PagedResult } from '../models/order.model';
 })
 export class OrderApiService {
   private apiUrl = '/api/Order'; // 使用大寫 O 以符合常見後端慣例
-
+  private orderItemapiUrl = '/api/OrderItems'; 
   constructor(private http: HttpClient) { }
 
   // 訂單區
@@ -31,7 +31,7 @@ export class OrderApiService {
 
   getOrderDetail(orderId: number): Observable<OrderDetailDto> {
     return this.http.get<OrderDetailDto>(
-      `${this.apiUrl}/orders/${orderId}`
+      `https://localhost:7001/api/OrderItems/detail/${orderId}`
     );
   }
 
@@ -51,6 +51,13 @@ export class OrderApiService {
   getOrderDetailByApi(orderId: string | number): Observable<OrderDetailDto> {
     // 根據追蹤與 404 報錯，/api/detail 並不存在。改用專案中已確認可運行的路徑。
     return this.http.get<OrderDetailDto>(`${this.apiUrl}/orders/${orderId}`);
+  }
+
+  getOrderDetailByApi2(orderId: string | number): Observable<OrderDetailDto> {
+    // 根據追蹤與 404 報錯，/api/detail 並不存在。改用專案中已確認可運行的路徑。
+     return this.http.get<OrderDetailDto>(
+      `https://localhost:7001/api/OrderItems/detail/${orderId}`
+    );
   }
 
   cancelOrder(orderId: number | string): Observable<boolean> {

@@ -1,14 +1,37 @@
 <div class="order-container">
   <h2 class="page-title">我的訂單記錄</h2>
 
+  <div class="search-container">
+    <div class="search-wrapper">
+      <i class="pi pi-search search-icon"></i>
+      <input 
+        type="text" 
+        [(ngModel)]="searchQuery" 
+        (input)="onSearchChange()"
+        placeholder="搜尋訂單編號..." 
+        class="search-input"
+      >
+      @if (searchQuery) {
+        <button class="clear-btn" (click)="searchQuery = ''; onSearchChange()">&times;</button>
+      }
+    </div>
+  </div>
+
+  <div class="filter-tabs">
+    <button [class.active]="currentFilter === 'all'" (click)="setFilter('all')">全部</button>
+    <button [class.active]="currentFilter === '1'" (click)="setFilter('1')">待付款</button>
+    <button [class.active]="currentFilter === '2'" (click)="setFilter('2')">已完成</button>
+    <button [class.active]="currentFilter === '3'" (click)="setFilter('3')">已取消</button>
+  </div>
+
   <div class="order-list">
-    @for (order of orders; track order.orderId) {
+    @for (order of filteredOrders; track order.orderId) {
     <div class="order-card">
 
       <div class="card-header">
         <div class="order-info">
-          <span class="order-id">#{{ order.orderId }}</span>
-          <span class="order-date">{{ order.orderDate | date:'yyyy/MM/dd HH:mm' }}</span>
+          <span class="order-id">訂單編號: {{ order.orderId }}</span>
+          <span class="order-date">時間: {{ order.orderDate | date:'yyyy/MM/dd HH:mm' }}</span>
         </div>
         <div class="status-badge" [ngClass]="getStatusClass(order.status)">
           {{ getStatusLabel(order.status) }}
@@ -50,6 +73,39 @@
     }
   </div>
 
+  <!-- 原生自定義分頁器 -->
+  @if (totalRecords > pageSize) {
+    <div class="custom-pagination">
+      <button 
+        class="page-nav-btn" 
+        [disabled]="currentPage === 1" 
+        (click)="goToPage(currentPage - 1)">
+        &lsaquo;
+      </button>
+
+      <div class="page-numbers">
+        @for (p of pageNumbers; track p) {
+          <button 
+            [class.active]="p === currentPage" 
+            (click)="goToPage(p)">
+            {{ p }}
+          </button>
+        }
+      </div>
+
+      <button 
+        class="page-nav-btn" 
+        [disabled]="currentPage === totalPages" 
+        (click)="goToPage(currentPage + 1)">
+        &rsaquo;
+      </button>
+
+      <div class="page-info">
+        第 {{ currentPage }} / {{ totalPages }} 頁
+      </div>
+    </div>
+  }
+
   <!-- 訂單詳情彈窗 (Modal) -->
   @if (showModal && selectedOrderDetails) {
   <div class="modal-overlay" (click)="closeModal()">
@@ -74,8 +130,8 @@
 
           <div class="detail-section">
             <h4>付款與運送</h4>
-            <p><strong>付款方式:</strong> {{ selectedOrderDetails.paymentMethod || '未提供' }}</p>
-            <p><strong>運送方式:</strong> {{ selectedOrderDetails.shippingMethod || '未提供' }}</p>
+            <p><strong>付款方式:</strong> {{ selectedOrderDetails.selectedPayment || '未提供' }}</p>
+            <p><strong>運送方式:</strong> {{ selectedOrderDetails.shippingMethodName || '未提供' }}</p>
             <p><strong>下單時間:</strong> {{ (selectedOrderDetails.createDate || selectedOrderDetails.orderDate) |
               date:'yyyy/MM/dd HH:mm:ss' }}</p>
           </div>

@@ -30,6 +30,7 @@ export interface OrderItemDto {
   priceAtPurchase: number;
   unitPriceAtPurchase: number;
   imageUrl: string;
+  productImage: string;
 }
 
 export interface OrderDetailDto {

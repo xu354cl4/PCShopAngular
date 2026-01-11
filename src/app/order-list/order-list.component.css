@@ -8,8 +8,8 @@
   /* 主要文字：炭灰色 (非純黑) */
   --text-sub: #999990;
   /* 次要文字：暖灰色 */
-  --accent-color: #bfae9a;
-  /* 裝飾色：奶茶/亞麻色 */
+  --accent-color: #8c7355;
+  /* 裝飾色：深奶茶/木質色 */
   --border-color: #eaeaea;
   /* 邊框色：極淺灰 */
   --price-color: #d95e50;
@@ -43,22 +43,129 @@
   /* Pinkoi 風格標題常置中 */
 }
 
+/* 搜尋框樣式 */
+.search-container {
+  max-width: 500px;
+  margin: 0 auto 25px;
+  padding: 0 10px;
+}
+
+.search-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 2px solid #e0dfd5; /* 稍微加深並加粗邊框 */
+  border-radius: 25px;
+  padding: 6px 18px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); /* 增強陰影感 */
+}
+
+.search-wrapper:hover {
+  border-color: var(--accent-color);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+.search-wrapper:focus-within {
+  border-color: var(--accent-color);
+  background: #ffffff;
+  box-shadow: 0 8px 25px rgba(140, 115, 85, 0.15); /* 使用更明顯的裝飾色發光效果 */
+}
+
+.search-icon {
+  color: var(--accent-color); /* 將圖示改為裝飾色更吸睛 */
+  margin-right: 12px;
+  font-size: 1rem;
+}
+
+.search-input {
+  border: none;
+  outline: none;
+  flex: 1;
+  padding: 10px 5px;
+  font-size: 1rem;
+  color: var(--text-main);
+  background: transparent;
+}
+
+.search-input::placeholder {
+  color: #bbb;
+  font-style: italic;
+}
+
+.clear-btn {
+  background: none;
+  border: none;
+  color: var(--text-sub);
+  font-size: 1.2rem;
+  padding: 0 5px;
+  cursor: pointer;
+}
+
+.clear-btn:hover {
+  color: var(--price-color);
+}
+
+/* 篩選分頁樣式 */
+.filter-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+.filter-tabs button {
+  background: white;
+  border: 1px solid var(--border-color);
+  color: var(--text-sub);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+}
+
+.filter-tabs button:hover {
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+}
+
+.filter-tabs button.active {
+  background: #333333; /* 使用深炭灰色 */
+  border-color: #333333;
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px); /* 選取時微浮 */
+}
+
 /* 訂單卡片本體 */
 .order-card {
-  background: var(--card-bg);
+  background: #ffffff; /* 保持清新底色 */
   border-radius: var(--radius);
-  /* 移除原本明顯的陰影，改用極淡的邊框或微陰影 */
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
   margin-bottom: 25px;
   overflow: hidden;
-  border: 1px solid white;
-  /* 讓邊框融入背景 */
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid #f0f0f0;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  cursor: pointer;
 }
 
 .order-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+  transform: translateY(-5px);
+  background-color: #fdfdfd;
+  border-color: var(--accent-color);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+}
+
+.order-card:hover .card-header,
+.order-card:hover .card-body,
+.order-card:hover .card-footer {
+  background-color: transparent; /* 讓母卡片的背景色透出來 */
 }
 
 /* 1. 頭部：訂號與狀態 */
@@ -122,9 +229,10 @@
 }
 
 .status-cancelled {
-  background-color: #f4f4f5;
-  /* 淺霧灰 */
-  color: #909399;
+  background-color: #feeef0;
+  /* 淺紅色背景 */
+  color: #d9534f;
+  /* 磚紅色文字 */
 }
 
 /* 2. 中間：商品列表 */
@@ -226,9 +334,9 @@ button {
 
 /* 主要按鈕：無印風多用深灰或大地色，少用亮藍 */
 .btn-primary {
-  background: #5a5a5a;
-  /* 深暖灰 */
-  border: 1px solid #5a5a5a;
+  background: #3a3a3a;
+  /* 更深的暖灰 */
+  border: 1px solid #3a3a3a;
   color: white;
 }
 
@@ -290,10 +398,83 @@ button {
   z-index: 10;
 }
 
-.modal-header h3 {
-  margin: 0;
-  font-size: 1.25rem;
-  color: var(--text-main);
+/* --- 原生自定義分頁器樣式 --- */
+.custom-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 50px 0;
+  padding: 20px;
+  flex-wrap: wrap;
+}
+
+.page-nav-btn {
+  background: white;
+  border: 1px solid #ddd;
+  color: #666;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.page-nav-btn:hover:not(:disabled) {
+  border-color: #333;
+  color: #333;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.page-nav-btn i {
+  font-size: 1.1rem;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.page-numbers {
+  display: flex;
+  gap: 8px;
+}
+
+.page-numbers button {
+  background: white;
+  border: 1px solid #ddd;
+  color: #666;
+  min-width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.page-numbers button:hover {
+  border-color: #333;
+  color: #333;
+  background: #fcfcfb;
+}
+
+.page-numbers button.active {
+  background: #333;
+  border-color: #333;
+  color: white;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  transform: translateY(-2px);
+}
+
+.page-info {
+  font-size: 0.9rem;
+  color: #999;
+  margin-left: 10px;
 }
 
 .close-btn {
