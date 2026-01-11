@@ -34,7 +34,9 @@ export class OrderApiService {
       `https://localhost:7001/api/OrderItems/detail/${orderId}`
     );
   }
-
+ getOrderDetail2(orderId: number): Observable<OrderDetailDto> {
+    return this.http.get<OrderDetailDto>(`${this.apiUrl}/orders/${orderId}`);
+  }
   createOrder(data: CreateOrderRequest): Observable<{ orderId: number }> {
     return this.http.post<{ orderId: number }>(`${this.apiUrl}/orders`, data);
   }

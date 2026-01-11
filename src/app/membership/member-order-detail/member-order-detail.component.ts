@@ -20,7 +20,7 @@ export class MemberOrderDetailComponent implements OnChanges {
     if (!this.orderId) return;
 
     this.orderService
-      .getOrderDetail(this.orderId)
+      .getOrderDetail2(this.orderId)
       .subscribe(res => {
         // 將後端的 OrderDetailDto 映射為前端用的 OrderDetail 介面
         // 樣板中預期 status 為 'Pending' | 'Shipping' | 'Completed'
@@ -41,11 +41,12 @@ export class MemberOrderDetailComponent implements OnChanges {
           receiverPhone: res.receiverPhone,
           items: (res.items || []).map(item => ({
             productName: item.productName,
-            productImage: item.imageUrl,
-            unitPriceAtPurchase: item.priceAtPurchase || 0,
+            productImage: item.productImage,
+            unitPriceAtPurchase: item.unitPriceAtPurchase || 0,
             quantity: item.quantity
           }))
         };
+        console.log(this.order);
       });
   }
 
