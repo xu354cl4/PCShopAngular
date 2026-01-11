@@ -5,7 +5,7 @@ import { FaqCategory, FaqList, FaqDetail, FaqUpsertDto, FaqAdminModel } from '..
 @Injectable({ providedIn: 'root' })
 export class FaqBackApiService {
 
-  private base = '/api/faqs-admin';
+  private base = 'https://localhost:7001/api/faqs-admin';
 
   constructor(private http: HttpClient) { }
 
