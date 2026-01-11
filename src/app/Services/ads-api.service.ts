@@ -76,13 +76,13 @@ export class AdsApiService {
   // ===============================
   getPageRules() {
     return this.http.get<Record<string, string[]>>(
-      `https://localhost:7001/admin/ads/page-rules`
+      `https://localhost:7001/api/admin/ads/page-rules`
     );
   }
 
   savePageRules(payload: { rules: Record<string, string[]> }) {
     return this.http.post(
-      '/api/admin/ads/page-rules',
+      'https://localhost:7001/api/admin/ads/page-rules',
       payload
     );
   }

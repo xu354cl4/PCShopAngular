@@ -262,13 +262,15 @@ export class AdminAdsComponent implements OnInit {
     // ⚠️ 這裡假設你 AdsApiService 叫 uploadAdMedia(file)
     this.api.uploadAdMedia(file).subscribe({
       next: (res: any) => {
-        const mediaUrl = res.url || res.imageUrl; // 兼容你後端回傳欄位
+        let mediaUrl = res.url || res.imageUrl; // 兼容你後端回傳欄位
         if (!mediaUrl) {
           this.msg = '上傳成功但沒有回傳 url';
           this.uploading = false;
           return;
         }
-
+        if (mediaUrl.startsWith('/')) {
+          mediaUrl = `https://localhost:7001${mediaUrl}`;
+        }
         // ✅ 上傳後立刻覆蓋 MediaUrl + 自動帶入 type
         const autoType: 'image' | 'video' = res.type ?? this.detectMediaType(file);
 
