@@ -14,54 +14,54 @@ export class AdminProductService {
 
   // ===== 商品 CRUD =====
   getProducts(): Observable<AdminProductListDto[]> {
-    return this.http.get<AdminProductListDto[]>('/api/admin/AdminProducts');
+    return this.http.get<AdminProductListDto[]>('https://localhost:7001/api/admin/AdminProducts');
   }
 
   getProduct(id: number): Observable<AdminProductDto> {
-    return this.http.get<AdminProductDto>(`/api/admin/AdminProducts/${id}`);
+    return this.http.get<AdminProductDto>(`https://localhost:7001/api/admin/AdminProducts/${id}`);
   }
 
   createProduct(dto: AdminProductDto): Observable<{ productId: number }> {
-    return this.http.post<{ productId: number }>('/api/admin/AdminProducts', dto);
+    return this.http.post<{ productId: number }>('https://localhost:7001/api/admin/AdminProducts', dto);
   }
 
   updateProduct(id: number, dto: AdminProductDto): Observable<void> {
-    return this.http.put<void>(`/api/admin/AdminProducts/${id}`, dto);
+    return this.http.put<void>(`https://localhost:7001/api/admin/AdminProducts/${id}`, dto);
   }
 
   deleteProduct(id: number): Observable<void> {
-    return this.http.delete<void>(`/api/admin/AdminProducts/${id}`);
+    return this.http.delete<void>(`https://localhost:7001/api/admin/AdminProducts/${id}`);
   }
 
   uploadImage(file: File): Observable<{ imageUrl: string }> {
     const fd = new FormData();
     fd.append('file', file);
-    return this.http.post<{ imageUrl: string }>('/api/admin/AdminProducts/upload-image', fd);
+    return this.http.post<{ imageUrl: string }>('https://localhost:7001/api/admin/AdminProducts/upload-image', fd);
   }
 
   // ===== 分類 =====
   getCategories(): Observable<CategoryDto[]> {
-    return this.http.get<CategoryDto[]>('/api/admin/AdminProducts/categories');
+    return this.http.get<CategoryDto[]>('https://localhost:7001/api/admin/AdminProducts/categories');
   }
 
   createCategory(category: { categoryName: string }): Observable<CategoryDto> {
-    return this.http.post<CategoryDto>('/api/admin/AdminProducts/categories', category);
+    return this.http.post<CategoryDto>('https://localhost:7001/api/admin/AdminProducts/categories', category);
   }
 
   // ===== SKU CRUD =====
   getSkus(productId: number): Observable<ProductSkuDto[]> {
-    return this.http.get<ProductSkuDto[]>(`/api/admin/AdminProducts/${productId}/skus`);
+    return this.http.get<ProductSkuDto[]>(`https://localhost:7001/api/admin/AdminProducts/${productId}/skus`);
   }
 
   createSku(productId: number, dto: ProductSkuDto): Observable<{ skuid: number }> {
-    return this.http.post<{ skuid: number }>(`/api/admin/AdminProducts/${productId}/skus`, dto);
+    return this.http.post<{ skuid: number }>(`https://localhost:7001/api/admin/AdminProducts/${productId}/skus`, dto);
   }
 
   updateSku(dto: ProductSkuDto): Observable<void> {
-    return this.http.put<void>(`/api/admin/AdminProducts/skus/${dto.skuid}`, dto);
+    return this.http.put<void>(`https://localhost:7001/api/admin/AdminProducts/skus/${dto.skuid}`, dto);
   }
 
   deleteSku(skuid: number): Observable<void> {
-    return this.http.delete<void>(`/api/admin/AdminProducts/skus/${skuid}`);
+    return this.http.delete<void>(`https://localhost:7001/api/admin/AdminProducts/skus/${skuid}`);
   }
 }
