@@ -113,6 +113,7 @@ export class MembercenterComponent implements OnInit {
   getStatusLabel(status: string): string {
     const statusMap: Record<string, string> = {
       'pending': '待付款',
+      'shipping': '待付款', // 或者您可以改成 配送中
       'completed': '已完成',
       'cancelled': '已取消'
     };

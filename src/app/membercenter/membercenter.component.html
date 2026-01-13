@@ -122,7 +122,6 @@
           <h3>最新訂單</h3>
           <ul class="order-list-5">
             @for (o of overview.latestOrders; track o.orderNo) {
-              @if (o.statusCode !== 'shipping') {
               <li>
                 <span class="order-id">#{{ o.orderNo }}</span>
                 <span class="order-status" [ngClass]="o.statusCode">
@@ -130,7 +129,6 @@
                 </span>
                 <span class="order-amount">${{ o.totalAmount | number }}</span>
               </li>
-              }
             }
           </ul>
         </div>

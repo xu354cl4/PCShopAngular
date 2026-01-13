@@ -141,13 +141,6 @@ export class OrderListComponent implements OnInit, OnChanges {
               price: i.price || i.unitPrice || 0
             }))
           };
-        }).filter(order => {
-          const s = String(order.status);
-          // 排除 配送中 (或是 Shipped 字樣) 的資料
-          return s !== 'Shipped' && s !== '1' || this.currentFilter === '1'; 
-          // 註：如果 currentFilter 就是 '1' (待付款)，那就要顯示。
-          // 但若 API 的 '1' 代表配送中，而我們要顯示的是待付款，這部分可能需要視後端定義調整。
-          // 根據先前需求，我們將待付款對應為 1。
         });
       },
       error: (err) => {
