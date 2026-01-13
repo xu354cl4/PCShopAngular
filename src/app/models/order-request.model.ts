@@ -54,6 +54,7 @@ export interface OrderDetailDto {
   subtotal: number;
   statusName: string;
   selectedPayment: string;
+  discointAmount: number;
   items: OrderItemDto[];
 }
 export interface CreateOrderResponse {

@@ -129,9 +129,9 @@
                     <span>紅利折抵</span>
                     <span>-{{ orderDetail.usedPoints }}</span>
                 </div>
-                <div class="summary-line" *ngIf="orderDetail.couponDiscount > 0 || orderDetail.discountAmount > 0">
+                <div class="summary-line" *ngIf="orderDetail.couponDiscount > 0 || orderDetail.discointAmount > 0">
                     <span>優惠折扣</span>
-                    <span>-{{ (orderDetail.couponDiscount || orderDetail.discountAmount) |
+                    <span>-{{ (orderDetail.couponDiscount || orderDetail.discointAmount) |
                         currency:'TWD':'symbol':'1.0-0' }}</span>
                 </div>
                 <div class="summary-line total">
