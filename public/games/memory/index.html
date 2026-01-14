@@ -3,21 +3,208 @@
 
 <head>
   <meta charset="UTF-8" />
-  <title>翻牌配對</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>Memory Game 2×2 / 4×4</title>
+
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      background: #222;
+      color: #fff;
+    }
+
+    .controls {
+      margin: 16px;
+    }
+
+    #game-board {
+      display: grid;
+      gap: 16px;
+      justify-content: center;
+      align-content: center;
+      margin: 20px auto;
+    }
+
+    .card {
+      width: 120px;
+      height: 120px;
+      position: relative;
+      cursor: pointer;
+      perspective: 600px;
+    }
+
+    .card-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      backface-visibility: hidden;
+      transition: transform 0.4s;
+    }
+
+    .front {
+      background: #fff;
+    }
+
+    .back {
+      background: #fff;
+      color: #000;
+      transform: rotateY(180deg);
+    }
+
+    .card.flipped .front {
+      transform: rotateY(180deg);
+    }
+
+    .card.flipped .back {
+      transform: rotateY(0);
+    }
+  </style>
 </head>
 
 <body>
 
-  <h2>🧠 翻牌配對</h2>
-  <div id="timer">⏱ 0 秒</div>
-  <div id="game-board" class="board"></div>
-  <p id="status">點擊兩張卡片開始遊戲</p>
-  <button id="restartBtn" class="restart-btn" style="display:none;">
-    🔄 再玩一次
-  </button>
+  <h2>🧠 記憶翻牌</h2>
 
-  <script src="memory.js"></script>
+  <div class="controls">
+    <button id="btn2">2 × 2</button>
+    <button id="btn4">4 × 4</button>
+  </div>
+
+  <div id="timer">⏱ 0 秒</div>
+  <div id="status">請選擇模式開始</div>
+
+  <div id="game-board"></div>
+
+  <button id="restartBtn" style="display:none">重新開始</button>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+      let startTime = null;
+      let timerInterval = null;
+      let gridSize = 2;
+
+      const allSymbols = ['🍎', '🍌', '🍇', '🍓', '🍉', '🍒', '🥝', '🍍'];
+
+      let cards = [];
+      let flippedCards = [];
+      let lockBoard = false;
+      let matchedCount = 0;
+
+      const board = document.getElementById('game-board');
+      const statusText = document.getElementById('status');
+      const timer = document.getElementById('timer');
+      const restartBtn = document.getElementById('restartBtn');
+
+      document.getElementById('btn2').onclick = () => startGame(2);
+      document.getElementById('btn4').onclick = () => startGame(4);
+      restartBtn.onclick = () => startGame(gridSize);
+
+      function startGame(size) {
+        gridSize = size;
+        resetState();
+        setupGrid();
+        generateCards();
+        statusText.textContent = '點擊兩張卡片開始';
+      }
+
+      function setupGrid() {
+        board.style.gridTemplateColumns = `repeat(${gridSize}, 120px)`;
+        board.style.gridTemplateRows = `repeat(${gridSize}, 120px)`;
+      }
+
+      function generateCards() {
+        board.innerHTML = '';
+
+        const pairCount = (gridSize * gridSize) / 2;
+        const symbols = allSymbols.slice(0, pairCount);
+        cards = [...symbols, ...symbols].sort(() => Math.random() - 0.5);
+
+        cards.forEach(symbol => {
+          const card = document.createElement('div');
+          card.className = 'card';
+          card.dataset.symbol = symbol;
+
+          card.innerHTML = `
+            <div class="card-face front"></div>
+            <div class="card-face back">${symbol}</div>
+          `;
+
+          card.onclick = () => flipCard(card);
+          board.appendChild(card);
+        });
+      }
+
+      function flipCard(card) {
+        if (lockBoard) return;
+        if (card.classList.contains('flipped')) return;
+
+        startTimer();
+        card.classList.add('flipped');
+        flippedCards.push(card);
+
+        if (flippedCards.length === 2) checkMatch();
+      }
+
+      function checkMatch() {
+        const [c1, c2] = flippedCards;
+        const isMatch = c1.dataset.symbol === c2.dataset.symbol;
+
+        if (isMatch) {
+          matchedCount += 2;
+          flippedCards = [];
+          if (matchedCount === cards.length) endGame();
+        } else {
+          lockBoard = true;
+          statusText.textContent = '❌ 配對失敗';
+
+          setTimeout(() => {
+            c1.classList.remove('flipped');
+            c2.classList.remove('flipped');
+            flippedCards = [];
+            lockBoard = false;
+            statusText.textContent = '繼續配對';
+          }, 700);
+        }
+      }
+
+      function startTimer() {
+        if (timerInterval) return;
+        startTime = Date.now();
+
+        timerInterval = setInterval(() => {
+          const sec = Math.floor((Date.now() - startTime) / 1000);
+          timer.textContent = `⏱ ${sec} 秒`;
+        }, 500);
+      }
+
+      function endGame() {
+        clearInterval(timerInterval);
+        const sec = Math.floor((Date.now() - startTime) / 1000);
+        timer.textContent = `🎉 完成時間：${sec} 秒`;
+        statusText.textContent = '🎉 完成！';
+        restartBtn.style.display = 'inline-block';
+      }
+
+      function resetState() {
+        clearInterval(timerInterval);
+        timerInterval = null;
+        startTime = null;
+        flippedCards = [];
+        matchedCount = 0;
+        lockBoard = false;
+        timer.textContent = '⏱ 0 秒';
+        restartBtn.style.display = 'none';
+      }
+
+    });
+  </script>
+
 </body>
 
 </html>
