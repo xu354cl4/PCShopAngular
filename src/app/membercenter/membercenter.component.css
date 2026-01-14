@@ -166,3 +166,7 @@
 .order-status.completed {
   background: #4caf50;
 }
+
+.order-status.cancelled {
+  background: red;
+}
