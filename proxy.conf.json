@@ -1,13 +1,13 @@
 {
   "/api": {
-    "target": "https://9rgpr49q-7001.asse.devtunnels.ms",
+    "target": "https://91dnz7ll-7001.asse.devtunnels.ms",
     "//備註": "開發人員通道測試用網址，若要切換回本地請改用下方的 target_original",
     "target_original": "https://localhost:7001",
     "secure": false,
     "changeOrigin": true
   },
   "/uploads": {
-    "target": "https://9rgpr49q-7001.asse.devtunnels.ms",
+    "target": "https://91dnz7ll-7001.asse.devtunnels.ms",
     "target_original": "https://localhost:7001",
     "secure": false,
     "changeOrigin": true

@@ -38,6 +38,6 @@ export class EcpayService {
     isCollection: string;
     extraData: string;
   }): Observable<EcpayResponse> {
-    return this.http.post<EcpayResponse>('https://localhost:7001/api/ECPay/LogisticsMap', logisticsData);
+    return this.http.post<EcpayResponse>('https://91dnz7ll-7001.asse.devtunnels.ms/api/ECPay/LogisticsMap', logisticsData);
   }
 }
