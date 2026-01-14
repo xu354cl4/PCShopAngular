@@ -7,14 +7,14 @@
     <ul>
       <li (click)="mainView='overview'; this.selectedOrderId = null">帳戶總覽</li>
 
-      <li (click)="mainView='orders'">訂單管理
+      <li (click)="mainView='orders'; orderView='all'; this.selectedOrderId = null">訂單管理
         <ul>
           <li (click)="$event.stopPropagation(); mainView='orders'; orderView='pending'; this.selectedOrderId = null">
             待付款</li>
-          <li (click)="$event.stopPropagation(); mainView='orders'; orderView='shipping'; this.selectedOrderId = null">
-            配送中</li>
           <li (click)="$event.stopPropagation(); mainView='orders'; orderView='completed'; this.selectedOrderId = null">
             已完成</li>
+          <li (click)="$event.stopPropagation(); mainView='orders'; orderView='cancelled'; this.selectedOrderId = null">
+            已取消</li>
         </ul>
       </li>
 
@@ -35,154 +35,105 @@
           </li>
         </ul>
       </li>
-
-      <!-- <li (click)="mainView='benefits'">優惠管理
-        <ul>
-          <li
-            (click)="$event.stopPropagation(); mainView='benefits'; benefitsView='coupon';this.selectedOrderId = null">
-            折價券 💰
-          </li>
-          <li (click)="$event.stopPropagation(); mainView='benefits'; benefitsView='coin'; this.selectedOrderId = null">
-            蝦幣紀錄 🪙
-          </li>
-          <li
-            (click)="$event.stopPropagation(); mainView='benefits'; benefitsView='activity'; this.selectedOrderId = null">
-            回饋活動
-            🎁</li>
-        </ul>
-      </li> -->
     </ul>
   </aside>
 
   <!-- 右側內容區 -->
-  <!-- 訂單區 -->
   <section class="content-5">
+    <!-- 訂單區 -->
     @if (selectedOrderId !== null) {
-    <app-member-order-detail [orderId]="selectedOrderId" (close)="closeOrderDetail()">
-    </app-member-order-detail>
-    }
-    @if (selectedOrderId === null && mainView === 'orders') {
-
-    @if (orderView === 'pending') {
-    <app-member-order-pending [state]="orderListState" (stateChange)="orderListState = $event"
-      (openDetail)="openOrderDetail($event)"></app-member-order-pending>
-    }
-
-    @if (orderView === 'shipping') {
-    <app-member-order-shipping [state]="orderListState" (stateChange)="orderListState = $event"
-      (openDetail)="openOrderDetail($event)"></app-member-order-shipping>
+      <app-member-order-detail [orderId]="selectedOrderId" (close)="closeOrderDetail()">
+      </app-member-order-detail>
+    } @else if (mainView === 'orders') {
+      <app-order-list 
+        [fixedFilter]="orderView" 
+        (openDetail)="openOrderDetail($event)">
+      </app-order-list>
     }
 
-    @if (orderView === 'completed') {
-    <app-member-order-history [state]="orderListState" (stateChange)="orderListState = $event"
-      (openDetail)="openOrderDetail($event)"></app-member-order-history>
-    }
-    @if (loading) {
-    <div class="card-5">載入中...</div>
-    }
-
-    @if (!loading && error) {
-    <div class="card-5">{{ error }}</div>
-    }
-
-
-    <!-- 個人檔案區 -->
-    }
-    @if (!loading && !error && mainView === 'settings') {
-
-    @if (settingsView === 'profile') {
-    <app-member-profile (saved)="onProfileSaved()"></app-member-profile>
-    }
-
-    @if (settingsView === 'address') {
-    <app-member-address></app-member-address>
-    }
-
-    @if (settingsView === 'security') {
-    <app-member-security></app-member-security>
-    }
-    }
-    @if (loading) {
-    <div class="card-5">載入中...</div>
-    }
-
-    @if (!loading && error) {
-    <div class="card-5">{{ error }}</div>
+    <!-- 個人設定區 -->
+    @if (mainView === 'settings') {
+      @if (settingsView === 'profile') {
+      <app-member-profile (saved)="onProfileSaved()"></app-member-profile>
+      }
+      @if (settingsView === 'address') {
+      <app-member-address></app-member-address>
+      }
+      @if (settingsView === 'security') {
+      <app-member-security></app-member-security>
+      }
     }
 
     @if (mainView === 'benefits') {
-
-    @if (benefitsView === 'coupon') {
-    <app-member-benefits-coupon></app-member-benefits-coupon>
-    }
-
-    @if (benefitsView === 'coin') {
-    <app-member-benefits-coin></app-member-benefits-coin>
-    }
-
-    @if (benefitsView === 'activity') {
-    <app-member-benefits-footprints></app-member-benefits-footprints>
-    }
+      @if (benefitsView === 'coupon') {
+      <app-member-benefits-coupon></app-member-benefits-coupon>
+      }
+      @if (benefitsView === 'coin') {
+      <app-member-benefits-coin></app-member-benefits-coin>
+      }
+      @if (benefitsView === 'activity') {
+      <app-member-benefits-footprints></app-member-benefits-footprints>
+      }
     }
 
     <!-- ================= 帳戶總覽 ================= -->
-    @if (!loading && !error && mainView === 'overview' && overview) {
-
-    <div class="content-panel-5">
-      <h2 class="content-title-5">帳戶總覽</h2>
-
-      <div class="card-5">
-        <h3>個人資料</h3>
-        <!-- <button type="button" (click)="mainView='settings'; settingsView='profile'">
-          編輯
-        </button> -->
-        <div class="info-grid-5">
-          <div class="info-item-5">
-            <span class="info-label-5">姓名</span>
-            <span class="info-value-5">{{ overview.profile.fullName }}</span>
-          </div>
-
-          <div class="info-item-5">
-            <span class="info-label-5">生日</span>
-            <span class="info-value-5">
-              {{ overview.profile.birthDate
-              ? (overview.profile.birthDate | date:'yyyy/MM/dd')
-              : '-' }}
-            </span>
-          </div>
-          <div class="info-item-5">
-            <span class="info-label-5">可用點數</span>
-            <span class="info-value-5 highlight">
-              {{ points | number }} P
-            </span>
-          </div>
-          <div class="info-item-5">
-            <span class="info-label-5">手機</span>
-            <span class="info-value-5">{{ overview.profile.phone }}</span>
-          </div>
-
-          <div class="info-item-5">
-            <span class="info-label-5">Email</span>
-            <span class="info-value-5">{{ overview.profile.email }}</span>
+    @if (mainView === 'overview') {
+      @if (loading) {
+      <div class="card-5">載入中...</div>
+      }
+      @if (!loading && error) {
+      <div class="card-5">{{ error }}</div>
+      }
+      @if (!loading && !error && overview) {
+      <div class="content-panel-5">
+        <h2 class="content-title-5">帳戶總覽</h2>
+        <div class="card-5">
+          <h3>個人資料</h3>
+          <div class="info-grid-5">
+            <div class="info-item-5">
+              <span class="info-label-5">姓名</span>
+              <span class="info-value-5">{{ overview.profile.fullName }}</span>
+            </div>
+            <div class="info-item-5">
+              <span class="info-label-5">生日</span>
+              <span class="info-value-5">
+                {{ overview.profile.birthDate
+                ? (overview.profile.birthDate | date:'yyyy/MM/dd')
+                : '-' }}
+              </span>
+            </div>
+            <div class="info-item-5">
+              <span class="info-label-5">可用點數</span>
+              <span class="info-value-5 highlight">
+                {{ points | number }} P
+              </span>
+            </div>
+            <div class="info-item-5">
+              <span class="info-label-5">手機</span>
+              <span class="info-value-5">{{ overview.profile.phone }}</span>
+            </div>
+            <div class="info-item-5">
+              <span class="info-label-5">Email</span>
+              <span class="info-value-5">{{ overview.profile.email }}</span>
+            </div>
           </div>
         </div>
+        <div class="card-5">
+          <h3>最新訂單</h3>
+          <ul class="order-list-5">
+            @for (o of overview.latestOrders; track o.orderNo) {
+              <li>
+                <span class="order-id">#{{ o.orderNo }}</span>
+                <span class="order-status" [ngClass]="o.statusCode">
+                  {{ getStatusLabel(o.statusCode) }}
+                </span>
+                <span class="order-amount">${{ o.totalAmount | number }}</span>
+              </li>
+            }
+          </ul>
+        </div>
       </div>
-
-      <div class="card-5">
-        <h3>最新訂單</h3>
-        <ul class="order-list-5">
-          @for (o of overview.latestOrders; track o.orderNo) {
-          <li>
-            <span class="order-id">#{{ o.orderNo }}</span>
-            <span class="order-status" [ngClass]="o.statusCode">
-              {{ o.statusText }}
-            </span>
-            <span class="order-amount">${{ o.totalAmount | number }}</span>
-          </li>
-          }
-        </ul>
-      </div>
-    </div>
+      }
     }
   </section>
 </main>

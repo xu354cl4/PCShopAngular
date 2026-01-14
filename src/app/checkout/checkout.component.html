@@ -184,7 +184,7 @@
 
             <!-- Address (Conditional) -->
             <div class="address-section animate-in"
-              *ngIf="checkoutForm.get('delivery.deliveryMethod')?.value !== 'store_pickup'">
+              *ngIf="checkoutForm.get('delivery.deliveryMethod')?.value !== 'CVS'">
               <div class="form-field">
                 <label>收件地址</label>
                 <div class="address-grid">
@@ -200,12 +200,12 @@
 
             <!-- Store (Conditional) -->
             <div class="store-section animate-in"
-              *ngIf="checkoutForm.get('delivery.deliveryMethod')?.value === 'store_pickup'">
+              *ngIf="checkoutForm.get('delivery.deliveryMethod')?.value === 'CVS'">
               <div class="selected-store" *ngIf="checkoutForm.get('delivery.storeName')?.value">
                 <i class="pi pi-map-marker"></i>
                 <span>{{ checkoutForm.get('delivery.storeName')?.value }}</span>
               </div>
-              <button pButton type="button" label="搜尋門市" class="btn-store-search modern-btn-secondary"></button>
+              <button pButton type="button" label="搜尋門市" class="btn-store-search modern-btn-secondary" (click)="onSelectStore()"></button>
             </div>
           </div>
         </div>

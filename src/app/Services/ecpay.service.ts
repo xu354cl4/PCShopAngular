@@ -28,4 +28,16 @@ export class EcpayService {
     // 傳送 JSON Body: { "orderId": 123 }
     return this.http.post<EcpayResponse>(this.apiUrl, { orderId });
   }
+  /**
+   * 向後端請求門市地圖金流參數
+   * @param logisticsData 門市地圖請求資料
+   */
+  getLogisticsMap(logisticsData: {
+    logisticsType: string;
+    logisticsSubType: string;
+    isCollection: string;
+    extraData: string;
+  }): Observable<EcpayResponse> {
+    return this.http.post<EcpayResponse>('https://localhost:7001/api/ECPay/LogisticsMap', logisticsData);
+  }
 }
