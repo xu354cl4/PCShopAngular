@@ -30,9 +30,8 @@
         </div>
 
         <!-- 星星評價 -->
-        <div class="rating text-warning mb-2">
-          <ng-container *ngFor="let _ of [].constructor(product.rating)">★</ng-container>
-          <ng-container *ngFor="let _ of [].constructor(5 - product.rating)">☆</ng-container>
+        <div class="star-section mt-2" style="font-size: 1rem; color: #FFD700;">
+          ★★★★☆ <!-- 4 顆亮黃星 + 1 顆灰星 -->
         </div>
 
         <!-- 商品簡介 -->
@@ -98,6 +97,12 @@
             加入購物車
           </button>
         </div>
+      </div>
+      <!-- ⭐ 商品詳情大圖（電商感） -->
+      <div class="product-detail-image">
+        <img [src]="(product.images && product.images.length > 0
+        ? product.images[0]
+        : 'https://localhost:7001/images/products/noimage.jpg')" [alt]="product.name" />
       </div>
     </div>
 
