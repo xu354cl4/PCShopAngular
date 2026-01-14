@@ -82,6 +82,7 @@ export class MembercenterComponent implements OnInit {
       }
     });
   }
+
   onProfileSaved() {
     this.loadOverview();          // 讓 overview 的顯示資料更新
     this.mainView = 'overview';   // 可選：存完回總覽（不想回去就拿掉這行）
