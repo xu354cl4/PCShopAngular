@@ -68,6 +68,8 @@ export class ProductDetailComponent implements OnInit {
     private cartService: CartService
   ) { }
 
+  selectedImage: string = '';
+
   ngOnInit(): void {
     this.productId = Number(this.route.snapshot.paramMap.get('id'));
     this.loadProduct(this.productId);
@@ -79,12 +81,19 @@ export class ProductDetailComponent implements OnInit {
       next: (product) => {
         this.product = product;
         this.loading = false;
+        // 預設主圖
+        this.selectedImage = (this.product.images && this.product.images.length > 0)
+          ? this.product.images[0]
+          : 'https://localhost:7001/images/products/noimage.jpg';
       },
       error: (err) => {
         console.error('取得商品失敗', err);
         this.loading = false;
       }
     });
+  }
+  selectImage(img: string) {
+    this.selectedImage = img;
   }
 
   getProduct(id: number): Observable<Product> {
@@ -130,6 +139,24 @@ export class ProductDetailComponent implements OnInit {
 
   getSkuPrice(sku: ProductSku): number {
     return (this.product?.price || 0) + sku.priceAdjustment;
+  }
+
+  getDescriptionText(): string {
+    return this.product?.description || '';
+  }
+
+  getFeatures(): string[] {
+    // 假設我們 FullDescription 裡有 "特色：" 開頭的文字
+    if (!this.product?.description) return [];
+    const match = this.product.description.match(/特色：(.+?)規格：/s);
+    return match ? match[1].trim().split('、') : [];
+  }
+
+  getSpecs(): string[] {
+    // 假設我們 FullDescription 裡有 "規格：" 開頭的文字
+    if (!this.product?.description) return [];
+    const match = this.product.description.match(/規格：(.+)/s);
+    return match ? match[1].trim().split('\n') : [];
   }
 
   // 數量變化監控，超過庫存自動修正

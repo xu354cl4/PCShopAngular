@@ -1,0 +1,57 @@
+/* 篩選區整體 - 淺藍底 */
+.filter-section {
+  padding: 16px;
+  border: 1px solid #c0d6f9;  /* 比較淡的藍色邊框 */
+  border-radius: 8px;
+  background-color: #e6f0ff;    /* 淺藍底色 */
+  margin-bottom: 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+/* 篩選標題 */
+.filter-section h5 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  border-bottom: 1px solid #b0cfff; /* 標題底線也偏藍 */
+  padding-bottom: 4px;
+  color: #1a3d7c;  /* 深藍文字 */
+}
+
+/* 分類清單 */
+.filter-section ul.list-group li {
+  padding: 6px 8px;
+  margin-bottom: 4px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.filter-section ul.list-group li:hover {
+  background-color: #d0e4ff;  /* hover 更亮的藍 */
+}
+
+/* checkbox 調整大小 */
+.filter-section input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+}
+
+/* 按鈕樣式微調 */
+.filter-section button {
+  width: 100%;
+}
+
+/* 價格篩選欄 */
+.filter-section input[type="number"] {
+  width: 100%;
+  border-radius: 6px;
+  border: 1px solid #99c2ff;
+  padding: 4px 8px;
+  background-color: #f0f8ff; /* 輕微藍色背景，和整體一致 */
+}
+
+/* 價格欄間距 */
+.filter-section .d-flex.gap-2 span {
+  font-weight: bold;
+}

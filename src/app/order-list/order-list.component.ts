@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { OrderApiService } from '../Services/order-api.service';
@@ -33,7 +33,10 @@ export interface Order {
 })
 
 //API串接//
-export class OrderListComponent implements OnInit {
+export class OrderListComponent implements OnInit, OnChanges {
+  @Input() fixedFilter: string | null = null;
+  @Output() openDetail = new EventEmitter<number>();
+
   orders: Order[] = [];
   selectedOrderDetails: any = null;
   showModal: boolean = false;
@@ -72,7 +75,29 @@ export class OrderListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.applyFixedFilter();
     this.loadOrders(1);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['fixedFilter'] && !changes['fixedFilter'].firstChange) {
+      this.applyFixedFilter();
+      this.loadOrders(1);
+    }
+  }
+
+  private applyFixedFilter(): void {
+    if (this.fixedFilter) {
+      if (this.fixedFilter === 'pending') {
+        this.currentFilter = '1';
+      } else if (this.fixedFilter === 'completed') {
+        this.currentFilter = '2';
+      } else if (this.fixedFilter === 'cancelled') {
+        this.currentFilter = '3';
+      } else if (this.fixedFilter === 'all') {
+        this.currentFilter = 'all';
+      }
+    }
   }
 
   loadOrders(page: number): void {
@@ -139,10 +164,10 @@ export class OrderListComponent implements OnInit {
   getStatusClass(status: string | number): string {
     const s = String(status);
     switch (s) {
-      case '0': case 'Pending': return 'status-pending';
-      case '1': case 'Shipped': return 'status-shipped';
+      case '0': case 'Pending': case '1': return 'status-pending';
       case '2': case 'Completed': return 'status-completed';
       case '3': case 'Cancelled': return 'status-cancelled';
+      case 'Shipped': return 'status-shipped';
       default: return '';
     }
   }
@@ -151,14 +176,6 @@ export class OrderListComponent implements OnInit {
   getStatusLabel(status: string | number): string {
     const s = String(status);
     const statusMap: Record<string, string> = {
-      // '0': '處理中',
-      // 'Pending': '待付款',
-      // '1': '運送中',
-      // 'Shipped': '配送中',
-      // '2': '已完成',
-      // 'Completed': '已完成',
-      // '3': '已取消',
-      // 'Cancelled': '已取消'
       '0': '處理中',
       'Pending': '待付款',
       '1': '待付款',
@@ -182,6 +199,10 @@ export class OrderListComponent implements OnInit {
   }
 
   viewDetails(id: number): void {
+    if (this.openDetail.observed) {
+      this.openDetail.emit(id);
+      return;
+    }
     const listOrder = this.orders.find(o => o.id === id);
     console.log('正在查看訂單 ID:', id, '對應清單資料:', listOrder);
 

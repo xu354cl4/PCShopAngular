@@ -28,7 +28,16 @@
       <label>密碼</label>
       <input type="password" placeholder="請輸入密碼" [(ngModel)]="dto.Password" />
     </div>
+    <div class="form-group">
+      <label>驗證碼</label>
 
+      <div class="captcha-row">
+        <div class="captcha-box">{{ captchaText }}</div>
+        <button type="button" class="refresh-btn" (click)="generateCaptcha()">↻</button>
+      </div>
+
+      <input type="text" placeholder="請輸入驗證碼" [(ngModel)]="captchaInput" name="captchaInput" />
+    </div>
     <button class="login-btn" (click)="submit()">登入</button>
     <div class="links">
       <a routerLink="/forgot" (click)="goForgotpassword()">忘記密碼？</a>

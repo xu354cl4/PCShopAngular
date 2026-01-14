@@ -41,25 +41,32 @@
    商品卡片區
 ========================= */
 
-/* 卡片本體 */
+/* 卡片浮島效果 */
 .card {
   height: 100%;
   border: 1px solid #e0e0e0;
-  border-radius: 8px;
+  border-radius: 14px; /* 圓角較大 */
   overflow: hidden;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  background: #fff;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.12);
 }
 
 /* 商品圖片 */
 .card-img-top {
   width: 100%;
-  height: 200px;
+  height: 230px;
   object-fit: cover;
+  background: #f7f7f7;
+  transition: transform 0.4s ease;
+}
+
+.card:hover .card-img-top {
+  transform: scale(1.08);
 }
 
 /* =========================
@@ -68,7 +75,7 @@
 .card-body {
   display: flex;
   flex-direction: column;
-  min-height: 140px; /* ⭐ 關鍵：統一高度 */
+  min-height: 140px; /* 統一高度 */
 }
 
 /* 文字區塊 */
@@ -76,24 +83,45 @@
   flex-grow: 1;
 }
 
+/* 商品標題 + 底色裝飾 */
 .text-section h6 {
   font-size: 1rem;
+  font-weight: 600;
   line-height: 1.2rem;
   margin-bottom: 0.3rem;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  position: relative;
+  padding-bottom: 4px;
 }
 
+/* 商品價格 */
 .text-section p {
   font-size: 0.95rem;
   font-weight: 700;
-  color: #007bff;
+  color: #e53935; /* 紅色醒目 */
   margin-bottom: 0.5rem;
 }
 
+/* 原價 */
+.original-price {
+  font-size: 0.9rem;
+  color: #999;
+  text-decoration: line-through;
+  margin-bottom: 2px;
+  margin-right: 0.3rem;
+}
+
+/* 折扣價 */
+.sale-price {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #e53935;
+}
+
 /* =========================
-   星星評分（固定底部）
+   星星評分（固定底部） - 固定亮四顆
 ========================= */
 .star-section {
   margin-top: auto;
@@ -103,7 +131,15 @@
 
 .star-section i {
   font-size: 1rem;
+}
+
+/* 五顆星寫死四顆黃一顆灰 */
+.star-section i.text-warning {
   color: #ffc107;
+}
+
+.star-section i.text-secondary {
+  color: #ddd;
 }
 
 /* =========================
@@ -169,21 +205,4 @@
   .card-img-top {
     height: 180px;
   }
-}
-
-/* =========================
-   價格
-========================= */
-.original-price {
-  font-size: 0.9rem;
-  color: #999; /* 灰色 */
-  text-decoration: line-through;
-  margin-bottom: 2px;
-}
-
-.sale-price {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #e53935; /* 紅色醒目 */
-  margin-left: 0.5rem; /* 和原價有點間距 */
 }

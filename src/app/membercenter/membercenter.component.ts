@@ -14,17 +14,18 @@ import { MemberOrderDetailComponent } from '../membership/member-order-detail/me
 import { MemberBenefitsCouponComponent } from "../membership/member-benefits-coupon/member-benefits-coupon.component";
 import { MemberBenefitsCoinComponent } from "../membership/member-benefits-coin/member-benefits-coin.component";
 import { MemberBenefitsFootprintsComponent } from "../membership/member-benefits-footprints/member-benefits-footprints.component";
+import { OrderListComponent } from '../order-list/order-list.component';
 
 
 type MainView = 'overview' | 'orders' | 'settings' | 'benefits';
-type OrderView = 'all' | 'pending' | 'shipping' | 'completed';
+type OrderView = 'all' | 'pending' | 'completed' | 'cancelled';
 type SettingsView = 'profile' | 'address' | 'security';
 type BenefitsView = 'coupon' | 'coin' | 'activity';
 
 @Component({
   selector: 'app-membercenter',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MemberProfileComponent, MemberSecurityComponent, MemberAddressComponent, MemberOrderPendingComponent, MemberOrderShippingComponent, MemberOrderHistoryComponent, MemberOrderDetailComponent, MemberBenefitsCouponComponent, MemberBenefitsCoinComponent, MemberBenefitsFootprintsComponent],
+  imports: [CommonModule, ReactiveFormsModule, MemberProfileComponent, MemberSecurityComponent, MemberAddressComponent, MemberOrderPendingComponent, MemberOrderShippingComponent, MemberOrderHistoryComponent, MemberOrderDetailComponent, MemberBenefitsCouponComponent, MemberBenefitsCoinComponent, MemberBenefitsFootprintsComponent, OrderListComponent],
   templateUrl: './membercenter.component.html',
   styleUrl: './membercenter.component.css'
 })
@@ -108,5 +109,15 @@ export class MembercenterComponent implements OnInit {
 
   closeOrderDetail() {
     this.selectedOrderId = null;
+  }
+
+  getStatusLabel(status: string): string {
+    const statusMap: Record<string, string> = {
+      'pending': '待付款',
+      'shipping': '待付款', // 或者您可以改成 配送中
+      'completed': '已完成',
+      'cancelled': '已取消'
+    };
+    return statusMap[status] || status;
   }
 }

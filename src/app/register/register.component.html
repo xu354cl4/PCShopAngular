@@ -8,7 +8,7 @@
     <form [formGroup]="form" (ngSubmit)="Submit()">
 
       <div class="form-row">
-        <label>Full Name</label>
+        <label>姓名</label>
         <input type="text" formControlName="fullName" placeholder="請輸入姓名" />
 
         @if (form.get('fullName')?.invalid && form.get('fullName')?.touched) {
@@ -17,7 +17,7 @@
       </div>
 
       <div class="form-row">
-        <label>Email</label>
+        <label>信箱</label>
         <input type="email" formControlName="mail" placeholder="請輸入 Email" />
 
         @if (form.get('mail')?.invalid && form.get('mail')?.touched) {
@@ -27,7 +27,7 @@
 
       @if (!isExternalLogin) {
       <div class="form-row">
-        <label>Password</label>
+        <label>密碼</label>
         <input type="password" formControlName="password" placeholder="請輸入密碼" />
 
         @if (form.get('password')?.invalid && form.get('password')?.touched) {
@@ -37,7 +37,7 @@
       }
 
       <div class="form-row">
-        <label>Phone</label>
+        <label>手機號碼</label>
         <input type="tel" formControlName="phone" placeholder="例如: 0912345678" />
 
         @if (form.get('phone')?.invalid && form.get('phone')?.touched) {
@@ -46,7 +46,7 @@
       </div>
 
       <div class="form-row">
-        <label>Address</label>
+        <label>地址</label>
         <input type="text" formControlName="address" placeholder="請輸入地址" />
 
         @if (form.get('address')?.invalid && form.get('address')?.touched) {
@@ -55,22 +55,27 @@
       </div>
 
       <div class="form-row">
-        <label>Shipping Address (選填)</label>
+        <label>配送地址(選填)</label>
         <input type="text" formControlName="shippingAddress" placeholder="同上可不填" />
       </div>
 
       <div class="form-row">
-        <label>BirthDay</label>
+        <label>生日</label>
         <input type="date" formControlName="birthDay" [max]="getTodayString()" [min]="'1900-01-01'" />
 
         @if (form.get('birthDay')?.invalid && form.get('birthDay')?.touched) {
         <small class="error-text">生日日期無效</small>
         }
       </div>
+      <div class="form-actions">
+        <button type="button" class="demo-btn" (click)="fillDemoData()">
+          🚀 Demo 一鍵填值
+        </button>
 
-      <button type="submit" class="submit-btn" [disabled]="form.invalid">
-        {{ isExternalLogin ? '完成資料' : '註冊' }}
-      </button>
+        <button type="submit" class="submit-btn" [disabled]="form.invalid">
+          {{ isExternalLogin ? '完成資料' : '註冊' }}
+        </button>
+      </div>
 
     </form>
   </div>

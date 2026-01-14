@@ -19,16 +19,16 @@
         <button type="button" class="btn btn-outline-primary" (click)="uploadAvatar()" [disabled]="!selectedFile">
           上傳頭像
         </button>
-        </div>
+      </div>
 
       <div style="margin-bottom: 20px;">
         <img *ngIf="previewUrl" [src]="previewUrl"
           style="width:80px; height:80px; border-radius:50%; object-fit:cover; border: 2px solid #ddd;" />
         <img *ngIf="!previewUrl" [src]="(avatarUrl$ | async) || '/assets/images/no-image.png'"
           style="width:80px; height:80px; border-radius:50%; object-fit:cover; border: 2px solid #ddd;" />
-        </div>
+      </div>
 
-        <div class="form-row">
+      <div class="form-row">
         <label class="row-label">Email</label>
         <div class="row-content">
           <input type="email" class="shop-input" [(ngModel)]="emailInput" [readonly]="isThirdParty"
@@ -52,7 +52,16 @@
               補寄驗證信
             </button>
           </div>
+          <!-- ✅ Email 已驗證 -->
+          <div *ngIf="
+    !isThirdParty &&
+    isMailVerified &&
+    emailInput === (authState.getCurrentUser()?.mail ?? '')
+  " class="status-success"
+            style="color:#16a34a; margin-top:5px; font-size:0.9em; display:flex; align-items:center; gap:6px;">
+            ✔️ 此信箱已驗證
           </div>
+        </div>
       </div>
 
       <div class="form-row">
@@ -63,15 +72,15 @@
           請輸入姓名
         </div>
       </div>
-<div class="form-row">
-  <label class="row-label">生日</label>
+      <div class="form-row">
+        <label class="row-label">生日</label>
         <input type="date" class="shop-input" formControlName="birthDate" />
-        </div>
+      </div>
 
       <div class="form-row">
         <label class="row-label">手機</label>
         <input class="shop-input" formControlName="phone" />
-        </div>
+      </div>
 
       <div class="form-footer" style="margin-top: 20px;">
         <button type="button" class="btn-shop primary" (click)="save()">

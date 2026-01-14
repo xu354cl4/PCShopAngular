@@ -110,4 +110,20 @@ export class HomeComponent implements OnInit, AfterViewInit {
       });
     }
   }
+
+  heartsClicked: boolean[] = [];
+
+  toggleHeart(event: Event, index: number) {
+    event.stopPropagation(); // 防止觸發卡片 click
+    this.heartsClicked[index] = !this.heartsClicked[index];
+
+    const target = event.target as HTMLElement;
+    if (this.heartsClicked[index]) {
+      target.classList.add('clicked');
+      target.textContent = '❤️';
+      setTimeout(() => target.classList.remove('clicked'), 500);
+    } else {
+      target.textContent = '🤍';
+    }
+  }
 }

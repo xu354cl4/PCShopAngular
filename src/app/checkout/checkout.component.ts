@@ -7,6 +7,7 @@ import { Subject, takeUntil, startWith } from 'rxjs';
 import { OrderApiService } from '../Services/order-api.service';
 import { CreateOrderRequest, CreateOrderResponse } from '../models/order-request.model';
 import { TAIWAN_ADDRESS_DATA } from '../models/taiwan-address-data';
+import { EcpayService } from '../Services/ecpay.service';
 
 // PrimeNG Imports
 import { StepsModule } from 'primeng/steps';
@@ -64,7 +65,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   deliveryMethods = [
     { label: '本島宅配', value: 'mainland_delivery' },
     { label: '台灣離島宅配', value: 'island_delivery' },
-    { label: '門市自取', value: 'store_pickup' }
+    { label: '7-11門市自取', value: 'CVS' }
   ];
 
   paymentMethods = [
@@ -83,7 +84,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private router: Router,
     private http: HttpClient,
-    private orderService: OrderApiService
+    private orderService: OrderApiService,
+    private ecpayService: EcpayService
   ) {
     // 獲取路由轉場時帶過來的 state 資料
     const navigation = this.router.getCurrentNavigation();
@@ -117,7 +119,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         city: ['', Validators.required],
         district: ['', Validators.required],
         address: ['', Validators.required],
-        storeName: ['台北信義門市'] // 預設或選取後的門市
+        storeName: [''] // 預設或選取後的門市
       })
     });
   }
@@ -171,7 +173,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         const districtCtrl = this.checkoutForm.get('delivery.district');
         const addressCtrl = this.checkoutForm.get('delivery.address');
 
-        if (method === 'store_pickup') {
+        if (method === 'CVS') {
           cityCtrl?.disable();
           districtCtrl?.disable();
           addressCtrl?.disable();
@@ -181,7 +183,27 @@ export class CheckoutComponent implements OnInit, OnDestroy {
           addressCtrl?.enable();
         }
       });
+
+    // 監聽綠界門市選擇回傳
+    window.addEventListener('message', this.handleLogisticsMessage);
   }
+
+  // 處理綠界門市回傳訊息 (使用箭頭函式以保持 this 語境)
+  private handleLogisticsMessage = (event: MessageEvent) => {
+    // 這裡可以檢查 event.origin 確保安全性
+    const storeData = event.data;
+
+    // 檢查回傳資料格式是否符合預期
+    if (storeData && storeData.storeId && storeData.storeName) {
+      console.log('收到門市資訊:', storeData);
+      
+      this.checkoutForm.get('delivery')?.patchValue({
+        storeName: `${storeData.storeName} (${storeData.storeId})`,
+        // 如果有需要也可以把地址存進去
+        address: storeData.storeAddress
+      });
+    }
+  };
 
   // 同步邏輯 helper
   private syncCustomerToDelivery() {
@@ -245,6 +267,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
+    // 移除監聽器
+    window.removeEventListener('message', this.handleLogisticsMessage);
   }
   //更新executeEcpayForm方法
   onConfirmCheckout() {
@@ -262,8 +286,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     const formData = this.checkoutForm.getRawValue();
 
     // 根據運送方式決定地址
-    const address = formData.delivery.deliveryMethod === 'store_pickup'
-      ? formData.delivery.storeName
+    const address = formData.delivery.deliveryMethod === 'CVS'
+      ? `${formData.delivery.address}(${formData.delivery.storeName})`.trim()
       : `${formData.delivery.city}${formData.delivery.district}${formData.delivery.address}`.trim();
 
     // 組合訂單請求物件
@@ -310,8 +334,10 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
   /**
    * 提交資料到綠界金流
+   * @param htmlForm 綠界回傳的 HTML 表單字串
+   * @param target 提交對象，預設 _self (當前頁面)，若為物流地圖建議用新視窗
    */
-  private executeEcpayForm(htmlForm: string) {
+  private executeEcpayForm(htmlForm: string, target: string = '_self') {
     // 建立一個隱藏的 div 來放置 HTML
     const div = document.createElement('div');
     div.style.display = 'none';
@@ -321,11 +347,48 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     // 尋找表單並提交
     const form = div.querySelector('form');
     if (form) {
+      if (target !== '_self') {
+        // 設定新視窗參數
+        const width = 1000;
+        const height = 700;
+        const left = (window.screen.width - width) / 2;
+        const top = (window.screen.height - height) / 2;
+        
+        window.open('', target, `width=${width},height=${height},left=${left},top=${top},scrollbars=yes,resizable=yes`);
+        form.target = target;
+      }
       form.submit();
     } else {
       console.error('無法解析綠界表單');
       alert('跳轉金流失敗，請聯繫客服');
     }
+  }
+
+  /**
+   * 開啟綠界門市地圖
+   */
+  onSelectStore() {
+    const logisticsData = {
+      logisticsType: 'CVS',
+      logisticsSubType: 'UNIMART',
+      isCollection: 'N',
+      extraData: '' // 可以帶入一些自定義資料，在回傳時會帶回
+    };
+
+    this.ecpayService.getLogisticsMap(logisticsData).subscribe({
+      next: (response) => {
+        if (response.success && response.htmlForm) {
+          // 使用新窗口打開門市地圖
+          this.executeEcpayForm(response.htmlForm, 'ecpayMapPopup');
+        } else {
+          alert(response.message || '無法開啟門市地圖');
+        }
+      },
+      error: (err) => {
+        console.error('開啟門市地圖失敗:', err);
+        alert('系統錯誤，無法開啟門市地圖');
+      }
+    });
   }
 }
 
