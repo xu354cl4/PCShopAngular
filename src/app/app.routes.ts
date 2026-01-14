@@ -2,6 +2,7 @@
 import { Routes } from '@angular/router';
 import { ProfileCompleteGuard } from './guard/profile-complete.guard';
 
+
 export const routes: Routes = [
   {
     path: '',

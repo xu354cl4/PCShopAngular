@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
@@ -7,11 +8,19 @@ import { ProductService, ApiResponse } from '../product/services/product.service
 import { Product } from '../product/models/product.model';
 
 declare var bootstrap: any;
+=======
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+>>>>>>> Stashed changes
 
 @Component({
   selector: 'app-home',
   standalone: true,
+<<<<<<< Updated upstream
   imports: [CommonModule, RouterModule],
+=======
+  imports: [CommonModule],
+>>>>>>> Stashed changes
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
@@ -108,6 +117,22 @@ export class HomeComponent implements OnInit, AfterViewInit {
       new bootstrap.Carousel(carouselEl, {
         interval: 3000
       });
+    }
+  }
+
+  heartsClicked: boolean[] = [];
+
+  toggleHeart(event: Event, index: number) {
+    event.stopPropagation(); // 防止觸發卡片 click
+    this.heartsClicked[index] = !this.heartsClicked[index];
+
+    const target = event.target as HTMLElement;
+    if (this.heartsClicked[index]) {
+      target.classList.add('clicked');
+      target.textContent = '❤️';
+      setTimeout(() => target.classList.remove('clicked'), 500);
+    } else {
+      target.textContent = '🤍';
     }
   }
 }

@@ -14,29 +14,49 @@
       <!-- 商品資訊 -->
       <div class="col-md-6 mb-4">
         <h3>{{ product.name }}</h3>
-        <p class="text-muted">{{ product.category }}</p>
+        <p class="category text-muted">{{ product.category }}</p>
 
-        <!-- 商品價格 -->
+        <!-- 價格區 -->
         <div class="price-wrapper mb-2">
-          <!-- 原價：只有在有折扣時顯示 -->
           <span class="original-price" *ngIf="selectedSku && selectedSku.priceAdjustment != 0">
             NT$ {{ product.price | number:'1.0-0' }}
           </span>
-
-          <!-- 折扣後價格 -->
           <span class="sale-price">
             NT$ {{ (selectedSku ? getSkuPrice(selectedSku) : product.price) | number:'1.0-0' }}
           </span>
         </div>
 
         <!-- 星星評價 -->
-        <div class="text-warning mb-2">
+        <div class="rating text-warning mb-2">
           <ng-container *ngFor="let _ of [].constructor(product.rating)">★</ng-container>
           <ng-container *ngFor="let _ of [].constructor(5 - product.rating)">☆</ng-container>
         </div>
 
-        <p class="description">{{ product.description }}</p>
-        <p class="text-muted">保固：{{ product.warrantyInfo }}</p>
+        <!-- 商品簡介 -->
+        <div class="description mb-3">
+          <p>{{ getDescriptionText() }}</p>
+        </div>
+
+        <!-- 特色清單 -->
+        <div class="features mb-3" *ngIf="getFeatures().length">
+          <h5>特色</h5>
+          <ul>
+            <li *ngFor="let feat of getFeatures()">{{ feat }}</li>
+          </ul>
+        </div>
+
+        <!-- 規格清單 -->
+        <div class="specs mb-3" *ngIf="getSpecs().length">
+          <h5>規格</h5>
+          <ul>
+            <li *ngFor="let spec of getSpecs()">{{ spec }}</li>
+          </ul>
+        </div>
+
+        <!-- 支援資訊 -->
+        <div class="support-info mb-3">
+          <p>✔ 支援信用卡付款 &nbsp; ✔ 本島/離島配送 &nbsp; ✔ 門市自取</p>
+        </div>
 
         <!-- SKU 選擇 -->
         <div *ngIf="!loadingSkus && skus.length">
@@ -51,7 +71,7 @@
           </div>
         </div>
 
-        <!-- 庫存與數量提示 -->
+        <!-- 庫存與數量 -->
         <div *ngIf="selectedSku" class="mt-2">
           <p [ngClass]="{'text-danger': quantityExceeded, 'text-success': !quantityExceeded}">
             庫存: {{ selectedSku.stockQuantity }}

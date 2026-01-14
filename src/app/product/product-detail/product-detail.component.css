@@ -1,48 +1,59 @@
-/* 頁面基礎 */
-.page-wrapper {
-  padding-top: 20px;
-  padding-bottom: 80px; /* 預留 footer 空間 */
-}
+.page-wrapper { padding-top: 20px; padding-bottom: 80px; }
+.product-image { width: 100%; max-height: 400px; object-fit: cover; border-radius: 8px; background-color: #f8f9fa; }
+.thumb-image { width: 60px; height: 60px; object-fit: cover; cursor: pointer; border: 2px solid transparent; border-radius: 4px; }
+.thumb-image:hover { border-color: #007bff; }
 
-/* 商品圖片 */
-.product-image {
+.product-title { font-weight: 700; color: #333; font-size: 2rem; }
+.category { font-size: 1.1rem; color: #666; }
+.description { font-size: 1.15rem; line-height: 1.8; margin-bottom: 1rem; }
+
+.price-wrapper { display: flex; flex-direction: column; }
+.original-price { font-size: 1rem; color: #999; text-decoration: line-through; margin-bottom: 2px; }
+.sale-price { font-size: 1.8rem; font-weight: 700; color: #e53935; }
+
+.price-star-wrapper { min-height: 70px; display: flex; flex-direction: column; justify-content: space-between; }
+.star-rating { font-size: 1.5rem; letter-spacing: 1px; color: #FFD700; }
+
+.purchase-info { border: 1px solid #ddd; border-radius: 8px; padding: 12px 16px; background-color: #f8f9ff; font-size: 1rem; color: #333; margin-bottom: 1rem; }
+.purchase-info .info-item { margin-bottom: 4px; display: flex; align-items: center; gap: 6px; font-weight: 500; }
+
+.sku-list .btn { font-size: 1rem; min-width: 90px; padding: 0.4rem 0.8rem; }
+.stock-info { padding: 6px 10px; border-radius: 6px; font-weight: 500; width: fit-content; font-size: 1rem; }
+.stock-info.available { background-color: #e6f9ed; color: #2a7a2f; }
+.stock-info.exceeded { background-color: #ffe6e6; color: #d8000c; animation: pulse 1s infinite; }
+@keyframes pulse { 0% { background-color: #ffe6e6; } 50% { background-color: #ffcccc; } 100% { background-color: #ffe6e6; } }
+
+.form-control { font-size: 1rem; }
+.btn-lg { font-size: 1.2rem; padding: 0.6rem 1rem; }
+
+.product-details h4 { font-size: 1.5rem; margin-bottom: 1rem; }
+.detail-images img {
   width: 100%;
-  max-height: 400px;
+  height: auto;
   object-fit: cover;
   border-radius: 8px;
+  margin-bottom: 20px; /* 每張圖之間間距 */
 }
 
-/* 商品描述 */
-.description {
-  margin-bottom: 0.5rem;
+.description p {
+  font-size: 1rem;
+  line-height: 1.6;
+  white-space: pre-line;
 }
 
-/* 星星評價 */
-.text-warning {
-  font-size: 1.2rem;
+.features ul,
+.specs ul {
+  padding-left: 1.2rem;
+  margin: 0.3rem 0;
 }
 
-/* 響應式調整 */
-@media (max-width: 767.98px) {
-  .product-image {
-    max-height: 300px;
-  }
+.features li,
+.specs li {
+  margin-bottom: 0.3rem;
+  list-style-type: disc;
 }
 
-.price-wrapper {
-  display: flex;
-  flex-direction: column;
-}
-
-.original-price {
-  font-size: 0.9rem;
-  color: #999;
-  text-decoration: line-through;
-  margin-bottom: 2px;
-}
-
-.sale-price {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #e53935; /* 紅色醒目 */
+.support-info p {
+  font-size: 0.95rem;
+  color: #555;
 }

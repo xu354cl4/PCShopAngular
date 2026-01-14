@@ -23,35 +23,42 @@
   </div>
 </div>
 
-<!-- Hot Products (硬寫 ID 讀後端) -->
-<section class="hot-products section mt-5">
+<!-- HOT PRODUCTS -->
+<section class="hot-products section">
   <div class="container">
     <div class="row">
-
       <div class="col-12 mb-4">
         <h2>暢銷商品</h2>
       </div>
+      <div class="col-12 text-center" *ngIf="loadingHot">載入中...</div>
+      <div class="col-12 text-center text-danger" *ngIf="errorHot">{{ errorHot }}</div>
 
-      <div class="col-12 text-center" *ngIf="loadingHot">
-        載入中...
-      </div>
+      <div class="col-lg-4 col-md-6 col-12 mb-3" *ngFor="let product of hotProducts; let i = index">
+        <div class="card h-100" (click)="goToProductDetail(product.id)">
+          <!-- 左上 HOT / NEW -->
+          <div class="card-badges-left">
+            <span class="badge-hot">HOT</span>
+          </div>
 
-      <div class="col-12 text-center text-danger" *ngIf="errorHot">
-        {{ errorHot }}
-      </div>
+          <!-- 右上 愛心 -->
+          <div class="card-badges-right">
+            <span class="badge-heart" (click)="toggleHeart($event, i)">🤍</span>
+          </div>
 
-      <div class="col-lg-4 col-md-6 col-12 mb-3" *ngFor="let product of hotProducts">
-        <div class="card h-100" style="cursor: pointer" (click)="goToProductDetail(product.id)">
+          <!-- Product Image -->
           <img [src]="product.imageUrl" class="card-img-top" [alt]="product.name">
+
+          <!-- Card Body -->
           <div class="card-body d-flex flex-column">
             <h5 class="card-title">{{ product.name }}</h5>
+            <div class="product-meta mb-2">
+              <span class="stars">★★★★☆</span>
+              <span class="review-count">(50+)</span>
+            </div>
             <p class="mb-1 mt-auto">
-              <!-- 原價永遠畫線 -->
               <span *ngIf="product.salePrice" class="original-price">
                 $ {{ product.price | number:'1.0-0' }}
               </span>
-
-              <!-- 折扣價或原價加粗 -->
               <span class="sale-price ms-1">
                 $ {{ product.salePrice !== undefined ? (product.salePrice | number:'1.0-0') : (product.price |
                 number:'1.0-0') }}
@@ -60,40 +67,45 @@
           </div>
         </div>
       </div>
-
     </div>
   </div>
 </section>
 
-<!-- Latest Products -->
-<section class="latest-products section mt-5">
+<!-- LATEST PRODUCTS -->
+<section class="latest-products section">
   <div class="container">
     <div class="row">
-
       <div class="col-12 mb-4">
         <h2>最新商品</h2>
       </div>
+      <div class="col-12 text-center" *ngIf="loadingLatest">載入中...</div>
+      <div class="col-12 text-center text-danger" *ngIf="errorLatest">{{ errorLatest }}</div>
 
-      <div class="col-12 text-center" *ngIf="loadingLatest">
-        載入中...
-      </div>
+      <div class="col-lg-4 col-md-6 col-12 mb-3" *ngFor="let product of latestProducts; let i = index">
+        <div class="card h-100" (click)="goToProductDetail(product.id)">
+          <!-- 左上 HOT / NEW -->
+          <div class="card-badges-left">
+            <span class="badge-new">NEW</span>
+          </div>
 
-      <div class="col-12 text-center text-danger" *ngIf="errorLatest">
-        {{ errorLatest }}
-      </div>
+          <!-- 右上 愛心 -->
+          <div class="card-badges-right">
+            <span class="badge-heart" (click)="toggleHeart($event, i)">🤍</span>
+          </div>
 
-      <div class="col-lg-4 col-md-6 col-12 mb-3" *ngFor="let product of latestProducts">
-        <div class="card h-100" style="cursor: pointer" (click)="goToProductDetail(product.id)">
+          <!-- Product Image -->
           <img [src]="product.imageUrl" class="card-img-top" [alt]="product.name">
+
+          <!-- Card Body -->
           <div class="card-body d-flex flex-column">
             <h5 class="card-title">{{ product.name }}</h5>
+            <div class="product-meta mb-2">
+              <span class="stars">★★★★☆</span>
+            </div>
             <p class="mb-1 mt-auto">
-              <!-- 原價永遠畫線 -->
               <span *ngIf="product.salePrice" class="original-price">
                 $ {{ product.price | number:'1.0-0' }}
               </span>
-
-              <!-- 折扣價或原價加粗 -->
               <span class="sale-price ms-1">
                 $ {{ product.salePrice !== undefined ? (product.salePrice | number:'1.0-0') : (product.price |
                 number:'1.0-0') }}
@@ -102,7 +114,6 @@
           </div>
         </div>
       </div>
-
     </div>
   </div>
 </section>

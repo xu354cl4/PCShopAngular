@@ -227,3 +227,44 @@
 .shopping-list::-webkit-scrollbar-track {
   background: #f1f1f1;
 }
+
+/* ==================== Header Middle 文字大小 ==================== */
+.header-middle {
+  font-size: 1rem; /* 整體文字大小，可微調 */
+}
+
+.header-middle .middle-right-area {
+  font-size: 0.95rem; /* 購物車、wishlist 文字大小 */
+}
+
+.header-middle .navbar-cart .total-items {
+  font-size: 0.85rem; /* 小紅點內文字 */
+}
+
+/* ==================== Header Bottom / Navbar 文字大小 ==================== */
+.header-bottom .nav-inner .navbar-nav .nav-link,
+.header-bottom .mega-category-menu .cat-button,
+.header-bottom .sub-category .dropdown-item {
+  font-size: 1rem; /* 主導航、分類按鈕、下拉選單文字大小 */
+}
+
+/* RWD 響應式微調 */
+@media (max-width: 991.98px) {
+  .header-middle {
+    font-size: 0.95rem;
+  }
+  .header-bottom .nav-inner .navbar-nav .nav-link,
+  .header-bottom .mega-category-menu .cat-button {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .header-middle {
+    font-size: 0.9rem;
+  }
+  .header-bottom .nav-inner .navbar-nav .nav-link,
+  .header-bottom .mega-category-menu .cat-button {
+    font-size: 0.9rem;
+  }
+}

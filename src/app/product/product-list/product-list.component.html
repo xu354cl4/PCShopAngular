@@ -50,37 +50,37 @@
           <div class="col-xl-3 col-lg-4 col-md-6 col-12"
             *ngFor="let product of pagedProducts; trackBy: trackByProductId">
             <div class="card h-100">
+
+              <!-- 商品圖片 -->
               <a [routerLink]="['/products', product.id]">
                 <img [src]="product.imageUrl || 'https://localhost:7001/images/products/noimage.jpg'"
                   class="card-img-top" [alt]="product.name" />
               </a>
+
+              <!-- 卡片內容 -->
               <div class="card-body d-flex flex-column">
 
-                <!-- 文字區塊，高度統一 -->
-                <div class="text-section flex-grow-1">
+                <!-- 商品名稱與價格 -->
+                <div class="flex-grow-1">
                   <h6 class="mb-1 text-truncate">
                     <a [routerLink]="['/products', product.id]" class="text-decoration-none text-dark">
                       {{ product.name }}
                     </a>
                   </h6>
-                  <p class="mb-1">
-                    <!-- 原價永遠畫線，灰色 -->
-                    <span *ngIf="product.salePrice" class="original-price">
+
+                  <p class="mb-2">
+                    <span *ngIf="product.salePrice" class="original-price text-decoration-line-through me-2">
                       $ {{ product.price | number:'1.0-0' }}
                     </span>
-
-                    <!-- 折扣價或原價加粗，紅色 -->
-                    <span class="sale-price">
+                    <span class="sale-price fw-bold">
                       $ {{ product.salePrice || product.price | number:'1.0-0' }}
                     </span>
                   </p>
                 </div>
 
-                <!-- 星星評分，固定底部 -->
-                <div class="star-section mt-auto text-warning">
-                  <ng-container *ngFor="let i of [1,2,3,4,5]">
-                    <i class="bi" [ngClass]="i <= product.rating ? 'bi-star-fill' : 'bi-star'"></i>
-                  </ng-container>
+                <!-- ⭐ 固定星星 (Unicode) -->
+                <div class="star-section mt-2" style="font-size: 1rem; color: #FFD700;">
+                  ★★★★☆ <!-- 4 顆亮黃星 + 1 顆灰星 -->
                 </div>
 
               </div>
