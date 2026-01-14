@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
@@ -8,19 +7,11 @@ import { ProductService, ApiResponse } from '../product/services/product.service
 import { Product } from '../product/models/product.model';
 
 declare var bootstrap: any;
-=======
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
->>>>>>> Stashed changes
 
 @Component({
   selector: 'app-home',
   standalone: true,
-<<<<<<< Updated upstream
   imports: [CommonModule, RouterModule],
-=======
-  imports: [CommonModule],
->>>>>>> Stashed changes
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
