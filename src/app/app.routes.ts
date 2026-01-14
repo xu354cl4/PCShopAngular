@@ -13,7 +13,7 @@ export const routes: Routes = [
     loadComponent: () => import('./home/home.component').then(m => m.HomeComponent)
   },
   {
-    path: 'faqs', canActivate: [ProfileCompleteGuard], loadComponent: () => import('./faqs/faqs.component').then(m => m.FaqsComponent)
+    path: 'faqs', loadComponent: () => import('./faqs/faqs.component').then(m => m.FaqsComponent)
   },
   {
     path: 'ad', loadComponent: () => import('./pages/admin/admin-ads/admin-ads.component').then(m => m.AdminAdsComponent)
@@ -51,7 +51,7 @@ export const routes: Routes = [
     title: '結帳作業'
   },
   {
-    path: 'products', canActivate: [ProfileCompleteGuard], loadChildren: () => import('./product/product.module').then(m => m.ProductModule)
+    path: 'products', loadChildren: () => import('./product/product.module').then(m => m.ProductModule)
   },
   {
     path: 'forgot-password', loadComponent: () => import('./resetpage/resetpage.component').then(m => m.ResetpageComponent),
