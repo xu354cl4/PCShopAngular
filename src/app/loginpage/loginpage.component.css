@@ -339,3 +339,30 @@ input:focus {
 
 
 
+.captcha-group {
+  margin-top: 12px;
+}
+
+.captcha-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.captcha-box {
+  font-family: monospace;
+  letter-spacing: 3px;
+  padding: 8px 14px;
+  background: linear-gradient(135deg, #e5e7eb, #f9fafb);
+  border: 1px dashed #9ca3af;
+  font-size: 18px;
+  user-select: none;
+}
+
+.refresh-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+}
