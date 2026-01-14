@@ -16,7 +16,7 @@ export class EcpayService {
 
   // ⭐ 對應後端 ECPayController 的 GetPaymentParams 路徑
   // 請確保 Port (7001 或 7007) 與你後端執行時一致
-  private apiUrl = '/api/ECPay/GetPaymentParams';
+  private apiUrl = 'https://localhost:7001/api/ECPay/GetPaymentParams';
 
   constructor(private http: HttpClient) { }
 
